@@ -1,0 +1,166 @@
+enum CampaignState {
+  GENESIS
+  COLLECTION
+  LIVE
+  REVIEW
+  COMPLETE
+  UNSUCCESSFUL
+}
+
+enum GoalType {
+  FIXED
+  FLEXIBLE
+}
+
+type Factory @entity {
+  id: ID!
+  campaigns: [Campaign!]! @derivedFrom(field: "factory")
+  factoryWallet: Bytes!
+  campaignImplementation: Bytes!
+  campaignRewardsImplementation: Bytes!
+  factoryRevenue: BigInt!
+  totalRevenueFromCommissions: BigInt!
+  totalRevenueFromFeatures: BigInt!
+
+  # current owner of the factory
+  owner: ID!
+}
+
+type Token @entity {
+  id: ID!
+  approved: Boolean!
+  campaigns: [Campaign!]! @derivedFrom(field: "token")
+}
+
+type User @entity {
+  id: ID!
+  campaignsDeployed: [Campaign!]! @derivedFrom(field: "owner")
+  campaignsBacked: [Campaign!]! @derivedFrom(field: "approvers")
+  userAddress: Bytes!
+  joined: BigInt!
+  updatedAt: BigInt!
+  verified: Boolean!
+  contributions: [Contribution!]! @derivedFrom(field: "owner")
+  rewards: [RewardEligibility!]! @derivedFrom(field: "owner")
+  votes: [Vote!]! @derivedFrom(field: "owner")
+  requests: [Request!]! @derivedFrom(field: "owner")
+  reports: [Report!]! @derivedFrom(field: "owner")
+  reviews: [Review!]! @derivedFrom(field: "owner")
+}
+
+type Category @entity {
+  id: ID!
+  campaigns: [Campaign!]! @derivedFrom(field: "category")
+  totalCampaign: BigInt!
+  commission: BigInt!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+  active: Boolean!
+}
+
+type FeaturePackage @entity {
+  id: ID!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+  time: BigInt!
+  cost: BigInt!
+  campaigns: [Campaign!]! @derivedFrom(field: "featurePackages")
+}
+
+type Campaign @entity {
+  id: ID!
+  factory: Factory!
+  campaignAddress: Bytes!
+  rewardsAddress: Bytes!
+  owner: User!
+  approvers: [User!]!
+  createdAt: BigInt!
+  updatedAt: BigInt!
+  category: Category!
+  featureFor: BigInt!
+  active: Boolean!
+  approved: Boolean!
+  token: Token!
+  withdrawalsPaused: Boolean!
+  allowContributionAfterTargetIsMet: Boolean!
+  totalCampaignContribution: BigInt!
+  campaignBalance: BigInt!
+  minimumContribution: BigInt!
+  totalApprovers: BigInt!
+  target: BigInt!
+  deadline: BigInt!
+  totalFinalizedRequests: BigInt!
+  totalReports: BigInt!
+  totalReviews: BigInt!
+  goalType: GoalType!
+  campaignState: CampaignState!
+  requests: [Request!]! @derivedFrom(field: "campaign")
+  featurePackages: [FeaturePackage!]!
+  reports: [Report!]! @derivedFrom(field: "campaign")
+  reviews: [Review!]! @derivedFrom(field: "campaign")
+  contributions: [Contribution!]! @derivedFrom(field: "campaign")
+  rewards: [Reward!]! @derivedFrom(field: "campaign")
+}
+
+type Contribution @entity {
+  id: ID!
+  campaign: Campaign!
+  owner: User!
+  amount: BigInt!
+  withReward: Boolean!
+  reward: RewardEligibility!
+  createdAt: BigInt!
+}
+
+type Reward @entity {
+  id: ID!
+  amount: BigInt!
+  campaign: Campaign!
+  eligibleRewards: [RewardEligibility!]! @derivedFrom(field: "reward")
+}
+
+type RewardEligibility @entity {
+  id: ID!
+  owner: User!
+  reward: Reward!
+  deliveredByCampaign: Boolean!
+  receivedByUser: Boolean!
+}
+
+type Request @entity {
+  id: ID!
+  campaign: Campaign!
+  recipient: Bytes!
+  complete: Boolean!
+  value: BigInt!
+  totalApprovals: BigInt!
+  totalAgainst: BigInt!
+  totalAbstained: BigInt!
+  duration: BigInt!
+  void: Boolean!
+  votes: [Vote!]! @derivedFrom(field: "request")
+  owner: User!
+}
+
+type Vote @entity {
+  id: ID!
+  request: Request!
+  owner: User!
+  support: BigInt!
+  cancelled: Boolean!
+  reasonHash: String!
+}
+
+type Review @entity {
+  id: ID!
+  owner: User!
+  campaign: Campaign!
+  commentHash: String!
+}
+
+type Report @entity {
+  id: ID!
+  owner: User!
+  campaign: Campaign!
+  reasonHash: String!
+}

@@ -1,0 +1,111 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: CampaignFactory
+    network: bsc
+    source:
+      address: '0xcEab0945b9c99c5d8F86085392d0009c7650537a'
+      abi: CampaignFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Campaign
+        - User
+        - Category
+        - Token
+        - FeaturePackage
+      abis:
+        - name: CampaignFactory
+          file: ./abis/CampaignFactory.json
+      eventHandlers:
+        - event: CampaignActiveToggle(indexed uint256,bool,address)
+          handler: handleCampaignActiveToggle
+        - event: CampaignApproval(indexed uint256,bool,address)
+          handler: handleCampaignApproval
+        - event: CampaignCategoryChange(indexed uint256,uint256,address)
+          handler: handleCampaignCategoryChange
+        - event: CampaignDeployed(indexed uint256,uint256,uint256,address)
+          handler: handleCampaignDeployed
+        - event: CampaignFeaturePaused(indexed uint256,address)
+          handler: handleCampaignFeaturePaused
+        - event: CampaignFeatureUnpaused(indexed uint256,uint256,address)
+          handler: handleCampaignFeatureUnpaused
+        - event: CampaignFeatured(indexed uint256,uint256,uint256,address)
+          handler: handleCampaignFeatured
+        - event: CategoryAdded(indexed uint256,bool,address)
+          handler: handleCategoryAdded
+        - event: CategoryModified(indexed uint256,bool,address)
+          handler: handleCategoryModified
+        - event: FeaturePackageAdded(indexed uint256,uint256,uint256,address)
+          handler: handleFeaturePackageAdded
+        - event: FeaturePackageDestroyed(indexed uint256,address)
+          handler: handleFeaturePackageDestroyed
+        - event: FeaturePackageModified(indexed uint256,uint256,uint256,address)
+          handler: handleFeaturePackageModified
+        - event: Paused(address)
+          handler: handlePaused
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+        - event: TokenAdded(indexed address,address)
+          handler: handleTokenAdded
+        - event: TokenApproval(indexed address,bool,address)
+          handler: handleTokenApproval
+        - event: TokenRemoved(indexed uint256,address,address)
+          handler: handleTokenRemoved
+        - event: Unpaused(address)
+          handler: handleUnpaused
+        - event: UserAdded(indexed uint256,address)
+          handler: handleUserAdded
+        - event: UserApproval(indexed uint256,bool,address)
+          handler: handleUserApproval
+        - event: UserModified(indexed uint256,address)
+          handler: handleUserModified
+        - event: UserRemoved(indexed uint256,address)
+          handler: handleUserRemoved
+      file: ./src/mapping.ts
+templates:
+  - kind: ethereum/contract
+    name: Campaign
+    network: bsc
+    source:
+      abi: Campaign
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Contribution
+        - Reward
+        - RewardEligibility
+        - Request
+        - Vote
+        - Review
+        - Report
+      file: ./src/campaign.ts
+      abis:
+        - name: Campaign
+          file: ./abis/Campaign.json
+  - kind: ethereum/contract
+    name: CampaignRewards
+    network: bsc
+    source:
+      abi: CampaignRewards
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Reward
+        - RewardEligibility
+      file: ./src/campaignRewards.ts
+      abis:
+        - name: CampaignRewards
+          file: ./abis/CampaignRewards.json
