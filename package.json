@@ -1,16 +1,17 @@
 {
-  "name": "campaign-factory",
+  "name": "crowdship",
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ carterax/campaign-factory",
-    "create-local": "graph create --node http://localhost:8020/ carterax/campaign-factory",
-    "remove-local": "graph remove --node http://localhost:8020/ carterax/campaign-factory",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 carterax/campaign-factory"
+    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ carterax/crowdship",
+    "create-local": "graph create --node http://localhost:8020/ carterax/crowdship",
+    "remove-local": "graph remove --node http://localhost:8020/ carterax/crowdship",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 carterax/crowdship"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.22.0",
-    "@graphprotocol/graph-ts": "0.22.0"
+    "@graphprotocol/graph-ts": "0.22.0",
+    "matchstick-as": "^0.1.3"
   }
 }

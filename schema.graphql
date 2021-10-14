@@ -1,5 +1,4 @@
 enum CampaignState {
-  GENESIS
   COLLECTION
   LIVE
   REVIEW
@@ -14,92 +13,126 @@ enum GoalType {
 
 type Factory @entity {
   id: ID!
-  campaigns: [Campaign!]! @derivedFrom(field: "factory")
-  factoryWallet: Bytes!
-  campaignImplementation: Bytes!
-  campaignRewardsImplementation: Bytes!
-  factoryRevenue: BigInt!
-  totalRevenueFromCommissions: BigInt!
-  totalRevenueFromFeatures: BigInt!
+  campaignFactories: [CampaignFactory!]!
+  totalCampaignFactories: BigInt!
+}
 
-  # current owner of the factory
+type CampaignFactory @entity {
+  "campaign factory address"
+  id: ID!
+  "factory this campaignFactory belongs to"
+  origin: Factory!
+  factoryWallet: Bytes!
+  campaignImplementation: Bytes
+  campaignRewardsImplementation: Bytes
+  defaultCommission: BigInt
+  factoryRevenue: BigInt
+  totalRevenueFromCommissions: BigInt
+  totalRevenueFromFeatures: BigInt
+  "current owner of the factory"
   owner: ID!
+  "derived fields"
+  users: [User!] @derivedFrom(field: "campaignFactory")
+  campaigns: [Campaign!] @derivedFrom(field: "campaignFactory")
+  tokens: [Token!] @derivedFrom(field: "campaignFactory")
+  roles: [Role!] @derivedFrom(field: "campaignFactory")
+  categories: [Category!] @derivedFrom(field: "campaignFactory")
+  featurePackages: [FeaturePackage!] @derivedFrom(field: "campaignFactory")
 }
 
 type Token @entity {
   id: ID!
+  campaignFactory: CampaignFactory!
   approved: Boolean!
   campaigns: [Campaign!]! @derivedFrom(field: "token")
+  exists: Boolean!
+}
+
+type Role @entity {
+  id: ID!
+  campaignFactory: CampaignFactory!
+  users: [User!]! @derivedFrom(field: "roles")
 }
 
 type User @entity {
   id: ID!
-  campaignsDeployed: [Campaign!]! @derivedFrom(field: "owner")
-  campaignsBacked: [Campaign!]! @derivedFrom(field: "approvers")
+  campaignFactory: CampaignFactory!
+  campaignsDeployed: [Campaign!] @derivedFrom(field: "owner")
+  campaignsBacked: [Campaign!] @derivedFrom(field: "approvers")
   userAddress: Bytes!
   joined: BigInt!
-  updatedAt: BigInt!
+  updatedAt: BigInt
   verified: Boolean!
-  contributions: [Contribution!]! @derivedFrom(field: "owner")
-  rewards: [RewardEligibility!]! @derivedFrom(field: "owner")
-  votes: [Vote!]! @derivedFrom(field: "owner")
-  requests: [Request!]! @derivedFrom(field: "owner")
-  reports: [Report!]! @derivedFrom(field: "owner")
-  reviews: [Review!]! @derivedFrom(field: "owner")
+  roles: [Role!]
+  contributions: [Contribution!] @derivedFrom(field: "owner")
+  withdrawals: [Withdrawal!] @derivedFrom(field: "owner")
+  rewards: [RewardRecipient!] @derivedFrom(field: "owner")
+  votes: [Vote!] @derivedFrom(field: "owner")
+  requests: [Request!] @derivedFrom(field: "owner")
+  reports: [Report!] @derivedFrom(field: "owner")
+  reviews: [Review!] @derivedFrom(field: "owner")
+  exists: Boolean!
 }
 
 type Category @entity {
   id: ID!
+  campaignFactory: CampaignFactory!
   campaigns: [Campaign!]! @derivedFrom(field: "category")
   totalCampaign: BigInt!
   commission: BigInt!
   createdAt: BigInt!
   updatedAt: BigInt!
   active: Boolean!
+  exists: Boolean!
 }
 
 type FeaturePackage @entity {
   id: ID!
+  campaignFactory: CampaignFactory!
   createdAt: BigInt!
   updatedAt: BigInt!
   time: BigInt!
   cost: BigInt!
   campaigns: [Campaign!]! @derivedFrom(field: "featurePackages")
+  exists: Boolean!
 }
 
 type Campaign @entity {
   id: ID!
-  factory: Factory!
+  campaignFactory: CampaignFactory!
   campaignAddress: Bytes!
   rewardsAddress: Bytes!
   owner: User!
-  approvers: [User!]!
+  approvers: [User!]
   createdAt: BigInt!
-  updatedAt: BigInt!
+  updatedAt: BigInt
   category: Category!
-  featureFor: BigInt!
+  featureFor: BigInt
   active: Boolean!
   approved: Boolean!
-  token: Token!
-  withdrawalsPaused: Boolean!
-  allowContributionAfterTargetIsMet: Boolean!
-  totalCampaignContribution: BigInt!
-  campaignBalance: BigInt!
-  minimumContribution: BigInt!
-  totalApprovers: BigInt!
-  target: BigInt!
-  deadline: BigInt!
-  totalFinalizedRequests: BigInt!
-  totalReports: BigInt!
-  totalReviews: BigInt!
-  goalType: GoalType!
+  token: Token
+  withdrawalsPaused: Boolean
+  allowContributionAfterTargetIsMet: Boolean
+  totalCampaignContribution: BigInt
+  campaignBalance: BigInt
+  minimumContribution: BigInt
+  totalApprovers: BigInt
+  target: BigInt
+  deadline: BigInt
+  totalFinalizedRequests: BigInt
+  totalReports: BigInt
+  totalReviews: BigInt
+  goalType: GoalType
   campaignState: CampaignState!
-  requests: [Request!]! @derivedFrom(field: "campaign")
-  featurePackages: [FeaturePackage!]!
-  reports: [Report!]! @derivedFrom(field: "campaign")
-  reviews: [Review!]! @derivedFrom(field: "campaign")
-  contributions: [Contribution!]! @derivedFrom(field: "campaign")
-  rewards: [Reward!]! @derivedFrom(field: "campaign")
+  requests: [Request!] @derivedFrom(field: "campaign")
+  featurePackages: [FeaturePackage!]
+  reports: [Report!] @derivedFrom(field: "campaign")
+  reviews: [Review!] @derivedFrom(field: "campaign")
+  contributions: [Contribution!] @derivedFrom(field: "campaign")
+  withdrawals: [Withdrawal!] @derivedFrom(field: "campaign")
+  rewards: [Reward!] @derivedFrom(field: "campaign")
+  rewardRecipients: [RewardRecipient!] @derivedFrom(field: "campaign")
+  exists: Boolean!
 }
 
 type Contribution @entity {
@@ -108,20 +141,34 @@ type Contribution @entity {
   owner: User!
   amount: BigInt!
   withReward: Boolean!
-  reward: RewardEligibility!
+  reward: RewardRecipient!
+  createdAt: BigInt!
+}
+
+type Withdrawal @entity {
+  id: ID!
+  campaign: Campaign!
+  owner: User!
+  amount: BigInt!
   createdAt: BigInt!
 }
 
 type Reward @entity {
   id: ID!
+  createdAt: BigInt!
+  updatedAt: BigInt!
   amount: BigInt!
   campaign: Campaign!
-  eligibleRewards: [RewardEligibility!]! @derivedFrom(field: "reward")
+  rewardRecipients: [RewardRecipient!]! @derivedFrom(field: "reward")
+  exists: Boolean!
 }
 
-type RewardEligibility @entity {
+type RewardRecipient @entity {
   id: ID!
+  campaign: Campaign!
   owner: User!
+  createdAt: BigInt!
+  updatedAt: BigInt!
   reward: Reward!
   deliveredByCampaign: Boolean!
   receivedByUser: Boolean!
@@ -129,6 +176,8 @@ type RewardEligibility @entity {
 
 type Request @entity {
   id: ID!
+  createdAt: BigInt!
+  updatedAt: BigInt!
   campaign: Campaign!
   recipient: Bytes!
   complete: Boolean!
@@ -144,23 +193,25 @@ type Request @entity {
 
 type Vote @entity {
   id: ID!
+  campaign: Campaign!
+  createdAt: BigInt!
+  updatedAt: BigInt!
   request: Request!
   owner: User!
   support: BigInt!
   cancelled: Boolean!
-  reasonHash: String!
 }
 
 type Review @entity {
   id: ID!
+  createdAt: BigInt!
   owner: User!
   campaign: Campaign!
-  commentHash: String!
 }
 
 type Report @entity {
   id: ID!
+  createdAt: BigInt!
   owner: User!
   campaign: Campaign!
-  reasonHash: String!
 }

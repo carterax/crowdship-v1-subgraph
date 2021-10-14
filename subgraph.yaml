@@ -3,10 +3,29 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: CampaignFactory
-    network: bsc
+    name: Factory
+    network: mainnet
     source:
-      address: '0xcEab0945b9c99c5d8F86085392d0009c7650537a'
+      address: '0xCfEB869F69431e42cdB54A4F4f105C19C080A601'
+      abi: Factory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Factory
+      abis:
+        - name: Factory
+          file: ./abis/Factory.json
+      eventHandlers:
+        - event: CampaignFactoryDeployed(indexed address,address,address,uint256)
+          handler: handleCampaignFactoryDeployed
+      file: ./src/mappings/factory.ts
+templates:
+  - kind: ethereum/contract
+    name: CampaignFactory
+    network: mainnet
+    source:
       abi: CampaignFactory
     mapping:
       kind: ethereum/events
@@ -18,17 +37,26 @@ dataSources:
         - Category
         - Token
         - FeaturePackage
+      file: ./src/mappings/campaignFactory.ts
       abis:
         - name: CampaignFactory
           file: ./abis/CampaignFactory.json
       eventHandlers:
+        - event: FactoryConfigUpdated(address,address,address)
+          handler: handleFactoryConfigUpdated
+        - event: CategoryCommissionUpdated(indexed uint256,uint256)
+          handler: handleCategoryCommissionUpdated
+        - event: CampaignDefaultCommissionUpdated(uint256)
+          handler: handleCampaignDefaultCommissionUpdated
+        - event: CampaignTransactionConfigUpdated(string,uint256)
+          handler: handleCampaignTransactionConfigUpdated
         - event: CampaignActiveToggle(indexed uint256,bool,address)
           handler: handleCampaignActiveToggle
         - event: CampaignApproval(indexed uint256,bool,address)
           handler: handleCampaignApproval
         - event: CampaignCategoryChange(indexed uint256,uint256,address)
           handler: handleCampaignCategoryChange
-        - event: CampaignDeployed(indexed uint256,uint256,uint256,address)
+        - event: CampaignDeployed(indexed uint256,address,address,address,uint256,uint256,address)
           handler: handleCampaignDeployed
         - event: CampaignFeaturePaused(indexed uint256,address)
           handler: handleCampaignFeaturePaused
@@ -66,15 +94,11 @@ dataSources:
           handler: handleUserAdded
         - event: UserApproval(indexed uint256,bool,address)
           handler: handleUserApproval
-        - event: UserModified(indexed uint256,address)
-          handler: handleUserModified
         - event: UserRemoved(indexed uint256,address)
           handler: handleUserRemoved
-      file: ./src/mapping.ts
-templates:
   - kind: ethereum/contract
     name: Campaign
-    network: bsc
+    network: mainnet
     source:
       abi: Campaign
     mapping:
@@ -83,19 +107,51 @@ templates:
       language: wasm/assemblyscript
       entities:
         - Contribution
+        - Withdrawal
         - Reward
-        - RewardEligibility
+        - RewardRecipient
         - Request
         - Vote
         - Review
         - Report
-      file: ./src/campaign.ts
+      file: ./src/mappings/campaign.ts
       abis:
         - name: Campaign
           file: ./abis/Campaign.json
+      eventHandlers:
+        - event: CampaignOwnershipTransferred(indexed address,address,address)
+          handler: handleCampaignOwnershipTransferred
+        - event: CampaignSettingsUpdated(indexed address,uint256,uint256,uint256,address,address)
+          handler: handleCampaignSettingsUpdated
+        - event: CampaignDeadlineExtended(indexed address,uint256,address)
+          handler: handleCampaignDeadlineExtended
+        - event: CampaignReported(indexed address,address)
+          handler: handleCampaignReported
+        - event: CampaignUserDataTransferred(indexed address,address,address,address)
+          handler: handleCampaignUserDataTransferred
+        - event: ContributionMade(indexed address,uint256,indexed uint256,bool,address)
+          handler: handleContributionMade
+        - event: ContributionWithdrawn(indexed address,uint256,address,address)
+          handler: handleContributionWithdrawn
+        - event: TargetMet(indexed address,uint256,address)
+          handler: handleTargetMet
+        - event: RequestAdded(indexed uint256,indexed address,uint256,uint256,address,address)
+          handler: handleRequestAdded
+        - event: RequestVoided(indexed uint256,indexed address,address)
+          handler: handleRequestVoided
+        - event: RequestComplete(indexed uint256,indexed address,address)
+          handler: handleRequestComplete
+        - event: Voted(indexed uint256,uint8,indexed address,address)
+          handler: handleVoted
+        - event: VoteCancelled(indexed uint256,uint8,indexed address,address)
+          handler: handleVoteCancelled
+        - event: CampaignReviewed(indexed address,address)
+          handler: handleCampaignReviewed
+        - event: CampaignStateChange(indexed address,uint8,address)
+          handler: handleCampaignStateChange
   - kind: ethereum/contract
     name: CampaignRewards
-    network: bsc
+    network: mainnet
     source:
       abi: CampaignRewards
     mapping:
@@ -104,8 +160,23 @@ templates:
       language: wasm/assemblyscript
       entities:
         - Reward
-        - RewardEligibility
-      file: ./src/campaignRewards.ts
+        - RewardRecipient
+      file: ./src/mappings/campaignRewards.ts
       abis:
         - name: CampaignRewards
           file: ./abis/CampaignRewards.json
+      eventHandlers:
+        - event: RewardCreated(indexed uint256,indexed address,uint256,uint256,uint256,bool,address)
+          handler: handleRewardCreated
+        - event: RewardModified(indexed uint256,indexed address,uint256,uint256,uint256,bool,address)
+          handler: handleRewardModified
+        - event: RewardStockIncreased(indexed uint256,indexed address,uint256,address)
+          handler: handleRewardStockIncreased
+        - event: RewardDestroyed(indexed uint256,indexed address,address)
+          handler: handleRewardDestroyed
+        - event: RewardRecipientAdded(indexed uint256,indexed address,uint256,address)
+          handler: handleRewardRecipientAdded
+        - event: RewarderApproval(indexed uint256,indexed address,bool,address)
+          handler: handleRewarderApproval
+        - event: RewardRecipientApproval(indexed uint256,indexed address,address)
+          handler: handleRewardRecipientApproval

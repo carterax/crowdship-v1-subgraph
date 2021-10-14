@@ -17,13 +17,8 @@ export class Factory extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("factoryWallet", Value.fromBytes(Bytes.empty()));
-    this.set("campaignImplementation", Value.fromBytes(Bytes.empty()));
-    this.set("campaignRewardsImplementation", Value.fromBytes(Bytes.empty()));
-    this.set("factoryRevenue", Value.fromBigInt(BigInt.zero()));
-    this.set("totalRevenueFromCommissions", Value.fromBigInt(BigInt.zero()));
-    this.set("totalRevenueFromFeatures", Value.fromBigInt(BigInt.zero()));
-    this.set("owner", Value.fromString(""));
+    this.set("campaignFactories", Value.fromStringArray(new Array(0)));
+    this.set("totalCampaignFactories", Value.fromBigInt(BigInt.zero()));
   }
 
   save(): void {
@@ -52,13 +47,68 @@ export class Factory extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get campaigns(): Array<string> {
-    let value = this.get("campaigns");
+  get campaignFactories(): Array<string> {
+    let value = this.get("campaignFactories");
     return value!.toStringArray();
   }
 
-  set campaigns(value: Array<string>) {
-    this.set("campaigns", Value.fromStringArray(value));
+  set campaignFactories(value: Array<string>) {
+    this.set("campaignFactories", Value.fromStringArray(value));
+  }
+
+  get totalCampaignFactories(): BigInt {
+    let value = this.get("totalCampaignFactories");
+    return value!.toBigInt();
+  }
+
+  set totalCampaignFactories(value: BigInt) {
+    this.set("totalCampaignFactories", Value.fromBigInt(value));
+  }
+}
+
+export class CampaignFactory extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("origin", Value.fromString(""));
+    this.set("factoryWallet", Value.fromBytes(Bytes.empty()));
+    this.set("owner", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save CampaignFactory entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save CampaignFactory entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("CampaignFactory", id.toString(), this);
+    }
+  }
+
+  static load(id: string): CampaignFactory | null {
+    return changetype<CampaignFactory | null>(store.get("CampaignFactory", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get origin(): string {
+    let value = this.get("origin");
+    return value!.toString();
+  }
+
+  set origin(value: string) {
+    this.set("origin", Value.fromString(value));
   }
 
   get factoryWallet(): Bytes {
@@ -70,49 +120,106 @@ export class Factory extends Entity {
     this.set("factoryWallet", Value.fromBytes(value));
   }
 
-  get campaignImplementation(): Bytes {
+  get campaignImplementation(): Bytes | null {
     let value = this.get("campaignImplementation");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
   }
 
-  set campaignImplementation(value: Bytes) {
-    this.set("campaignImplementation", Value.fromBytes(value));
+  set campaignImplementation(value: Bytes | null) {
+    if (!value) {
+      this.unset("campaignImplementation");
+    } else {
+      this.set("campaignImplementation", Value.fromBytes(<Bytes>value));
+    }
   }
 
-  get campaignRewardsImplementation(): Bytes {
+  get campaignRewardsImplementation(): Bytes | null {
     let value = this.get("campaignRewardsImplementation");
-    return value!.toBytes();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
   }
 
-  set campaignRewardsImplementation(value: Bytes) {
-    this.set("campaignRewardsImplementation", Value.fromBytes(value));
+  set campaignRewardsImplementation(value: Bytes | null) {
+    if (!value) {
+      this.unset("campaignRewardsImplementation");
+    } else {
+      this.set("campaignRewardsImplementation", Value.fromBytes(<Bytes>value));
+    }
   }
 
-  get factoryRevenue(): BigInt {
+  get defaultCommission(): BigInt | null {
+    let value = this.get("defaultCommission");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set defaultCommission(value: BigInt | null) {
+    if (!value) {
+      this.unset("defaultCommission");
+    } else {
+      this.set("defaultCommission", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get factoryRevenue(): BigInt | null {
     let value = this.get("factoryRevenue");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set factoryRevenue(value: BigInt) {
-    this.set("factoryRevenue", Value.fromBigInt(value));
+  set factoryRevenue(value: BigInt | null) {
+    if (!value) {
+      this.unset("factoryRevenue");
+    } else {
+      this.set("factoryRevenue", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get totalRevenueFromCommissions(): BigInt {
+  get totalRevenueFromCommissions(): BigInt | null {
     let value = this.get("totalRevenueFromCommissions");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set totalRevenueFromCommissions(value: BigInt) {
-    this.set("totalRevenueFromCommissions", Value.fromBigInt(value));
+  set totalRevenueFromCommissions(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalRevenueFromCommissions");
+    } else {
+      this.set("totalRevenueFromCommissions", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get totalRevenueFromFeatures(): BigInt {
+  get totalRevenueFromFeatures(): BigInt | null {
     let value = this.get("totalRevenueFromFeatures");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set totalRevenueFromFeatures(value: BigInt) {
-    this.set("totalRevenueFromFeatures", Value.fromBigInt(value));
+  set totalRevenueFromFeatures(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalRevenueFromFeatures");
+    } else {
+      this.set("totalRevenueFromFeatures", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get owner(): string {
@@ -123,6 +230,108 @@ export class Factory extends Entity {
   set owner(value: string) {
     this.set("owner", Value.fromString(value));
   }
+
+  get users(): Array<string> | null {
+    let value = this.get("users");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set users(value: Array<string> | null) {
+    if (!value) {
+      this.unset("users");
+    } else {
+      this.set("users", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get campaigns(): Array<string> | null {
+    let value = this.get("campaigns");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set campaigns(value: Array<string> | null) {
+    if (!value) {
+      this.unset("campaigns");
+    } else {
+      this.set("campaigns", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get tokens(): Array<string> | null {
+    let value = this.get("tokens");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set tokens(value: Array<string> | null) {
+    if (!value) {
+      this.unset("tokens");
+    } else {
+      this.set("tokens", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get roles(): Array<string> | null {
+    let value = this.get("roles");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set roles(value: Array<string> | null) {
+    if (!value) {
+      this.unset("roles");
+    } else {
+      this.set("roles", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get categories(): Array<string> | null {
+    let value = this.get("categories");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set categories(value: Array<string> | null) {
+    if (!value) {
+      this.unset("categories");
+    } else {
+      this.set("categories", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get featurePackages(): Array<string> | null {
+    let value = this.get("featurePackages");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set featurePackages(value: Array<string> | null) {
+    if (!value) {
+      this.unset("featurePackages");
+    } else {
+      this.set("featurePackages", Value.fromStringArray(<Array<string>>value));
+    }
+  }
 }
 
 export class Token extends Entity {
@@ -130,7 +339,9 @@ export class Token extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("campaignFactory", Value.fromString(""));
     this.set("approved", Value.fromBoolean(false));
+    this.set("exists", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -159,6 +370,15 @@ export class Token extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get campaignFactory(): string {
+    let value = this.get("campaignFactory");
+    return value!.toString();
+  }
+
+  set campaignFactory(value: string) {
+    this.set("campaignFactory", Value.fromString(value));
+  }
+
   get approved(): boolean {
     let value = this.get("approved");
     return value!.toBoolean();
@@ -176,6 +396,68 @@ export class Token extends Entity {
   set campaigns(value: Array<string>) {
     this.set("campaigns", Value.fromStringArray(value));
   }
+
+  get exists(): boolean {
+    let value = this.get("exists");
+    return value!.toBoolean();
+  }
+
+  set exists(value: boolean) {
+    this.set("exists", Value.fromBoolean(value));
+  }
+}
+
+export class Role extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("campaignFactory", Value.fromString(""));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Role entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Role entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Role", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Role | null {
+    return changetype<Role | null>(store.get("Role", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get campaignFactory(): string {
+    let value = this.get("campaignFactory");
+    return value!.toString();
+  }
+
+  set campaignFactory(value: string) {
+    this.set("campaignFactory", Value.fromString(value));
+  }
+
+  get users(): Array<string> {
+    let value = this.get("users");
+    return value!.toStringArray();
+  }
+
+  set users(value: Array<string>) {
+    this.set("users", Value.fromStringArray(value));
+  }
 }
 
 export class User extends Entity {
@@ -183,10 +465,11 @@ export class User extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("campaignFactory", Value.fromString(""));
     this.set("userAddress", Value.fromBytes(Bytes.empty()));
     this.set("joined", Value.fromBigInt(BigInt.zero()));
-    this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("verified", Value.fromBoolean(false));
+    this.set("exists", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -215,22 +498,50 @@ export class User extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get campaignsDeployed(): Array<string> {
+  get campaignFactory(): string {
+    let value = this.get("campaignFactory");
+    return value!.toString();
+  }
+
+  set campaignFactory(value: string) {
+    this.set("campaignFactory", Value.fromString(value));
+  }
+
+  get campaignsDeployed(): Array<string> | null {
     let value = this.get("campaignsDeployed");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set campaignsDeployed(value: Array<string>) {
-    this.set("campaignsDeployed", Value.fromStringArray(value));
+  set campaignsDeployed(value: Array<string> | null) {
+    if (!value) {
+      this.unset("campaignsDeployed");
+    } else {
+      this.set(
+        "campaignsDeployed",
+        Value.fromStringArray(<Array<string>>value)
+      );
+    }
   }
 
-  get campaignsBacked(): Array<string> {
+  get campaignsBacked(): Array<string> | null {
     let value = this.get("campaignsBacked");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set campaignsBacked(value: Array<string>) {
-    this.set("campaignsBacked", Value.fromStringArray(value));
+  set campaignsBacked(value: Array<string> | null) {
+    if (!value) {
+      this.unset("campaignsBacked");
+    } else {
+      this.set("campaignsBacked", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
   get userAddress(): Bytes {
@@ -251,13 +562,21 @@ export class User extends Entity {
     this.set("joined", Value.fromBigInt(value));
   }
 
-  get updatedAt(): BigInt {
+  get updatedAt(): BigInt | null {
     let value = this.get("updatedAt");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set updatedAt(value: BigInt) {
-    this.set("updatedAt", Value.fromBigInt(value));
+  set updatedAt(value: BigInt | null) {
+    if (!value) {
+      this.unset("updatedAt");
+    } else {
+      this.set("updatedAt", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get verified(): boolean {
@@ -269,58 +588,149 @@ export class User extends Entity {
     this.set("verified", Value.fromBoolean(value));
   }
 
-  get contributions(): Array<string> {
+  get roles(): Array<string> | null {
+    let value = this.get("roles");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set roles(value: Array<string> | null) {
+    if (!value) {
+      this.unset("roles");
+    } else {
+      this.set("roles", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get contributions(): Array<string> | null {
     let value = this.get("contributions");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set contributions(value: Array<string>) {
-    this.set("contributions", Value.fromStringArray(value));
+  set contributions(value: Array<string> | null) {
+    if (!value) {
+      this.unset("contributions");
+    } else {
+      this.set("contributions", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get rewards(): Array<string> {
+  get withdrawals(): Array<string> | null {
+    let value = this.get("withdrawals");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set withdrawals(value: Array<string> | null) {
+    if (!value) {
+      this.unset("withdrawals");
+    } else {
+      this.set("withdrawals", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get rewards(): Array<string> | null {
     let value = this.get("rewards");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set rewards(value: Array<string>) {
-    this.set("rewards", Value.fromStringArray(value));
+  set rewards(value: Array<string> | null) {
+    if (!value) {
+      this.unset("rewards");
+    } else {
+      this.set("rewards", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get votes(): Array<string> {
+  get votes(): Array<string> | null {
     let value = this.get("votes");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set votes(value: Array<string>) {
-    this.set("votes", Value.fromStringArray(value));
+  set votes(value: Array<string> | null) {
+    if (!value) {
+      this.unset("votes");
+    } else {
+      this.set("votes", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get requests(): Array<string> {
+  get requests(): Array<string> | null {
     let value = this.get("requests");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set requests(value: Array<string>) {
-    this.set("requests", Value.fromStringArray(value));
+  set requests(value: Array<string> | null) {
+    if (!value) {
+      this.unset("requests");
+    } else {
+      this.set("requests", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get reports(): Array<string> {
+  get reports(): Array<string> | null {
     let value = this.get("reports");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set reports(value: Array<string>) {
-    this.set("reports", Value.fromStringArray(value));
+  set reports(value: Array<string> | null) {
+    if (!value) {
+      this.unset("reports");
+    } else {
+      this.set("reports", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get reviews(): Array<string> {
+  get reviews(): Array<string> | null {
     let value = this.get("reviews");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set reviews(value: Array<string>) {
-    this.set("reviews", Value.fromStringArray(value));
+  set reviews(value: Array<string> | null) {
+    if (!value) {
+      this.unset("reviews");
+    } else {
+      this.set("reviews", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get exists(): boolean {
+    let value = this.get("exists");
+    return value!.toBoolean();
+  }
+
+  set exists(value: boolean) {
+    this.set("exists", Value.fromBoolean(value));
   }
 }
 
@@ -329,11 +739,13 @@ export class Category extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("campaignFactory", Value.fromString(""));
     this.set("totalCampaign", Value.fromBigInt(BigInt.zero()));
     this.set("commission", Value.fromBigInt(BigInt.zero()));
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("active", Value.fromBoolean(false));
+    this.set("exists", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -360,6 +772,15 @@ export class Category extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get campaignFactory(): string {
+    let value = this.get("campaignFactory");
+    return value!.toString();
+  }
+
+  set campaignFactory(value: string) {
+    this.set("campaignFactory", Value.fromString(value));
   }
 
   get campaigns(): Array<string> {
@@ -415,6 +836,15 @@ export class Category extends Entity {
   set active(value: boolean) {
     this.set("active", Value.fromBoolean(value));
   }
+
+  get exists(): boolean {
+    let value = this.get("exists");
+    return value!.toBoolean();
+  }
+
+  set exists(value: boolean) {
+    this.set("exists", Value.fromBoolean(value));
+  }
 }
 
 export class FeaturePackage extends Entity {
@@ -422,10 +852,12 @@ export class FeaturePackage extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("campaignFactory", Value.fromString(""));
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("time", Value.fromBigInt(BigInt.zero()));
     this.set("cost", Value.fromBigInt(BigInt.zero()));
+    this.set("exists", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -452,6 +884,15 @@ export class FeaturePackage extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get campaignFactory(): string {
+    let value = this.get("campaignFactory");
+    return value!.toString();
+  }
+
+  set campaignFactory(value: string) {
+    this.set("campaignFactory", Value.fromString(value));
   }
 
   get createdAt(): BigInt {
@@ -498,6 +939,15 @@ export class FeaturePackage extends Entity {
   set campaigns(value: Array<string>) {
     this.set("campaigns", Value.fromStringArray(value));
   }
+
+  get exists(): boolean {
+    let value = this.get("exists");
+    return value!.toBoolean();
+  }
+
+  set exists(value: boolean) {
+    this.set("exists", Value.fromBoolean(value));
+  }
 }
 
 export class Campaign extends Entity {
@@ -505,32 +955,18 @@ export class Campaign extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
-    this.set("factory", Value.fromString(""));
+    this.set("campaignFactory", Value.fromString(""));
     this.set("campaignAddress", Value.fromBytes(Bytes.empty()));
     this.set("rewardsAddress", Value.fromBytes(Bytes.empty()));
     this.set("owner", Value.fromString(""));
-    this.set("approvers", Value.fromStringArray(new Array(0)));
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
-    this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("category", Value.fromString(""));
-    this.set("featureFor", Value.fromBigInt(BigInt.zero()));
     this.set("active", Value.fromBoolean(false));
     this.set("approved", Value.fromBoolean(false));
-    this.set("token", Value.fromString(""));
     this.set("withdrawalsPaused", Value.fromBoolean(false));
     this.set("allowContributionAfterTargetIsMet", Value.fromBoolean(false));
-    this.set("totalCampaignContribution", Value.fromBigInt(BigInt.zero()));
-    this.set("campaignBalance", Value.fromBigInt(BigInt.zero()));
-    this.set("minimumContribution", Value.fromBigInt(BigInt.zero()));
-    this.set("totalApprovers", Value.fromBigInt(BigInt.zero()));
-    this.set("target", Value.fromBigInt(BigInt.zero()));
-    this.set("deadline", Value.fromBigInt(BigInt.zero()));
-    this.set("totalFinalizedRequests", Value.fromBigInt(BigInt.zero()));
-    this.set("totalReports", Value.fromBigInt(BigInt.zero()));
-    this.set("totalReviews", Value.fromBigInt(BigInt.zero()));
-    this.set("goalType", Value.fromString(""));
     this.set("campaignState", Value.fromString(""));
-    this.set("featurePackages", Value.fromStringArray(new Array(0)));
+    this.set("exists", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -559,13 +995,13 @@ export class Campaign extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get factory(): string {
-    let value = this.get("factory");
+  get campaignFactory(): string {
+    let value = this.get("campaignFactory");
     return value!.toString();
   }
 
-  set factory(value: string) {
-    this.set("factory", Value.fromString(value));
+  set campaignFactory(value: string) {
+    this.set("campaignFactory", Value.fromString(value));
   }
 
   get campaignAddress(): Bytes {
@@ -595,13 +1031,21 @@ export class Campaign extends Entity {
     this.set("owner", Value.fromString(value));
   }
 
-  get approvers(): Array<string> {
+  get approvers(): Array<string> | null {
     let value = this.get("approvers");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set approvers(value: Array<string>) {
-    this.set("approvers", Value.fromStringArray(value));
+  set approvers(value: Array<string> | null) {
+    if (!value) {
+      this.unset("approvers");
+    } else {
+      this.set("approvers", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
   get createdAt(): BigInt {
@@ -613,13 +1057,21 @@ export class Campaign extends Entity {
     this.set("createdAt", Value.fromBigInt(value));
   }
 
-  get updatedAt(): BigInt {
+  get updatedAt(): BigInt | null {
     let value = this.get("updatedAt");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set updatedAt(value: BigInt) {
-    this.set("updatedAt", Value.fromBigInt(value));
+  set updatedAt(value: BigInt | null) {
+    if (!value) {
+      this.unset("updatedAt");
+    } else {
+      this.set("updatedAt", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get category(): string {
@@ -631,13 +1083,21 @@ export class Campaign extends Entity {
     this.set("category", Value.fromString(value));
   }
 
-  get featureFor(): BigInt {
+  get featureFor(): BigInt | null {
     let value = this.get("featureFor");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set featureFor(value: BigInt) {
-    this.set("featureFor", Value.fromBigInt(value));
+  set featureFor(value: BigInt | null) {
+    if (!value) {
+      this.unset("featureFor");
+    } else {
+      this.set("featureFor", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get active(): boolean {
@@ -658,13 +1118,21 @@ export class Campaign extends Entity {
     this.set("approved", Value.fromBoolean(value));
   }
 
-  get token(): string {
+  get token(): string | null {
     let value = this.get("token");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set token(value: string) {
-    this.set("token", Value.fromString(value));
+  set token(value: string | null) {
+    if (!value) {
+      this.unset("token");
+    } else {
+      this.set("token", Value.fromString(<string>value));
+    }
   }
 
   get withdrawalsPaused(): boolean {
@@ -685,94 +1153,174 @@ export class Campaign extends Entity {
     this.set("allowContributionAfterTargetIsMet", Value.fromBoolean(value));
   }
 
-  get totalCampaignContribution(): BigInt {
+  get totalCampaignContribution(): BigInt | null {
     let value = this.get("totalCampaignContribution");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set totalCampaignContribution(value: BigInt) {
-    this.set("totalCampaignContribution", Value.fromBigInt(value));
+  set totalCampaignContribution(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalCampaignContribution");
+    } else {
+      this.set("totalCampaignContribution", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get campaignBalance(): BigInt {
+  get campaignBalance(): BigInt | null {
     let value = this.get("campaignBalance");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set campaignBalance(value: BigInt) {
-    this.set("campaignBalance", Value.fromBigInt(value));
+  set campaignBalance(value: BigInt | null) {
+    if (!value) {
+      this.unset("campaignBalance");
+    } else {
+      this.set("campaignBalance", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get minimumContribution(): BigInt {
+  get minimumContribution(): BigInt | null {
     let value = this.get("minimumContribution");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set minimumContribution(value: BigInt) {
-    this.set("minimumContribution", Value.fromBigInt(value));
+  set minimumContribution(value: BigInt | null) {
+    if (!value) {
+      this.unset("minimumContribution");
+    } else {
+      this.set("minimumContribution", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get totalApprovers(): BigInt {
+  get totalApprovers(): BigInt | null {
     let value = this.get("totalApprovers");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set totalApprovers(value: BigInt) {
-    this.set("totalApprovers", Value.fromBigInt(value));
+  set totalApprovers(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalApprovers");
+    } else {
+      this.set("totalApprovers", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get target(): BigInt {
+  get target(): BigInt | null {
     let value = this.get("target");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set target(value: BigInt) {
-    this.set("target", Value.fromBigInt(value));
+  set target(value: BigInt | null) {
+    if (!value) {
+      this.unset("target");
+    } else {
+      this.set("target", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get deadline(): BigInt {
+  get deadline(): BigInt | null {
     let value = this.get("deadline");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set deadline(value: BigInt) {
-    this.set("deadline", Value.fromBigInt(value));
+  set deadline(value: BigInt | null) {
+    if (!value) {
+      this.unset("deadline");
+    } else {
+      this.set("deadline", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get totalFinalizedRequests(): BigInt {
+  get totalFinalizedRequests(): BigInt | null {
     let value = this.get("totalFinalizedRequests");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set totalFinalizedRequests(value: BigInt) {
-    this.set("totalFinalizedRequests", Value.fromBigInt(value));
+  set totalFinalizedRequests(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalFinalizedRequests");
+    } else {
+      this.set("totalFinalizedRequests", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get totalReports(): BigInt {
+  get totalReports(): BigInt | null {
     let value = this.get("totalReports");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set totalReports(value: BigInt) {
-    this.set("totalReports", Value.fromBigInt(value));
+  set totalReports(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalReports");
+    } else {
+      this.set("totalReports", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get totalReviews(): BigInt {
+  get totalReviews(): BigInt | null {
     let value = this.get("totalReviews");
-    return value!.toBigInt();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
   }
 
-  set totalReviews(value: BigInt) {
-    this.set("totalReviews", Value.fromBigInt(value));
+  set totalReviews(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalReviews");
+    } else {
+      this.set("totalReviews", Value.fromBigInt(<BigInt>value));
+    }
   }
 
-  get goalType(): string {
+  get goalType(): string | null {
     let value = this.get("goalType");
-    return value!.toString();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
   }
 
-  set goalType(value: string) {
-    this.set("goalType", Value.fromString(value));
+  set goalType(value: string | null) {
+    if (!value) {
+      this.unset("goalType");
+    } else {
+      this.set("goalType", Value.fromString(<string>value));
+    }
   }
 
   get campaignState(): string {
@@ -784,58 +1332,149 @@ export class Campaign extends Entity {
     this.set("campaignState", Value.fromString(value));
   }
 
-  get requests(): Array<string> {
+  get requests(): Array<string> | null {
     let value = this.get("requests");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set requests(value: Array<string>) {
-    this.set("requests", Value.fromStringArray(value));
+  set requests(value: Array<string> | null) {
+    if (!value) {
+      this.unset("requests");
+    } else {
+      this.set("requests", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get featurePackages(): Array<string> {
+  get featurePackages(): Array<string> | null {
     let value = this.get("featurePackages");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set featurePackages(value: Array<string>) {
-    this.set("featurePackages", Value.fromStringArray(value));
+  set featurePackages(value: Array<string> | null) {
+    if (!value) {
+      this.unset("featurePackages");
+    } else {
+      this.set("featurePackages", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get reports(): Array<string> {
+  get reports(): Array<string> | null {
     let value = this.get("reports");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set reports(value: Array<string>) {
-    this.set("reports", Value.fromStringArray(value));
+  set reports(value: Array<string> | null) {
+    if (!value) {
+      this.unset("reports");
+    } else {
+      this.set("reports", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get reviews(): Array<string> {
+  get reviews(): Array<string> | null {
     let value = this.get("reviews");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set reviews(value: Array<string>) {
-    this.set("reviews", Value.fromStringArray(value));
+  set reviews(value: Array<string> | null) {
+    if (!value) {
+      this.unset("reviews");
+    } else {
+      this.set("reviews", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get contributions(): Array<string> {
+  get contributions(): Array<string> | null {
     let value = this.get("contributions");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set contributions(value: Array<string>) {
-    this.set("contributions", Value.fromStringArray(value));
+  set contributions(value: Array<string> | null) {
+    if (!value) {
+      this.unset("contributions");
+    } else {
+      this.set("contributions", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
-  get rewards(): Array<string> {
+  get withdrawals(): Array<string> | null {
+    let value = this.get("withdrawals");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set withdrawals(value: Array<string> | null) {
+    if (!value) {
+      this.unset("withdrawals");
+    } else {
+      this.set("withdrawals", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get rewards(): Array<string> | null {
     let value = this.get("rewards");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set rewards(value: Array<string>) {
-    this.set("rewards", Value.fromStringArray(value));
+  set rewards(value: Array<string> | null) {
+    if (!value) {
+      this.unset("rewards");
+    } else {
+      this.set("rewards", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get rewardRecipients(): Array<string> | null {
+    let value = this.get("rewardRecipients");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set rewardRecipients(value: Array<string> | null) {
+    if (!value) {
+      this.unset("rewardRecipients");
+    } else {
+      this.set("rewardRecipients", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get exists(): boolean {
+    let value = this.get("exists");
+    return value!.toBoolean();
+  }
+
+  set exists(value: boolean) {
+    this.set("exists", Value.fromBoolean(value));
   }
 }
 
@@ -933,13 +1572,90 @@ export class Contribution extends Entity {
   }
 }
 
+export class Withdrawal extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("campaign", Value.fromString(""));
+    this.set("owner", Value.fromString(""));
+    this.set("amount", Value.fromBigInt(BigInt.zero()));
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Withdrawal entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save Withdrawal entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("Withdrawal", id.toString(), this);
+    }
+  }
+
+  static load(id: string): Withdrawal | null {
+    return changetype<Withdrawal | null>(store.get("Withdrawal", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get campaign(): string {
+    let value = this.get("campaign");
+    return value!.toString();
+  }
+
+  set campaign(value: string) {
+    this.set("campaign", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    return value!.toString();
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
+  get amount(): BigInt {
+    let value = this.get("amount");
+    return value!.toBigInt();
+  }
+
+  set amount(value: BigInt) {
+    this.set("amount", Value.fromBigInt(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+}
+
 export class Reward extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+    this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("amount", Value.fromBigInt(BigInt.zero()));
     this.set("campaign", Value.fromString(""));
+    this.set("exists", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -968,6 +1684,24 @@ export class Reward extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+
+  get updatedAt(): BigInt {
+    let value = this.get("updatedAt");
+    return value!.toBigInt();
+  }
+
+  set updatedAt(value: BigInt) {
+    this.set("updatedAt", Value.fromBigInt(value));
+  }
+
   get amount(): BigInt {
     let value = this.get("amount");
     return value!.toBigInt();
@@ -986,22 +1720,34 @@ export class Reward extends Entity {
     this.set("campaign", Value.fromString(value));
   }
 
-  get eligibleRewards(): Array<string> {
-    let value = this.get("eligibleRewards");
+  get rewardRecipients(): Array<string> {
+    let value = this.get("rewardRecipients");
     return value!.toStringArray();
   }
 
-  set eligibleRewards(value: Array<string>) {
-    this.set("eligibleRewards", Value.fromStringArray(value));
+  set rewardRecipients(value: Array<string>) {
+    this.set("rewardRecipients", Value.fromStringArray(value));
+  }
+
+  get exists(): boolean {
+    let value = this.get("exists");
+    return value!.toBoolean();
+  }
+
+  set exists(value: boolean) {
+    this.set("exists", Value.fromBoolean(value));
   }
 }
 
-export class RewardEligibility extends Entity {
+export class RewardRecipient extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("campaign", Value.fromString(""));
     this.set("owner", Value.fromString(""));
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+    this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("reward", Value.fromString(""));
     this.set("deliveredByCampaign", Value.fromBoolean(false));
     this.set("receivedByUser", Value.fromBoolean(false));
@@ -1009,21 +1755,19 @@ export class RewardEligibility extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save RewardEligibility entity without an ID");
+    assert(id != null, "Cannot save RewardRecipient entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        "Cannot save RewardEligibility entity with non-string ID. " +
+        "Cannot save RewardRecipient entity with non-string ID. " +
           'Considering using .toHex() to convert the "id" to a string.'
       );
-      store.set("RewardEligibility", id.toString(), this);
+      store.set("RewardRecipient", id.toString(), this);
     }
   }
 
-  static load(id: string): RewardEligibility | null {
-    return changetype<RewardEligibility | null>(
-      store.get("RewardEligibility", id)
-    );
+  static load(id: string): RewardRecipient | null {
+    return changetype<RewardRecipient | null>(store.get("RewardRecipient", id));
   }
 
   get id(): string {
@@ -1035,6 +1779,15 @@ export class RewardEligibility extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get campaign(): string {
+    let value = this.get("campaign");
+    return value!.toString();
+  }
+
+  set campaign(value: string) {
+    this.set("campaign", Value.fromString(value));
+  }
+
   get owner(): string {
     let value = this.get("owner");
     return value!.toString();
@@ -1042,6 +1795,24 @@ export class RewardEligibility extends Entity {
 
   set owner(value: string) {
     this.set("owner", Value.fromString(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+
+  get updatedAt(): BigInt {
+    let value = this.get("updatedAt");
+    return value!.toBigInt();
+  }
+
+  set updatedAt(value: BigInt) {
+    this.set("updatedAt", Value.fromBigInt(value));
   }
 
   get reward(): string {
@@ -1077,6 +1848,8 @@ export class Request extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+    this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("campaign", Value.fromString(""));
     this.set("recipient", Value.fromBytes(Bytes.empty()));
     this.set("complete", Value.fromBoolean(false));
@@ -1113,6 +1886,24 @@ export class Request extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+
+  get updatedAt(): BigInt {
+    let value = this.get("updatedAt");
+    return value!.toBigInt();
+  }
+
+  set updatedAt(value: BigInt) {
+    this.set("updatedAt", Value.fromBigInt(value));
   }
 
   get campaign(): string {
@@ -1220,11 +2011,13 @@ export class Vote extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("campaign", Value.fromString(""));
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+    this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("request", Value.fromString(""));
     this.set("owner", Value.fromString(""));
     this.set("support", Value.fromBigInt(BigInt.zero()));
     this.set("cancelled", Value.fromBoolean(false));
-    this.set("reasonHash", Value.fromString(""));
   }
 
   save(): void {
@@ -1251,6 +2044,33 @@ export class Vote extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get campaign(): string {
+    let value = this.get("campaign");
+    return value!.toString();
+  }
+
+  set campaign(value: string) {
+    this.set("campaign", Value.fromString(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+
+  get updatedAt(): BigInt {
+    let value = this.get("updatedAt");
+    return value!.toBigInt();
+  }
+
+  set updatedAt(value: BigInt) {
+    this.set("updatedAt", Value.fromBigInt(value));
   }
 
   get request(): string {
@@ -1288,15 +2108,6 @@ export class Vote extends Entity {
   set cancelled(value: boolean) {
     this.set("cancelled", Value.fromBoolean(value));
   }
-
-  get reasonHash(): string {
-    let value = this.get("reasonHash");
-    return value!.toString();
-  }
-
-  set reasonHash(value: string) {
-    this.set("reasonHash", Value.fromString(value));
-  }
 }
 
 export class Review extends Entity {
@@ -1304,9 +2115,9 @@ export class Review extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("owner", Value.fromString(""));
     this.set("campaign", Value.fromString(""));
-    this.set("commentHash", Value.fromString(""));
   }
 
   save(): void {
@@ -1335,6 +2146,15 @@ export class Review extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+
   get owner(): string {
     let value = this.get("owner");
     return value!.toString();
@@ -1352,15 +2172,6 @@ export class Review extends Entity {
   set campaign(value: string) {
     this.set("campaign", Value.fromString(value));
   }
-
-  get commentHash(): string {
-    let value = this.get("commentHash");
-    return value!.toString();
-  }
-
-  set commentHash(value: string) {
-    this.set("commentHash", Value.fromString(value));
-  }
 }
 
 export class Report extends Entity {
@@ -1368,9 +2179,9 @@ export class Report extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("owner", Value.fromString(""));
     this.set("campaign", Value.fromString(""));
-    this.set("reasonHash", Value.fromString(""));
   }
 
   save(): void {
@@ -1399,6 +2210,15 @@ export class Report extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+
   get owner(): string {
     let value = this.get("owner");
     return value!.toString();
@@ -1415,14 +2235,5 @@ export class Report extends Entity {
 
   set campaign(value: string) {
     this.set("campaign", Value.fromString(value));
-  }
-
-  get reasonHash(): string {
-    let value = this.get("reasonHash");
-    return value!.toString();
-  }
-
-  set reasonHash(value: string) {
-    this.set("reasonHash", Value.fromString(value));
   }
 }

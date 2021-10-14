@@ -6,6 +6,20 @@ import {
   DataSourceContext
 } from "@graphprotocol/graph-ts";
 
+export class CampaignFactory extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("CampaignFactory", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "CampaignFactory",
+      [address.toHex()],
+      context
+    );
+  }
+}
+
 export class Campaign extends DataSourceTemplate {
   static create(address: Address): void {
     DataSourceTemplate.create("Campaign", [address.toHex()]);
