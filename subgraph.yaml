@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: mainnet
+    network: rinkeby
     source:
-      address: '0xCfEB869F69431e42cdB54A4F4f105C19C080A601'
+      address: '0xC9F4D522CF5559A4b41C1FC99737446f70d2A17C'
       abi: Factory
     mapping:
       kind: ethereum/events
@@ -24,7 +24,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: CampaignFactory
-    network: mainnet
+    network: rinkeby
     source:
       abi: CampaignFactory
     mapping:
@@ -98,7 +98,7 @@ templates:
           handler: handleUserRemoved
   - kind: ethereum/contract
     name: Campaign
-    network: mainnet
+    network: rinkeby
     source:
       abi: Campaign
     mapping:
@@ -151,7 +151,7 @@ templates:
           handler: handleCampaignStateChange
   - kind: ethereum/contract
     name: CampaignRewards
-    network: mainnet
+    network: rinkeby
     source:
       abi: CampaignRewards
     mapping:

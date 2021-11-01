@@ -1,6 +1,5 @@
 import { FACTORY_ADDRESS } from './../utils/constants';
 import {
-  CampaignFactoryCreated as CampaignFactoryCreatedEvent,
   FactoryConfigUpdated as FactoryConfigUpdatedEvent,
   CategoryCommissionUpdated as CategoryCommissionUpdatedEvent,
   CampaignDefaultCommissionUpdated as CampaignDefaultCommissionUpdatedEvent,

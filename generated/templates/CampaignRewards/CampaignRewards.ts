@@ -732,48 +732,6 @@ export class CampaignRewards extends ethereum.SmartContract {
   }
 }
 
-export class __CampaignRewards_initCall extends ethereum.Call {
-  get inputs(): __CampaignRewards_initCall__Inputs {
-    return new __CampaignRewards_initCall__Inputs(this);
-  }
-
-  get outputs(): __CampaignRewards_initCall__Outputs {
-    return new __CampaignRewards_initCall__Outputs(this);
-  }
-}
-
-export class __CampaignRewards_initCall__Inputs {
-  _call: __CampaignRewards_initCall;
-
-  constructor(call: __CampaignRewards_initCall) {
-    this._call = call;
-  }
-
-  get _campaignFactory(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _campaign(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _campaignOwner(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-}
-
-export class __CampaignRewards_initCall__Outputs {
-  _call: __CampaignRewards_initCall;
-
-  constructor(call: __CampaignRewards_initCall) {
-    this._call = call;
-  }
-}
-
 export class AddRoleCall extends ethereum.Call {
   get inputs(): AddRoleCall__Inputs {
     return new AddRoleCall__Inputs(this);
@@ -808,150 +766,6 @@ export class AddRoleCall__Outputs {
   }
 }
 
-export class AssignRewardCall extends ethereum.Call {
-  get inputs(): AssignRewardCall__Inputs {
-    return new AssignRewardCall__Inputs(this);
-  }
-
-  get outputs(): AssignRewardCall__Outputs {
-    return new AssignRewardCall__Outputs(this);
-  }
-}
-
-export class AssignRewardCall__Inputs {
-  _call: AssignRewardCall;
-
-  constructor(call: AssignRewardCall) {
-    this._call = call;
-  }
-
-  get _rewardId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _amount(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _user(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-}
-
-export class AssignRewardCall__Outputs {
-  _call: AssignRewardCall;
-
-  constructor(call: AssignRewardCall) {
-    this._call = call;
-  }
-}
-
-export class CampaignSentRewardCall extends ethereum.Call {
-  get inputs(): CampaignSentRewardCall__Inputs {
-    return new CampaignSentRewardCall__Inputs(this);
-  }
-
-  get outputs(): CampaignSentRewardCall__Outputs {
-    return new CampaignSentRewardCall__Outputs(this);
-  }
-}
-
-export class CampaignSentRewardCall__Inputs {
-  _call: CampaignSentRewardCall;
-
-  constructor(call: CampaignSentRewardCall) {
-    this._call = call;
-  }
-
-  get _rewardRecipientId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _status(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-}
-
-export class CampaignSentRewardCall__Outputs {
-  _call: CampaignSentRewardCall;
-
-  constructor(call: CampaignSentRewardCall) {
-    this._call = call;
-  }
-}
-
-export class CreateRewardCall extends ethereum.Call {
-  get inputs(): CreateRewardCall__Inputs {
-    return new CreateRewardCall__Inputs(this);
-  }
-
-  get outputs(): CreateRewardCall__Outputs {
-    return new CreateRewardCall__Outputs(this);
-  }
-}
-
-export class CreateRewardCall__Inputs {
-  _call: CreateRewardCall;
-
-  constructor(call: CreateRewardCall) {
-    this._call = call;
-  }
-
-  get _value(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _deliveryDate(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _stock(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get _active(): boolean {
-    return this._call.inputValues[3].value.toBoolean();
-  }
-}
-
-export class CreateRewardCall__Outputs {
-  _call: CreateRewardCall;
-
-  constructor(call: CreateRewardCall) {
-    this._call = call;
-  }
-}
-
-export class DestroyRewardCall extends ethereum.Call {
-  get inputs(): DestroyRewardCall__Inputs {
-    return new DestroyRewardCall__Inputs(this);
-  }
-
-  get outputs(): DestroyRewardCall__Outputs {
-    return new DestroyRewardCall__Outputs(this);
-  }
-}
-
-export class DestroyRewardCall__Inputs {
-  _call: DestroyRewardCall;
-
-  constructor(call: DestroyRewardCall) {
-    this._call = call;
-  }
-
-  get _rewardId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class DestroyRewardCall__Outputs {
-  _call: DestroyRewardCall;
-
-  constructor(call: DestroyRewardCall) {
-    this._call = call;
-  }
-}
-
 export class GrantRoleCall extends ethereum.Call {
   get inputs(): GrantRoleCall__Inputs {
     return new GrantRoleCall__Inputs(this);
@@ -982,86 +796,6 @@ export class GrantRoleCall__Outputs {
   _call: GrantRoleCall;
 
   constructor(call: GrantRoleCall) {
-    this._call = call;
-  }
-}
-
-export class IncreaseRewardStockCall extends ethereum.Call {
-  get inputs(): IncreaseRewardStockCall__Inputs {
-    return new IncreaseRewardStockCall__Inputs(this);
-  }
-
-  get outputs(): IncreaseRewardStockCall__Outputs {
-    return new IncreaseRewardStockCall__Outputs(this);
-  }
-}
-
-export class IncreaseRewardStockCall__Inputs {
-  _call: IncreaseRewardStockCall;
-
-  constructor(call: IncreaseRewardStockCall) {
-    this._call = call;
-  }
-
-  get _rewardId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _count(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class IncreaseRewardStockCall__Outputs {
-  _call: IncreaseRewardStockCall;
-
-  constructor(call: IncreaseRewardStockCall) {
-    this._call = call;
-  }
-}
-
-export class ModifyRewardCall extends ethereum.Call {
-  get inputs(): ModifyRewardCall__Inputs {
-    return new ModifyRewardCall__Inputs(this);
-  }
-
-  get outputs(): ModifyRewardCall__Outputs {
-    return new ModifyRewardCall__Outputs(this);
-  }
-}
-
-export class ModifyRewardCall__Inputs {
-  _call: ModifyRewardCall;
-
-  constructor(call: ModifyRewardCall) {
-    this._call = call;
-  }
-
-  get _rewardId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _value(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _deliveryDate(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-
-  get _stock(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get _active(): boolean {
-    return this._call.inputValues[4].value.toBoolean();
-  }
-}
-
-export class ModifyRewardCall__Outputs {
-  _call: ModifyRewardCall;
-
-  constructor(call: ModifyRewardCall) {
     this._call = call;
   }
 }
@@ -1122,36 +856,6 @@ export class RenounceAdminCall__Outputs {
   _call: RenounceAdminCall;
 
   constructor(call: RenounceAdminCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceRewardsCall extends ethereum.Call {
-  get inputs(): RenounceRewardsCall__Inputs {
-    return new RenounceRewardsCall__Inputs(this);
-  }
-
-  get outputs(): RenounceRewardsCall__Outputs {
-    return new RenounceRewardsCall__Outputs(this);
-  }
-}
-
-export class RenounceRewardsCall__Inputs {
-  _call: RenounceRewardsCall;
-
-  constructor(call: RenounceRewardsCall) {
-    this._call = call;
-  }
-
-  get _user(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class RenounceRewardsCall__Outputs {
-  _call: RenounceRewardsCall;
-
-  constructor(call: RenounceRewardsCall) {
     this._call = call;
   }
 }
@@ -1224,36 +928,268 @@ export class RevokeRoleCall__Outputs {
   }
 }
 
-export class TransferRewardsCall extends ethereum.Call {
-  get inputs(): TransferRewardsCall__Inputs {
-    return new TransferRewardsCall__Inputs(this);
+export class __CampaignRewards_initCall extends ethereum.Call {
+  get inputs(): __CampaignRewards_initCall__Inputs {
+    return new __CampaignRewards_initCall__Inputs(this);
   }
 
-  get outputs(): TransferRewardsCall__Outputs {
-    return new TransferRewardsCall__Outputs(this);
+  get outputs(): __CampaignRewards_initCall__Outputs {
+    return new __CampaignRewards_initCall__Outputs(this);
   }
 }
 
-export class TransferRewardsCall__Inputs {
-  _call: TransferRewardsCall;
+export class __CampaignRewards_initCall__Inputs {
+  _call: __CampaignRewards_initCall;
 
-  constructor(call: TransferRewardsCall) {
+  constructor(call: __CampaignRewards_initCall) {
     this._call = call;
   }
 
-  get _oldAddress(): Address {
+  get _campaignFactory(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _newAddress(): Address {
+  get _campaign(): Address {
     return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _campaignOwner(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get _campaignId(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
   }
 }
 
-export class TransferRewardsCall__Outputs {
-  _call: TransferRewardsCall;
+export class __CampaignRewards_initCall__Outputs {
+  _call: __CampaignRewards_initCall;
 
-  constructor(call: TransferRewardsCall) {
+  constructor(call: __CampaignRewards_initCall) {
+    this._call = call;
+  }
+}
+
+export class CreateRewardCall extends ethereum.Call {
+  get inputs(): CreateRewardCall__Inputs {
+    return new CreateRewardCall__Inputs(this);
+  }
+
+  get outputs(): CreateRewardCall__Outputs {
+    return new CreateRewardCall__Outputs(this);
+  }
+}
+
+export class CreateRewardCall__Inputs {
+  _call: CreateRewardCall;
+
+  constructor(call: CreateRewardCall) {
+    this._call = call;
+  }
+
+  get _value(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _deliveryDate(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _stock(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _active(): boolean {
+    return this._call.inputValues[3].value.toBoolean();
+  }
+}
+
+export class CreateRewardCall__Outputs {
+  _call: CreateRewardCall;
+
+  constructor(call: CreateRewardCall) {
+    this._call = call;
+  }
+}
+
+export class AssignRewardCall extends ethereum.Call {
+  get inputs(): AssignRewardCall__Inputs {
+    return new AssignRewardCall__Inputs(this);
+  }
+
+  get outputs(): AssignRewardCall__Outputs {
+    return new AssignRewardCall__Outputs(this);
+  }
+}
+
+export class AssignRewardCall__Inputs {
+  _call: AssignRewardCall;
+
+  constructor(call: AssignRewardCall) {
+    this._call = call;
+  }
+
+  get _rewardId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _amount(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _user(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+}
+
+export class AssignRewardCall__Outputs {
+  _call: AssignRewardCall;
+
+  constructor(call: AssignRewardCall) {
+    this._call = call;
+  }
+}
+
+export class ModifyRewardCall extends ethereum.Call {
+  get inputs(): ModifyRewardCall__Inputs {
+    return new ModifyRewardCall__Inputs(this);
+  }
+
+  get outputs(): ModifyRewardCall__Outputs {
+    return new ModifyRewardCall__Outputs(this);
+  }
+}
+
+export class ModifyRewardCall__Inputs {
+  _call: ModifyRewardCall;
+
+  constructor(call: ModifyRewardCall) {
+    this._call = call;
+  }
+
+  get _rewardId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _value(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _deliveryDate(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _stock(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get _active(): boolean {
+    return this._call.inputValues[4].value.toBoolean();
+  }
+}
+
+export class ModifyRewardCall__Outputs {
+  _call: ModifyRewardCall;
+
+  constructor(call: ModifyRewardCall) {
+    this._call = call;
+  }
+}
+
+export class IncreaseRewardStockCall extends ethereum.Call {
+  get inputs(): IncreaseRewardStockCall__Inputs {
+    return new IncreaseRewardStockCall__Inputs(this);
+  }
+
+  get outputs(): IncreaseRewardStockCall__Outputs {
+    return new IncreaseRewardStockCall__Outputs(this);
+  }
+}
+
+export class IncreaseRewardStockCall__Inputs {
+  _call: IncreaseRewardStockCall;
+
+  constructor(call: IncreaseRewardStockCall) {
+    this._call = call;
+  }
+
+  get _rewardId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _count(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class IncreaseRewardStockCall__Outputs {
+  _call: IncreaseRewardStockCall;
+
+  constructor(call: IncreaseRewardStockCall) {
+    this._call = call;
+  }
+}
+
+export class DestroyRewardCall extends ethereum.Call {
+  get inputs(): DestroyRewardCall__Inputs {
+    return new DestroyRewardCall__Inputs(this);
+  }
+
+  get outputs(): DestroyRewardCall__Outputs {
+    return new DestroyRewardCall__Outputs(this);
+  }
+}
+
+export class DestroyRewardCall__Inputs {
+  _call: DestroyRewardCall;
+
+  constructor(call: DestroyRewardCall) {
+    this._call = call;
+  }
+
+  get _rewardId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class DestroyRewardCall__Outputs {
+  _call: DestroyRewardCall;
+
+  constructor(call: DestroyRewardCall) {
+    this._call = call;
+  }
+}
+
+export class CampaignSentRewardCall extends ethereum.Call {
+  get inputs(): CampaignSentRewardCall__Inputs {
+    return new CampaignSentRewardCall__Inputs(this);
+  }
+
+  get outputs(): CampaignSentRewardCall__Outputs {
+    return new CampaignSentRewardCall__Outputs(this);
+  }
+}
+
+export class CampaignSentRewardCall__Inputs {
+  _call: CampaignSentRewardCall;
+
+  constructor(call: CampaignSentRewardCall) {
+    this._call = call;
+  }
+
+  get _rewardRecipientId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _status(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class CampaignSentRewardCall__Outputs {
+  _call: CampaignSentRewardCall;
+
+  constructor(call: CampaignSentRewardCall) {
     this._call = call;
   }
 }
@@ -1284,6 +1220,70 @@ export class UserReceivedCampaignRewardCall__Outputs {
   _call: UserReceivedCampaignRewardCall;
 
   constructor(call: UserReceivedCampaignRewardCall) {
+    this._call = call;
+  }
+}
+
+export class RenounceRewardsCall extends ethereum.Call {
+  get inputs(): RenounceRewardsCall__Inputs {
+    return new RenounceRewardsCall__Inputs(this);
+  }
+
+  get outputs(): RenounceRewardsCall__Outputs {
+    return new RenounceRewardsCall__Outputs(this);
+  }
+}
+
+export class RenounceRewardsCall__Inputs {
+  _call: RenounceRewardsCall;
+
+  constructor(call: RenounceRewardsCall) {
+    this._call = call;
+  }
+
+  get _user(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class RenounceRewardsCall__Outputs {
+  _call: RenounceRewardsCall;
+
+  constructor(call: RenounceRewardsCall) {
+    this._call = call;
+  }
+}
+
+export class TransferRewardsCall extends ethereum.Call {
+  get inputs(): TransferRewardsCall__Inputs {
+    return new TransferRewardsCall__Inputs(this);
+  }
+
+  get outputs(): TransferRewardsCall__Outputs {
+    return new TransferRewardsCall__Outputs(this);
+  }
+}
+
+export class TransferRewardsCall__Inputs {
+  _call: TransferRewardsCall;
+
+  constructor(call: TransferRewardsCall) {
+    this._call = call;
+  }
+
+  get _oldAddress(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _newAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+}
+
+export class TransferRewardsCall__Outputs {
+  _call: TransferRewardsCall;
+
+  constructor(call: TransferRewardsCall) {
     this._call = call;
   }
 }
