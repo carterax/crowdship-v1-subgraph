@@ -6,7 +6,6 @@ import {
   Value,
   ValueKind,
   store,
-  Address,
   Bytes,
   BigInt,
   BigDecimal
@@ -73,6 +72,22 @@ export class CampaignFactory extends Entity {
 
     this.set("origin", Value.fromString(""));
     this.set("factoryWallet", Value.fromBytes(Bytes.empty()));
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+    this.set("paused", Value.fromBoolean(false));
+    this.set("deadlineStrikesAllowed", Value.fromBigInt(BigInt.zero()));
+    this.set("minimumContributionAllowed", Value.fromBigInt(BigInt.zero()));
+    this.set("maximumContributionAllowed", Value.fromBigInt(BigInt.zero()));
+    this.set("minimumRequestAmountAllowed", Value.fromBigInt(BigInt.zero()));
+    this.set("maximumRequestAmountAllowed", Value.fromBigInt(BigInt.zero()));
+    this.set("minimumCampaignTarget", Value.fromBigInt(BigInt.zero()));
+    this.set("maximumCampaignTarget", Value.fromBigInt(BigInt.zero()));
+    this.set("maxDeadlineExtension", Value.fromBigInt(BigInt.zero()));
+    this.set("minDeadlineExtension", Value.fromBigInt(BigInt.zero()));
+    this.set("minRequestDuration", Value.fromBigInt(BigInt.zero()));
+    this.set("maxRequestDuration", Value.fromBigInt(BigInt.zero()));
+    this.set("reviewThresholdMark", Value.fromBigInt(BigInt.zero()));
+    this.set("requestFinalizationThreshold", Value.fromBigInt(BigInt.zero()));
+    this.set("reportThresholdMark", Value.fromBigInt(BigInt.zero()));
     this.set("owner", Value.fromString(""));
   }
 
@@ -118,6 +133,15 @@ export class CampaignFactory extends Entity {
 
   set factoryWallet(value: Bytes) {
     this.set("factoryWallet", Value.fromBytes(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
   }
 
   get campaignImplementation(): Bytes | null {
@@ -205,21 +229,139 @@ export class CampaignFactory extends Entity {
     }
   }
 
-  get totalRevenueFromFeatures(): BigInt | null {
-    let value = this.get("totalRevenueFromFeatures");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
+  get paused(): boolean {
+    let value = this.get("paused");
+    return value!.toBoolean();
   }
 
-  set totalRevenueFromFeatures(value: BigInt | null) {
-    if (!value) {
-      this.unset("totalRevenueFromFeatures");
-    } else {
-      this.set("totalRevenueFromFeatures", Value.fromBigInt(<BigInt>value));
-    }
+  set paused(value: boolean) {
+    this.set("paused", Value.fromBoolean(value));
+  }
+
+  get deadlineStrikesAllowed(): BigInt {
+    let value = this.get("deadlineStrikesAllowed");
+    return value!.toBigInt();
+  }
+
+  set deadlineStrikesAllowed(value: BigInt) {
+    this.set("deadlineStrikesAllowed", Value.fromBigInt(value));
+  }
+
+  get minimumContributionAllowed(): BigInt {
+    let value = this.get("minimumContributionAllowed");
+    return value!.toBigInt();
+  }
+
+  set minimumContributionAllowed(value: BigInt) {
+    this.set("minimumContributionAllowed", Value.fromBigInt(value));
+  }
+
+  get maximumContributionAllowed(): BigInt {
+    let value = this.get("maximumContributionAllowed");
+    return value!.toBigInt();
+  }
+
+  set maximumContributionAllowed(value: BigInt) {
+    this.set("maximumContributionAllowed", Value.fromBigInt(value));
+  }
+
+  get minimumRequestAmountAllowed(): BigInt {
+    let value = this.get("minimumRequestAmountAllowed");
+    return value!.toBigInt();
+  }
+
+  set minimumRequestAmountAllowed(value: BigInt) {
+    this.set("minimumRequestAmountAllowed", Value.fromBigInt(value));
+  }
+
+  get maximumRequestAmountAllowed(): BigInt {
+    let value = this.get("maximumRequestAmountAllowed");
+    return value!.toBigInt();
+  }
+
+  set maximumRequestAmountAllowed(value: BigInt) {
+    this.set("maximumRequestAmountAllowed", Value.fromBigInt(value));
+  }
+
+  get minimumCampaignTarget(): BigInt {
+    let value = this.get("minimumCampaignTarget");
+    return value!.toBigInt();
+  }
+
+  set minimumCampaignTarget(value: BigInt) {
+    this.set("minimumCampaignTarget", Value.fromBigInt(value));
+  }
+
+  get maximumCampaignTarget(): BigInt {
+    let value = this.get("maximumCampaignTarget");
+    return value!.toBigInt();
+  }
+
+  set maximumCampaignTarget(value: BigInt) {
+    this.set("maximumCampaignTarget", Value.fromBigInt(value));
+  }
+
+  get maxDeadlineExtension(): BigInt {
+    let value = this.get("maxDeadlineExtension");
+    return value!.toBigInt();
+  }
+
+  set maxDeadlineExtension(value: BigInt) {
+    this.set("maxDeadlineExtension", Value.fromBigInt(value));
+  }
+
+  get minDeadlineExtension(): BigInt {
+    let value = this.get("minDeadlineExtension");
+    return value!.toBigInt();
+  }
+
+  set minDeadlineExtension(value: BigInt) {
+    this.set("minDeadlineExtension", Value.fromBigInt(value));
+  }
+
+  get minRequestDuration(): BigInt {
+    let value = this.get("minRequestDuration");
+    return value!.toBigInt();
+  }
+
+  set minRequestDuration(value: BigInt) {
+    this.set("minRequestDuration", Value.fromBigInt(value));
+  }
+
+  get maxRequestDuration(): BigInt {
+    let value = this.get("maxRequestDuration");
+    return value!.toBigInt();
+  }
+
+  set maxRequestDuration(value: BigInt) {
+    this.set("maxRequestDuration", Value.fromBigInt(value));
+  }
+
+  get reviewThresholdMark(): BigInt {
+    let value = this.get("reviewThresholdMark");
+    return value!.toBigInt();
+  }
+
+  set reviewThresholdMark(value: BigInt) {
+    this.set("reviewThresholdMark", Value.fromBigInt(value));
+  }
+
+  get requestFinalizationThreshold(): BigInt {
+    let value = this.get("requestFinalizationThreshold");
+    return value!.toBigInt();
+  }
+
+  set requestFinalizationThreshold(value: BigInt) {
+    this.set("requestFinalizationThreshold", Value.fromBigInt(value));
+  }
+
+  get reportThresholdMark(): BigInt {
+    let value = this.get("reportThresholdMark");
+    return value!.toBigInt();
+  }
+
+  set reportThresholdMark(value: BigInt) {
+    this.set("reportThresholdMark", Value.fromBigInt(value));
   }
 
   get owner(): string {
@@ -315,23 +457,6 @@ export class CampaignFactory extends Entity {
       this.set("categories", Value.fromStringArray(<Array<string>>value));
     }
   }
-
-  get featurePackages(): Array<string> | null {
-    let value = this.get("featurePackages");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set featurePackages(value: Array<string> | null) {
-    if (!value) {
-      this.unset("featurePackages");
-    } else {
-      this.set("featurePackages", Value.fromStringArray(<Array<string>>value));
-    }
-  }
 }
 
 export class Token extends Entity {
@@ -339,6 +464,7 @@ export class Token extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("campaignFactory", Value.fromString(""));
     this.set("approved", Value.fromBoolean(false));
     this.set("exists", Value.fromBoolean(false));
@@ -368,6 +494,15 @@ export class Token extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
   }
 
   get campaignFactory(): string {
@@ -783,13 +918,21 @@ export class Category extends Entity {
     this.set("campaignFactory", Value.fromString(value));
   }
 
-  get campaigns(): Array<string> {
+  get campaigns(): Array<string> | null {
     let value = this.get("campaigns");
-    return value!.toStringArray();
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
   }
 
-  set campaigns(value: Array<string>) {
-    this.set("campaigns", Value.fromStringArray(value));
+  set campaigns(value: Array<string> | null) {
+    if (!value) {
+      this.unset("campaigns");
+    } else {
+      this.set("campaigns", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
   get totalCampaign(): BigInt {
@@ -835,109 +978,6 @@ export class Category extends Entity {
 
   set active(value: boolean) {
     this.set("active", Value.fromBoolean(value));
-  }
-
-  get exists(): boolean {
-    let value = this.get("exists");
-    return value!.toBoolean();
-  }
-
-  set exists(value: boolean) {
-    this.set("exists", Value.fromBoolean(value));
-  }
-}
-
-export class FeaturePackage extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("campaignFactory", Value.fromString(""));
-    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
-    this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
-    this.set("time", Value.fromBigInt(BigInt.zero()));
-    this.set("cost", Value.fromBigInt(BigInt.zero()));
-    this.set("exists", Value.fromBoolean(false));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save FeaturePackage entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save FeaturePackage entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("FeaturePackage", id.toString(), this);
-    }
-  }
-
-  static load(id: string): FeaturePackage | null {
-    return changetype<FeaturePackage | null>(store.get("FeaturePackage", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get campaignFactory(): string {
-    let value = this.get("campaignFactory");
-    return value!.toString();
-  }
-
-  set campaignFactory(value: string) {
-    this.set("campaignFactory", Value.fromString(value));
-  }
-
-  get createdAt(): BigInt {
-    let value = this.get("createdAt");
-    return value!.toBigInt();
-  }
-
-  set createdAt(value: BigInt) {
-    this.set("createdAt", Value.fromBigInt(value));
-  }
-
-  get updatedAt(): BigInt {
-    let value = this.get("updatedAt");
-    return value!.toBigInt();
-  }
-
-  set updatedAt(value: BigInt) {
-    this.set("updatedAt", Value.fromBigInt(value));
-  }
-
-  get time(): BigInt {
-    let value = this.get("time");
-    return value!.toBigInt();
-  }
-
-  set time(value: BigInt) {
-    this.set("time", Value.fromBigInt(value));
-  }
-
-  get cost(): BigInt {
-    let value = this.get("cost");
-    return value!.toBigInt();
-  }
-
-  set cost(value: BigInt) {
-    this.set("cost", Value.fromBigInt(value));
-  }
-
-  get campaigns(): Array<string> {
-    let value = this.get("campaigns");
-    return value!.toStringArray();
-  }
-
-  set campaigns(value: Array<string>) {
-    this.set("campaigns", Value.fromStringArray(value));
   }
 
   get exists(): boolean {
@@ -1083,23 +1123,6 @@ export class Campaign extends Entity {
     this.set("category", Value.fromString(value));
   }
 
-  get featureFor(): BigInt | null {
-    let value = this.get("featureFor");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set featureFor(value: BigInt | null) {
-    if (!value) {
-      this.unset("featureFor");
-    } else {
-      this.set("featureFor", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
   get active(): boolean {
     let value = this.get("active");
     return value!.toBoolean();
@@ -1218,6 +1241,23 @@ export class Campaign extends Entity {
       this.unset("totalApprovers");
     } else {
       this.set("totalApprovers", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get totalFactoryRevenue(): BigInt | null {
+    let value = this.get("totalFactoryRevenue");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalFactoryRevenue(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalFactoryRevenue");
+    } else {
+      this.set("totalFactoryRevenue", Value.fromBigInt(<BigInt>value));
     }
   }
 
@@ -1346,23 +1386,6 @@ export class Campaign extends Entity {
       this.unset("requests");
     } else {
       this.set("requests", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-
-  get featurePackages(): Array<string> | null {
-    let value = this.get("featurePackages");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set featurePackages(value: Array<string> | null) {
-    if (!value) {
-      this.unset("featurePackages");
-    } else {
-      this.set("featurePackages", Value.fromStringArray(<Array<string>>value));
     }
   }
 

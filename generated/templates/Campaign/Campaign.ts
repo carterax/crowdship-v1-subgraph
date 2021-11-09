@@ -23,16 +23,12 @@ export class CampaignDeadlineExtended__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
   get time(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+    return this._event.parameters[0].value.toBigInt();
   }
 
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -49,16 +45,12 @@ export class CampaignOwnerSet__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
+  get user(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get user(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -75,16 +67,12 @@ export class CampaignOwnershipTransferred__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
+  get newOwner(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get newUser(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -101,12 +89,8 @@ export class CampaignReported__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
@@ -123,12 +107,8 @@ export class CampaignReviewed__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
@@ -145,15 +125,15 @@ export class CampaignSettingsUpdated__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get target(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
   }
 
   get minimumContribution(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get deadline(): BigInt {
+  get duration(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
@@ -165,8 +145,12 @@ export class CampaignSettingsUpdated__Params {
     return this._event.parameters[4].value.toAddress();
   }
 
+  get allowContributionAfterTargetIsMet(): boolean {
+    return this._event.parameters[5].value.toBoolean();
+  }
+
   get sender(): Address {
-    return this._event.parameters[5].value.toAddress();
+    return this._event.parameters[6].value.toAddress();
   }
 }
 
@@ -183,16 +167,12 @@ export class CampaignStateChange__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
   get state(): i32 {
-    return this._event.parameters[1].value.toI32();
+    return this._event.parameters[0].value.toI32();
   }
 
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -209,20 +189,16 @@ export class CampaignUserDataTransferred__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
+  get oldAddress(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get oldAddress(): Address {
+  get newAddress(): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get newAddress(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -239,24 +215,20 @@ export class ContributionMade__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
   get amount(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+    return this._event.parameters[0].value.toBigInt();
   }
 
   get rewardId(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get withReward(): boolean {
-    return this._event.parameters[3].value.toBoolean();
+    return this._event.parameters[2].value.toBoolean();
   }
 
   get sender(): Address {
-    return this._event.parameters[4].value.toAddress();
+    return this._event.parameters[3].value.toAddress();
   }
 }
 
@@ -273,20 +245,16 @@ export class ContributionWithdrawn__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
   get amount(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+    return this._event.parameters[0].value.toBigInt();
   }
 
   get user(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 
   get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -325,24 +293,20 @@ export class RequestAdded__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get duration(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get value(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[2].value.toBigInt();
   }
 
   get recipient(): Address {
-    return this._event.parameters[4].value.toAddress();
+    return this._event.parameters[3].value.toAddress();
   }
 
   get sender(): Address {
-    return this._event.parameters[5].value.toAddress();
+    return this._event.parameters[4].value.toAddress();
   }
 }
 
@@ -363,12 +327,8 @@ export class RequestComplete__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -389,12 +349,8 @@ export class RequestVoided__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -489,16 +445,12 @@ export class TargetMet__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
   get amount(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
+    return this._event.parameters[0].value.toBigInt();
   }
 
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -541,12 +493,8 @@ export class VoteCancelled__Params {
     return this._event.parameters[1].value.toI32();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -571,12 +519,8 @@ export class Voted__Params {
     return this._event.parameters[1].value.toI32();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 }
 

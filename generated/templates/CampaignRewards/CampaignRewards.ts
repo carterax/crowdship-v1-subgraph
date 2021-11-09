@@ -23,16 +23,12 @@ export class CampaignRewardOwnerSet__Params {
     this._event = event;
   }
 
-  get campaign(): Address {
+  get owner(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get owner(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -53,28 +49,24 @@ export class RewardCreated__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get value(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get deliveryDate(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[2].value.toBigInt();
   }
 
   get stock(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
+    return this._event.parameters[3].value.toBigInt();
   }
 
   get active(): boolean {
-    return this._event.parameters[5].value.toBoolean();
+    return this._event.parameters[4].value.toBoolean();
   }
 
   get sender(): Address {
-    return this._event.parameters[6].value.toAddress();
+    return this._event.parameters[5].value.toAddress();
   }
 }
 
@@ -95,12 +87,8 @@ export class RewardDestroyed__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -121,28 +109,24 @@ export class RewardModified__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get value(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get deliveryDate(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[2].value.toBigInt();
   }
 
   get stock(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
+    return this._event.parameters[3].value.toBigInt();
   }
 
   get active(): boolean {
-    return this._event.parameters[5].value.toBoolean();
+    return this._event.parameters[4].value.toBoolean();
   }
 
   get sender(): Address {
-    return this._event.parameters[6].value.toAddress();
+    return this._event.parameters[5].value.toAddress();
   }
 }
 
@@ -163,16 +147,12 @@ export class RewardRecipientAdded__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get amount(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -193,12 +173,8 @@ export class RewardRecipientApproval__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -219,16 +195,12 @@ export class RewardStockIncreased__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get count(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[1].value.toBigInt();
   }
 
   get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -249,16 +221,12 @@ export class RewarderApproval__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get campaign(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
   get status(): boolean {
-    return this._event.parameters[2].value.toBoolean();
+    return this._event.parameters[1].value.toBoolean();
   }
 
   get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 }
 

@@ -50,30 +50,18 @@ templates:
           handler: handleCampaignDefaultCommissionUpdated
         - event: CampaignTransactionConfigUpdated(string,uint256)
           handler: handleCampaignTransactionConfigUpdated
-        - event: CampaignActiveToggle(indexed uint256,bool,address)
+        - event: CampaignActiveToggle(indexed address,bool,address)
           handler: handleCampaignActiveToggle
-        - event: CampaignApproval(indexed uint256,bool,address)
+        - event: CampaignApproval(indexed address,bool,address)
           handler: handleCampaignApproval
-        - event: CampaignCategoryChange(indexed uint256,uint256,address)
+        - event: CampaignCategoryChange(indexed address,uint256,address)
           handler: handleCampaignCategoryChange
         - event: CampaignDeployed(indexed uint256,address,address,address,uint256,uint256,address)
           handler: handleCampaignDeployed
-        - event: CampaignFeaturePaused(indexed uint256,address)
-          handler: handleCampaignFeaturePaused
-        - event: CampaignFeatureUnpaused(indexed uint256,uint256,address)
-          handler: handleCampaignFeatureUnpaused
-        - event: CampaignFeatured(indexed uint256,uint256,uint256,address)
-          handler: handleCampaignFeatured
         - event: CategoryAdded(indexed uint256,bool,address)
           handler: handleCategoryAdded
         - event: CategoryModified(indexed uint256,bool,address)
           handler: handleCategoryModified
-        - event: FeaturePackageAdded(indexed uint256,uint256,uint256,address)
-          handler: handleFeaturePackageAdded
-        - event: FeaturePackageDestroyed(indexed uint256,address)
-          handler: handleFeaturePackageDestroyed
-        - event: FeaturePackageModified(indexed uint256,uint256,uint256,address)
-          handler: handleFeaturePackageModified
         - event: Paused(address)
           handler: handlePaused
         - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
@@ -86,16 +74,14 @@ templates:
           handler: handleTokenAdded
         - event: TokenApproval(indexed address,bool,address)
           handler: handleTokenApproval
-        - event: TokenRemoved(indexed uint256,address,address)
+        - event: TokenRemoved(address,address)
           handler: handleTokenRemoved
         - event: Unpaused(address)
           handler: handleUnpaused
         - event: UserAdded(indexed uint256,address)
           handler: handleUserAdded
-        - event: UserApproval(indexed uint256,bool,address)
+        - event: UserApproval(indexed uint256,indexed address,bool,address)
           handler: handleUserApproval
-        - event: UserRemoved(indexed uint256,address)
-          handler: handleUserRemoved
   - kind: ethereum/contract
     name: Campaign
     network: rinkeby
@@ -119,35 +105,35 @@ templates:
         - name: Campaign
           file: ./abis/Campaign.json
       eventHandlers:
-        - event: CampaignOwnershipTransferred(indexed address,address,address)
+        - event: CampaignOwnershipTransferred(address,address)
           handler: handleCampaignOwnershipTransferred
-        - event: CampaignSettingsUpdated(indexed address,uint256,uint256,uint256,address,address)
+        - event: CampaignSettingsUpdated(uint256,uint256,uint256,uint256,address,bool,address)
           handler: handleCampaignSettingsUpdated
-        - event: CampaignDeadlineExtended(indexed address,uint256,address)
+        - event: CampaignDeadlineExtended(uint256,address)
           handler: handleCampaignDeadlineExtended
-        - event: CampaignReported(indexed address,address)
+        - event: CampaignReported(address)
           handler: handleCampaignReported
-        - event: CampaignUserDataTransferred(indexed address,address,address,address)
+        - event: CampaignUserDataTransferred(address,address,address)
           handler: handleCampaignUserDataTransferred
-        - event: ContributionMade(indexed address,uint256,indexed uint256,bool,address)
+        - event: ContributionMade(uint256,indexed uint256,bool,address)
           handler: handleContributionMade
-        - event: ContributionWithdrawn(indexed address,uint256,address,address)
+        - event: ContributionWithdrawn(uint256,address,address)
           handler: handleContributionWithdrawn
-        - event: TargetMet(indexed address,uint256,address)
+        - event: TargetMet(uint256,address)
           handler: handleTargetMet
-        - event: RequestAdded(indexed uint256,indexed address,uint256,uint256,address,address)
+        - event: RequestAdded(indexed uint256,uint256,uint256,address,address)
           handler: handleRequestAdded
-        - event: RequestVoided(indexed uint256,indexed address,address)
+        - event: RequestVoided(indexed uint256,address)
           handler: handleRequestVoided
-        - event: RequestComplete(indexed uint256,indexed address,address)
+        - event: RequestComplete(indexed uint256,address)
           handler: handleRequestComplete
-        - event: Voted(indexed uint256,uint8,indexed address,address)
+        - event: Voted(indexed uint256,uint8,address)
           handler: handleVoted
-        - event: VoteCancelled(indexed uint256,uint8,indexed address,address)
+        - event: VoteCancelled(indexed uint256,uint8,address)
           handler: handleVoteCancelled
-        - event: CampaignReviewed(indexed address,address)
+        - event: CampaignReviewed(address)
           handler: handleCampaignReviewed
-        - event: CampaignStateChange(indexed address,uint8,address)
+        - event: CampaignStateChange(uint8,address)
           handler: handleCampaignStateChange
   - kind: ethereum/contract
     name: CampaignRewards
@@ -166,17 +152,17 @@ templates:
         - name: CampaignRewards
           file: ./abis/CampaignRewards.json
       eventHandlers:
-        - event: RewardCreated(indexed uint256,indexed address,uint256,uint256,uint256,bool,address)
+        - event: RewardCreated(indexed uint256,uint256,uint256,uint256,bool,address)
           handler: handleRewardCreated
-        - event: RewardModified(indexed uint256,indexed address,uint256,uint256,uint256,bool,address)
+        - event: RewardModified(indexed uint256,uint256,uint256,uint256,bool,address)
           handler: handleRewardModified
-        - event: RewardStockIncreased(indexed uint256,indexed address,uint256,address)
+        - event: RewardStockIncreased(indexed uint256,uint256,address)
           handler: handleRewardStockIncreased
-        - event: RewardDestroyed(indexed uint256,indexed address,address)
+        - event: RewardDestroyed(indexed uint256,address)
           handler: handleRewardDestroyed
-        - event: RewardRecipientAdded(indexed uint256,indexed address,uint256,address)
+        - event: RewardRecipientAdded(indexed uint256,uint256,address)
           handler: handleRewardRecipientAdded
-        - event: RewarderApproval(indexed uint256,indexed address,bool,address)
+        - event: RewarderApproval(indexed uint256,bool,address)
           handler: handleRewarderApproval
-        - event: RewardRecipientApproval(indexed uint256,indexed address,address)
+        - event: RewardRecipientApproval(indexed uint256,address)
           handler: handleRewardRecipientApproval

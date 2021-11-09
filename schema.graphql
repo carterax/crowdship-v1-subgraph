@@ -23,12 +23,31 @@ type CampaignFactory @entity {
   "factory this campaignFactory belongs to"
   origin: Factory!
   factoryWallet: Bytes!
+  createdAt: BigInt!
   campaignImplementation: Bytes
   campaignRewardsImplementation: Bytes
   defaultCommission: BigInt
   factoryRevenue: BigInt
   totalRevenueFromCommissions: BigInt
-  totalRevenueFromFeatures: BigInt
+  paused: Boolean!
+
+  "campaign rules"
+  deadlineStrikesAllowed: BigInt!
+  minimumContributionAllowed: BigInt!
+  maximumContributionAllowed: BigInt!
+  minimumRequestAmountAllowed: BigInt!
+  maximumRequestAmountAllowed: BigInt!
+  minimumCampaignTarget: BigInt!
+  maximumCampaignTarget: BigInt!
+  maxDeadlineExtension: BigInt!
+  minDeadlineExtension: BigInt!
+  minRequestDuration: BigInt!
+  maxRequestDuration: BigInt!
+  reviewThresholdMark: BigInt!
+  requestFinalizationThreshold: BigInt!
+  reportThresholdMark: BigInt!
+
+  # totalRevenueFromFeatures: BigInt
   "current owner of the factory"
   owner: ID!
   "derived fields"
@@ -37,11 +56,12 @@ type CampaignFactory @entity {
   tokens: [Token!] @derivedFrom(field: "campaignFactory")
   roles: [Role!] @derivedFrom(field: "campaignFactory")
   categories: [Category!] @derivedFrom(field: "campaignFactory")
-  featurePackages: [FeaturePackage!] @derivedFrom(field: "campaignFactory")
+  # featurePackages: [FeaturePackage!] @derivedFrom(field: "campaignFactory")
 }
 
 type Token @entity {
   id: ID!
+  createdAt: BigInt!
   campaignFactory: CampaignFactory!
   approved: Boolean!
   campaigns: [Campaign!]! @derivedFrom(field: "token")
@@ -77,7 +97,7 @@ type User @entity {
 type Category @entity {
   id: ID!
   campaignFactory: CampaignFactory!
-  campaigns: [Campaign!]! @derivedFrom(field: "category")
+  campaigns: [Campaign!] @derivedFrom(field: "category")
   totalCampaign: BigInt!
   commission: BigInt!
   createdAt: BigInt!
@@ -86,16 +106,16 @@ type Category @entity {
   exists: Boolean!
 }
 
-type FeaturePackage @entity {
-  id: ID!
-  campaignFactory: CampaignFactory!
-  createdAt: BigInt!
-  updatedAt: BigInt!
-  time: BigInt!
-  cost: BigInt!
-  campaigns: [Campaign!]! @derivedFrom(field: "featurePackages")
-  exists: Boolean!
-}
+# type FeaturePackage @entity {
+#   id: ID!
+#   campaignFactory: CampaignFactory!
+#   createdAt: BigInt!
+#   updatedAt: BigInt!
+#   time: BigInt!
+#   cost: BigInt!
+#   campaigns: [Campaign!]! @derivedFrom(field: "featurePackages")
+#   exists: Boolean!
+# }
 
 type Campaign @entity {
   id: ID!
@@ -107,16 +127,17 @@ type Campaign @entity {
   createdAt: BigInt!
   updatedAt: BigInt
   category: Category!
-  featureFor: BigInt
+  # featureFor: BigInt
   active: Boolean!
   approved: Boolean!
   token: Token
-  withdrawalsPaused: Boolean
+  withdrawalsPaused: Boolean!
   allowContributionAfterTargetIsMet: Boolean
   totalCampaignContribution: BigInt
   campaignBalance: BigInt
   minimumContribution: BigInt
   totalApprovers: BigInt
+  totalFactoryRevenue: BigInt
   target: BigInt
   deadline: BigInt
   totalFinalizedRequests: BigInt
@@ -124,8 +145,10 @@ type Campaign @entity {
   totalReviews: BigInt
   goalType: GoalType
   campaignState: CampaignState!
+
+  "derived fields"
   requests: [Request!] @derivedFrom(field: "campaign")
-  featurePackages: [FeaturePackage!]
+  # featurePackages: [FeaturePackage!]
   reports: [Report!] @derivedFrom(field: "campaign")
   reviews: [Review!] @derivedFrom(field: "campaign")
   contributions: [Contribution!] @derivedFrom(field: "campaign")

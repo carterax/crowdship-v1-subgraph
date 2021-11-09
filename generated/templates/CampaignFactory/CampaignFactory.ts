@@ -23,8 +23,8 @@ export class CampaignActiveToggle__Params {
     this._event = event;
   }
 
-  get campaignId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
+  get campaign(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 
   get active(): boolean {
@@ -49,8 +49,8 @@ export class CampaignApproval__Params {
     this._event = event;
   }
 
-  get campaignId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
+  get campaign(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 
   get approval(): boolean {
@@ -75,8 +75,8 @@ export class CampaignCategoryChange__Params {
     this._event = event;
   }
 
-  get campaignId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
+  get campaign(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 
   get newCategory(): BigInt {
@@ -145,84 +145,6 @@ export class CampaignDeployed__Params {
 
   get sender(): Address {
     return this._event.parameters[6].value.toAddress();
-  }
-}
-
-export class CampaignFeaturePaused extends ethereum.Event {
-  get params(): CampaignFeaturePaused__Params {
-    return new CampaignFeaturePaused__Params(this);
-  }
-}
-
-export class CampaignFeaturePaused__Params {
-  _event: CampaignFeaturePaused;
-
-  constructor(event: CampaignFeaturePaused) {
-    this._event = event;
-  }
-
-  get campaignId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-}
-
-export class CampaignFeatureUnpaused extends ethereum.Event {
-  get params(): CampaignFeatureUnpaused__Params {
-    return new CampaignFeatureUnpaused__Params(this);
-  }
-}
-
-export class CampaignFeatureUnpaused__Params {
-  _event: CampaignFeatureUnpaused;
-
-  constructor(event: CampaignFeatureUnpaused) {
-    this._event = event;
-  }
-
-  get campaignId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get timeLeft(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-}
-
-export class CampaignFeatured extends ethereum.Event {
-  get params(): CampaignFeatured__Params {
-    return new CampaignFeatured__Params(this);
-  }
-}
-
-export class CampaignFeatured__Params {
-  _event: CampaignFeatured;
-
-  constructor(event: CampaignFeatured) {
-    this._event = event;
-  }
-
-  get campaignId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get featurePackageId(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get amount(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
   }
 }
 
@@ -345,88 +267,6 @@ export class FactoryConfigUpdated__Params {
 
   get campaignRewardsImplementation(): Address {
     return this._event.parameters[2].value.toAddress();
-  }
-}
-
-export class FeaturePackageAdded extends ethereum.Event {
-  get params(): FeaturePackageAdded__Params {
-    return new FeaturePackageAdded__Params(this);
-  }
-}
-
-export class FeaturePackageAdded__Params {
-  _event: FeaturePackageAdded;
-
-  constructor(event: FeaturePackageAdded) {
-    this._event = event;
-  }
-
-  get packageId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get cost(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get time(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
-  }
-}
-
-export class FeaturePackageDestroyed extends ethereum.Event {
-  get params(): FeaturePackageDestroyed__Params {
-    return new FeaturePackageDestroyed__Params(this);
-  }
-}
-
-export class FeaturePackageDestroyed__Params {
-  _event: FeaturePackageDestroyed;
-
-  constructor(event: FeaturePackageDestroyed) {
-    this._event = event;
-  }
-
-  get packageId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-}
-
-export class FeaturePackageModified extends ethereum.Event {
-  get params(): FeaturePackageModified__Params {
-    return new FeaturePackageModified__Params(this);
-  }
-}
-
-export class FeaturePackageModified__Params {
-  _event: FeaturePackageModified;
-
-  constructor(event: FeaturePackageModified) {
-    this._event = event;
-  }
-
-  get packageId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get cost(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get time(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
   }
 }
 
@@ -587,16 +427,12 @@ export class TokenRemoved__Params {
     this._event = event;
   }
 
-  get tokenId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
   get token(): Address {
-    return this._event.parameters[1].value.toAddress();
+    return this._event.parameters[0].value.toAddress();
   }
 
   get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -657,34 +493,16 @@ export class UserApproval__Params {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get approval(): boolean {
-    return this._event.parameters[1].value.toBoolean();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-}
-
-export class UserRemoved extends ethereum.Event {
-  get params(): UserRemoved__Params {
-    return new UserRemoved__Params(this);
-  }
-}
-
-export class UserRemoved__Params {
-  _event: UserRemoved;
-
-  constructor(event: UserRemoved) {
-    this._event = event;
-  }
-
-  get userId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get sender(): Address {
+  get user(): Address {
     return this._event.parameters[1].value.toAddress();
+  }
+
+  get approval(): boolean {
+    return this._event.parameters[2].value.toBoolean();
+  }
+
+  get sender(): Address {
+    return this._event.parameters[3].value.toAddress();
   }
 }
 
@@ -768,38 +586,6 @@ export class CampaignFactory__deployedCampaignsResult {
     map.set("value7", ethereum.Value.fromBoolean(this.value7));
     map.set("value8", ethereum.Value.fromBoolean(this.value8));
     map.set("value9", ethereum.Value.fromBoolean(this.value9));
-    return map;
-  }
-}
-
-export class CampaignFactory__featurePackagesResult {
-  value0: BigInt;
-  value1: BigInt;
-  value2: BigInt;
-  value3: BigInt;
-  value4: boolean;
-
-  constructor(
-    value0: BigInt,
-    value1: BigInt,
-    value2: BigInt,
-    value3: BigInt,
-    value4: boolean
-  ) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
-    this.value4 = value4;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
-    map.set("value4", ethereum.Value.fromBoolean(this.value4));
     return map;
   }
 }
@@ -1081,29 +867,6 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  campaignRevenueFromFeatures(param0: BigInt): BigInt {
-    let result = super.call(
-      "campaignRevenueFromFeatures",
-      "campaignRevenueFromFeatures(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_campaignRevenueFromFeatures(param0: BigInt): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "campaignRevenueFromFeatures",
-      "campaignRevenueFromFeatures(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   campaignRewardsImplementation(): Address {
     let result = super.call(
       "campaignRewardsImplementation",
@@ -1348,91 +1111,6 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  featurePackageCount(): BigInt {
-    let result = super.call(
-      "featurePackageCount",
-      "featurePackageCount():(uint256)",
-      []
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_featurePackageCount(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "featurePackageCount",
-      "featurePackageCount():(uint256)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  featurePackages(param0: BigInt): CampaignFactory__featurePackagesResult {
-    let result = super.call(
-      "featurePackages",
-      "featurePackages(uint256):(uint256,uint256,uint256,uint256,bool)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
-
-    return new CampaignFactory__featurePackagesResult(
-      result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toBigInt(),
-      result[3].toBigInt(),
-      result[4].toBoolean()
-    );
-  }
-
-  try_featurePackages(
-    param0: BigInt
-  ): ethereum.CallResult<CampaignFactory__featurePackagesResult> {
-    let result = super.tryCall(
-      "featurePackages",
-      "featurePackages(uint256):(uint256,uint256,uint256,uint256,bool)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new CampaignFactory__featurePackagesResult(
-        value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toBigInt(),
-        value[3].toBigInt(),
-        value[4].toBoolean()
-      )
-    );
-  }
-
-  featuredCampaignIsPaused(param0: BigInt): boolean {
-    let result = super.call(
-      "featuredCampaignIsPaused",
-      "featuredCampaignIsPaused(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_featuredCampaignIsPaused(param0: BigInt): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "featuredCampaignIsPaused",
-      "featuredCampaignIsPaused(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
   getRoleAdmin(role: Bytes): Bytes {
     let result = super.call("getRoleAdmin", "getRoleAdmin(bytes32):(bytes32)", [
       ethereum.Value.fromFixedBytes(role)
@@ -1490,31 +1168,6 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  pausedFeaturedCampaignTimeLeft(param0: BigInt): BigInt {
-    let result = super.call(
-      "pausedFeaturedCampaignTimeLeft",
-      "pausedFeaturedCampaignTimeLeft(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_pausedFeaturedCampaignTimeLeft(
-    param0: BigInt
-  ): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "pausedFeaturedCampaignTimeLeft",
-      "pausedFeaturedCampaignTimeLeft(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   root(): Address {
     let result = super.call("root", "root():(address)", []);
 
@@ -1570,25 +1223,6 @@ export class CampaignFactory extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  tokenList(param0: BigInt): Address {
-    let result = super.call("tokenList", "tokenList(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
-    ]);
-
-    return result[0].toAddress();
-  }
-
-  try_tokenList(param0: BigInt): ethereum.CallResult<Address> {
-    let result = super.tryCall("tokenList", "tokenList(uint256):(address)", [
-      ethereum.Value.fromUnsignedBigInt(param0)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   tokensApproved(param0: Address): boolean {
@@ -2160,12 +1794,8 @@ export class RemoveTokenCall__Inputs {
     this._call = call;
   }
 
-  get _tokenId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
   get _token(): Address {
-    return this._call.inputValues[1].value.toAddress();
+    return this._call.inputValues[0].value.toAddress();
   }
 }
 
@@ -2305,36 +1935,6 @@ export class ToggleUserApprovalCall__Outputs {
   }
 }
 
-export class DestroyUserCall extends ethereum.Call {
-  get inputs(): DestroyUserCall__Inputs {
-    return new DestroyUserCall__Inputs(this);
-  }
-
-  get outputs(): DestroyUserCall__Outputs {
-    return new DestroyUserCall__Outputs(this);
-  }
-}
-
-export class DestroyUserCall__Inputs {
-  _call: DestroyUserCall;
-
-  constructor(call: DestroyUserCall) {
-    this._call = call;
-  }
-
-  get _userId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class DestroyUserCall__Outputs {
-  _call: DestroyUserCall;
-
-  constructor(call: DestroyUserCall) {
-    this._call = call;
-  }
-}
-
 export class CreateCampaignCall extends ethereum.Call {
   get inputs(): CreateCampaignCall__Inputs {
     return new CreateCampaignCall__Inputs(this);
@@ -2395,36 +1995,6 @@ export class ToggleCampaignApprovalCall__Outputs {
   _call: ToggleCampaignApprovalCall;
 
   constructor(call: ToggleCampaignApprovalCall) {
-    this._call = call;
-  }
-}
-
-export class DisableCampaignApprovalCall extends ethereum.Call {
-  get inputs(): DisableCampaignApprovalCall__Inputs {
-    return new DisableCampaignApprovalCall__Inputs(this);
-  }
-
-  get outputs(): DisableCampaignApprovalCall__Outputs {
-    return new DisableCampaignApprovalCall__Outputs(this);
-  }
-}
-
-export class DisableCampaignApprovalCall__Inputs {
-  _call: DisableCampaignApprovalCall;
-
-  constructor(call: DisableCampaignApprovalCall) {
-    this._call = call;
-  }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class DisableCampaignApprovalCall__Outputs {
-  _call: DisableCampaignApprovalCall;
-
-  constructor(call: DisableCampaignApprovalCall) {
     this._call = call;
   }
 }
@@ -2497,104 +2067,6 @@ export class ModifyCampaignCategoryCall__Outputs {
   }
 }
 
-export class FeatureCampaignCall extends ethereum.Call {
-  get inputs(): FeatureCampaignCall__Inputs {
-    return new FeatureCampaignCall__Inputs(this);
-  }
-
-  get outputs(): FeatureCampaignCall__Outputs {
-    return new FeatureCampaignCall__Outputs(this);
-  }
-}
-
-export class FeatureCampaignCall__Inputs {
-  _call: FeatureCampaignCall;
-
-  constructor(call: FeatureCampaignCall) {
-    this._call = call;
-  }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _featurePackageId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _token(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-}
-
-export class FeatureCampaignCall__Outputs {
-  _call: FeatureCampaignCall;
-
-  constructor(call: FeatureCampaignCall) {
-    this._call = call;
-  }
-}
-
-export class PauseCampaignFeaturedCall extends ethereum.Call {
-  get inputs(): PauseCampaignFeaturedCall__Inputs {
-    return new PauseCampaignFeaturedCall__Inputs(this);
-  }
-
-  get outputs(): PauseCampaignFeaturedCall__Outputs {
-    return new PauseCampaignFeaturedCall__Outputs(this);
-  }
-}
-
-export class PauseCampaignFeaturedCall__Inputs {
-  _call: PauseCampaignFeaturedCall;
-
-  constructor(call: PauseCampaignFeaturedCall) {
-    this._call = call;
-  }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class PauseCampaignFeaturedCall__Outputs {
-  _call: PauseCampaignFeaturedCall;
-
-  constructor(call: PauseCampaignFeaturedCall) {
-    this._call = call;
-  }
-}
-
-export class UnpauseCampaignFeaturedCall extends ethereum.Call {
-  get inputs(): UnpauseCampaignFeaturedCall__Inputs {
-    return new UnpauseCampaignFeaturedCall__Inputs(this);
-  }
-
-  get outputs(): UnpauseCampaignFeaturedCall__Outputs {
-    return new UnpauseCampaignFeaturedCall__Outputs(this);
-  }
-}
-
-export class UnpauseCampaignFeaturedCall__Inputs {
-  _call: UnpauseCampaignFeaturedCall;
-
-  constructor(call: UnpauseCampaignFeaturedCall) {
-    this._call = call;
-  }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class UnpauseCampaignFeaturedCall__Outputs {
-  _call: UnpauseCampaignFeaturedCall;
-
-  constructor(call: UnpauseCampaignFeaturedCall) {
-    this._call = call;
-  }
-}
-
 export class CreateCategoryCall extends ethereum.Call {
   get inputs(): CreateCategoryCall__Inputs {
     return new CreateCategoryCall__Inputs(this);
@@ -2655,108 +2127,6 @@ export class ModifyCategoryCall__Outputs {
   _call: ModifyCategoryCall;
 
   constructor(call: ModifyCategoryCall) {
-    this._call = call;
-  }
-}
-
-export class CreateFeaturePackageCall extends ethereum.Call {
-  get inputs(): CreateFeaturePackageCall__Inputs {
-    return new CreateFeaturePackageCall__Inputs(this);
-  }
-
-  get outputs(): CreateFeaturePackageCall__Outputs {
-    return new CreateFeaturePackageCall__Outputs(this);
-  }
-}
-
-export class CreateFeaturePackageCall__Inputs {
-  _call: CreateFeaturePackageCall;
-
-  constructor(call: CreateFeaturePackageCall) {
-    this._call = call;
-  }
-
-  get _cost(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _time(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class CreateFeaturePackageCall__Outputs {
-  _call: CreateFeaturePackageCall;
-
-  constructor(call: CreateFeaturePackageCall) {
-    this._call = call;
-  }
-}
-
-export class ModifyFeaturedPackageCall extends ethereum.Call {
-  get inputs(): ModifyFeaturedPackageCall__Inputs {
-    return new ModifyFeaturedPackageCall__Inputs(this);
-  }
-
-  get outputs(): ModifyFeaturedPackageCall__Outputs {
-    return new ModifyFeaturedPackageCall__Outputs(this);
-  }
-}
-
-export class ModifyFeaturedPackageCall__Inputs {
-  _call: ModifyFeaturedPackageCall;
-
-  constructor(call: ModifyFeaturedPackageCall) {
-    this._call = call;
-  }
-
-  get _packageId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _cost(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _time(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class ModifyFeaturedPackageCall__Outputs {
-  _call: ModifyFeaturedPackageCall;
-
-  constructor(call: ModifyFeaturedPackageCall) {
-    this._call = call;
-  }
-}
-
-export class DestroyFeaturedPackageCall extends ethereum.Call {
-  get inputs(): DestroyFeaturedPackageCall__Inputs {
-    return new DestroyFeaturedPackageCall__Inputs(this);
-  }
-
-  get outputs(): DestroyFeaturedPackageCall__Outputs {
-    return new DestroyFeaturedPackageCall__Outputs(this);
-  }
-}
-
-export class DestroyFeaturedPackageCall__Inputs {
-  _call: DestroyFeaturedPackageCall;
-
-  constructor(call: DestroyFeaturedPackageCall) {
-    this._call = call;
-  }
-
-  get _packageId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class DestroyFeaturedPackageCall__Outputs {
-  _call: DestroyFeaturedPackageCall;
-
-  constructor(call: DestroyFeaturedPackageCall) {
     this._call = call;
   }
 }

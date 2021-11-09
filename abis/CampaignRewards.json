@@ -3,12 +3,6 @@
         "anonymous": false,
         "inputs": [
             {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
-            },
-            {
                 "indexed": false,
                 "internalType": "address",
                 "name": "owner",
@@ -32,12 +26,6 @@
                 "internalType": "uint256",
                 "name": "rewardId",
                 "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
             },
             {
                 "indexed": false,
@@ -83,12 +71,6 @@
                 "type": "uint256"
             },
             {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
-            },
-            {
                 "indexed": false,
                 "internalType": "address",
                 "name": "sender",
@@ -106,12 +88,6 @@
                 "internalType": "uint256",
                 "name": "rewardId",
                 "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
             },
             {
                 "indexed": false,
@@ -157,12 +133,6 @@
                 "type": "uint256"
             },
             {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
-            },
-            {
                 "indexed": false,
                 "internalType": "uint256",
                 "name": "amount",
@@ -188,12 +158,6 @@
                 "type": "uint256"
             },
             {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
-            },
-            {
                 "indexed": false,
                 "internalType": "address",
                 "name": "sender",
@@ -211,12 +175,6 @@
                 "internalType": "uint256",
                 "name": "rewardId",
                 "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
             },
             {
                 "indexed": false,
@@ -242,12 +200,6 @@
                 "internalType": "uint256",
                 "name": "rewardRecipientId",
                 "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
             },
             {
                 "indexed": false,
@@ -389,7 +341,7 @@
         "name": "campaignContract",
         "outputs": [
             {
-                "internalType": "contract CampaignInterface",
+                "internalType": "contract ICampaign",
                 "name": "",
                 "type": "address"
             }
@@ -402,7 +354,7 @@
         "name": "campaignFactoryContract",
         "outputs": [
             {
-                "internalType": "contract CampaignFactoryInterface",
+                "internalType": "contract ICampaignFactory",
                 "name": "",
                 "type": "address"
             }

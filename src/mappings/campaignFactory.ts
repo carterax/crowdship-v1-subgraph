@@ -1,4 +1,3 @@
-import { FACTORY_ADDRESS } from './../utils/constants';
 import {
   FactoryConfigUpdated as FactoryConfigUpdatedEvent,
   CategoryCommissionUpdated as CategoryCommissionUpdatedEvent,
@@ -8,62 +7,137 @@ import {
   CampaignApproval as CampaignApprovalEvent,
   CampaignCategoryChange as CampaignCategoryChangeEvent,
   CampaignDeployed as CampaignDeployedEvent,
-  CampaignFeaturePaused as CampaignFeaturePausedEvent,
-  CampaignFeatureUnpaused as CampaignFeatureUnpausedEvent,
-  CampaignFeatured as CampaignFeaturedEvent,
   CategoryAdded as CategoryAddedEvent,
   CategoryModified as CategoryModifiedEvent,
-  FeaturePackageAdded as FeaturePackageAddedEvent,
-  FeaturePackageDestroyed as FeaturePackageDestroyedEvent,
-  FeaturePackageModified as FeaturePackageModifiedEvent,
   Paused as PausedEvent,
-  RoleAdminChanged as RoleAdminChangedEvent,
-  RoleGranted as RoleGrantedEvent,
-  RoleRevoked as RoleRevokedEvent,
   TokenAdded as TokenAddedEvent,
   TokenApproval as TokenApprovalEvent,
   TokenRemoved as TokenRemovedEvent,
   Unpaused as UnpausedEvent,
   UserAdded as UserAddedEvent,
   UserApproval as UserApprovalEvent,
-  UserRemoved as UserRemovedEvent,
 } from '../../generated/templates/CampaignFactory/CampaignFactory';
-import { CampaignFactory, Campaign, User } from '../../generated/schema';
+import {
+  CampaignFactory,
+  Campaign,
+  User,
+  Category,
+  Token,
+} from '../../generated/schema';
+import { Campaign as CampaignTemplate } from '../../generated/templates';
+import { BigInt } from '@graphprotocol/graph-ts';
 
 export function handleFactoryConfigUpdated(
   event: FactoryConfigUpdatedEvent
 ): void {
-  // let factory = CampaignFactory.load();
+  let campaignFactory = CampaignFactory.load(event.address.toHexString());
+
+  if (campaignFactory !== null) {
+    campaignFactory.campaignImplementation =
+      event.params.campaignImplementation;
+    campaignFactory.campaignRewardsImplementation =
+      event.params.campaignRewardsImplementation;
+    campaignFactory.factoryWallet = event.params.factoryWallet;
+
+    campaignFactory.save();
+  }
 }
 
 export function handleCategoryCommissionUpdated(
   event: CategoryCommissionUpdatedEvent
-): void {}
+): void {
+  let category = Category.load(event.params.categoryId.toHexString());
+
+  if (category !== null) {
+    category.commission = event.params.commission;
+    category.updatedAt = event.block.timestamp;
+    category.save();
+  }
+}
 
 export function handleCampaignDefaultCommissionUpdated(
   event: CampaignDefaultCommissionUpdatedEvent
-): void {}
+): void {
+  let campaignFactory = CampaignFactory.load(event.address.toHexString());
+
+  if (campaignFactory !== null) {
+    campaignFactory.defaultCommission = event.params.commission;
+    campaignFactory.save();
+  }
+}
 
 export function handleCampaignTransactionConfigUpdated(
   event: CampaignTransactionConfigUpdatedEvent
-): void {}
+): void {
+  let campaignFactory = CampaignFactory.load(event.address.toHexString());
+
+  if (campaignFactory !== null) {
+    if (event.params.prop === 'deadlineStrikesAllowed')
+      campaignFactory.deadlineStrikesAllowed = event.params.value;
+
+    if (event.params.prop === 'minimumContributionAllowed')
+      campaignFactory.minimumContributionAllowed = event.params.value;
+
+    if (event.params.prop === 'maximumContributionAllowed')
+      campaignFactory.maximumContributionAllowed = event.params.value;
+
+    if (event.params.prop === 'minimumRequestAmountAllowed')
+      campaignFactory.minimumRequestAmountAllowed = event.params.value;
+
+    if (event.params.prop === 'maximumRequestAmountAllowed')
+      campaignFactory.maximumRequestAmountAllowed = event.params.value;
+
+    if (event.params.prop === 'minimumCampaignTarget')
+      campaignFactory.minimumCampaignTarget = event.params.value;
+
+    if (event.params.prop === 'maximumCampaignTarget')
+      campaignFactory.maximumCampaignTarget = event.params.value;
+
+    if (event.params.prop === 'maxDeadlineExtension')
+      campaignFactory.maxDeadlineExtension = event.params.value;
+
+    if (event.params.prop === 'minDeadlineExtension')
+      campaignFactory.minDeadlineExtension = event.params.value;
+
+    if (event.params.prop === 'minRequestDuration')
+      campaignFactory.minRequestDuration = event.params.value;
+
+    if (event.params.prop === 'maxRequestDuration')
+      campaignFactory.maxRequestDuration = event.params.value;
+
+    if (event.params.prop === 'reviewThresholdMark')
+      campaignFactory.reviewThresholdMark = event.params.value;
+
+    if (event.params.prop === 'requestFinalizationThreshold')
+      campaignFactory.requestFinalizationThreshold = event.params.value;
+
+    if (event.params.prop === 'reportThresholdMark')
+      campaignFactory.reportThresholdMark = event.params.value;
+
+    campaignFactory.save();
+  }
+}
 
 export function handleCampaignActiveToggle(
   event: CampaignActiveToggleEvent
 ): void {
-  let campaign = Campaign.load(event.params.campaignId.toString());
+  let campaign = Campaign.load(event.params.campaign.toHexString());
+
   if (campaign !== null) {
     campaign.active = event.params.active;
     campaign.updatedAt = event.block.timestamp;
+
     campaign.save();
   }
 }
 
 export function handleCampaignApproval(event: CampaignApprovalEvent): void {
-  let campaign = Campaign.load(event.params.campaignId.toString());
+  let campaign = Campaign.load(event.params.campaign.toHexString());
+
   if (campaign !== null) {
     campaign.approved = event.params.approval;
     campaign.updatedAt = event.block.timestamp;
+
     campaign.save();
   }
 }
@@ -71,7 +145,8 @@ export function handleCampaignApproval(event: CampaignApprovalEvent): void {
 export function handleCampaignCategoryChange(
   event: CampaignCategoryChangeEvent
 ): void {
-  let campaign = Campaign.load(event.params.campaignId.toString());
+  let campaign = Campaign.load(event.params.campaign.toHexString());
+
   if (campaign !== null) {
     campaign.category = event.params.newCategory.toString();
     campaign.updatedAt = event.block.timestamp;
@@ -80,189 +155,107 @@ export function handleCampaignCategoryChange(
 }
 
 export function handleCampaignDeployed(event: CampaignDeployedEvent): void {
-  let campaign = new Campaign(event.params.campaignId.toString());
-  campaign.campaignFactory = event.params.factory.toString();
+  let campaign = new Campaign(event.params.campaign.toHexString()) as Campaign;
+
+  campaign.campaignFactory = event.params.factory.toHexString();
   campaign.campaignAddress = event.params.campaign;
   campaign.rewardsAddress = event.params.campaignRewards;
   campaign.owner = event.params.userId.toString();
   campaign.createdAt = event.block.timestamp;
+  campaign.updatedAt = new BigInt(0);
   campaign.category = event.params.category.toString();
+  campaign.withdrawalsPaused = false;
   campaign.active = false;
   campaign.approved = false;
   campaign.campaignState = 'COLLECTION';
   campaign.exists = true;
 
   campaign.save();
+  CampaignTemplate.create(event.params.campaign);
 }
 
-// export function handleCampaignFeaturePaused(
-//   event: CampaignFeaturePausedEvent
-// ): void {
-//   let entity = new CampaignFeaturePaused(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.campaignId = event.params.campaignId;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+export function handleCategoryAdded(event: CategoryAddedEvent): void {
+  let category = new Category(event.params.categoryId.toString());
 
-// export function handleCampaignFeatureUnpaused(
-//   event: CampaignFeatureUnpausedEvent
-// ): void {
-//   let entity = new CampaignFeatureUnpaused(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.campaignId = event.params.campaignId;
-//   entity.timeLeft = event.params.timeLeft;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+  category.campaignFactory = event.address.toHexString();
+  category.campaigns = [];
+  category.totalCampaign = new BigInt(0);
+  category.commission = new BigInt(0);
+  category.createdAt = event.block.timestamp;
+  category.updatedAt = new BigInt(0);
+  category.active = event.params.active;
+  category.exists = true;
 
-// export function handleCampaignFeatured(event: CampaignFeaturedEvent): void {
-//   let entity = new CampaignFeatured(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.campaignId = event.params.campaignId;
-//   entity.featurePackageId = event.params.featurePackageId;
-//   entity.amount = event.params.amount;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+  category.save();
+}
 
-// export function handleCategoryAdded(event: CategoryAddedEvent): void {
-//   let entity = new CategoryAdded(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.categoryId = event.params.categoryId;
-//   entity.active = event.params.active;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+export function handleCategoryModified(event: CategoryModifiedEvent): void {
+  let category = Category.load(event.params.categoryId.toString());
 
-// export function handleCategoryModified(event: CategoryModifiedEvent): void {
-//   let entity = new CategoryModified(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.categoryId = event.params.categoryId;
-//   entity.active = event.params.active;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+  if (category !== null) {
+    category.updatedAt = event.block.timestamp;
+    category.active = event.params.active;
 
-// export function handleFeaturePackageAdded(
-//   event: FeaturePackageAddedEvent
-// ): void {
-//   let entity = new FeaturePackageAdded(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.packageId = event.params.packageId;
-//   entity.cost = event.params.cost;
-//   entity.time = event.params.time;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+    category.save();
+  }
+}
 
-// export function handleFeaturePackageDestroyed(
-//   event: FeaturePackageDestroyedEvent
-// ): void {
-//   let entity = new FeaturePackageDestroyed(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.packageId = event.params.packageId;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+export function handlePaused(event: PausedEvent): void {
+  let campaignFactory = CampaignFactory.load(event.address.toHexString());
 
-// export function handleFeaturePackageModified(
-//   event: FeaturePackageModifiedEvent
-// ): void {
-//   let entity = new FeaturePackageModified(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.packageId = event.params.packageId;
-//   entity.cost = event.params.cost;
-//   entity.time = event.params.time;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+  if (campaignFactory !== null) {
+    campaignFactory.paused = true;
 
-// export function handlePaused(event: PausedEvent): void {
-//   let entity = new Paused(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.account = event.params.account;
-//   entity.save();
-// }
+    campaignFactory.save();
+  }
+}
 
-// export function handleRoleAdminChanged(event: RoleAdminChangedEvent): void {
-//   let entity = new RoleAdminChanged(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.role = event.params.role;
-//   entity.previousAdminRole = event.params.previousAdminRole;
-//   entity.newAdminRole = event.params.newAdminRole;
-//   entity.save();
-// }
+export function handleTokenAdded(event: TokenAddedEvent): void {
+  let token = new Token(event.params.token.toHexString());
 
-// export function handleRoleGranted(event: RoleGrantedEvent): void {
-//   let entity = new RoleGranted(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.role = event.params.role;
-//   entity.account = event.params.account;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+  token.campaignFactory = event.address.toHexString();
+  token.createdAt = event.block.timestamp;
+  token.approved = false;
+  token.exists = true;
 
-// export function handleRoleRevoked(event: RoleRevokedEvent): void {
-//   let entity = new RoleRevoked(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.role = event.params.role;
-//   entity.account = event.params.account;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+  token.save();
+}
 
-// export function handleTokenAdded(event: TokenAddedEvent): void {
-//   let entity = new TokenAdded(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.token = event.params.token;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+export function handleTokenApproval(event: TokenApprovalEvent): void {
+  let token = Token.load(event.params.token.toHexString());
 
-// export function handleTokenApproval(event: TokenApprovalEvent): void {
-//   let entity = new TokenApproval(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.token = event.params.token;
-//   entity.state = event.params.state;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+  if (token !== null) {
+    token.approved = event.params.state;
 
-// export function handleTokenRemoved(event: TokenRemovedEvent): void {
-//   let entity = new TokenRemoved(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.tokenId = event.params.tokenId;
-//   entity.token = event.params.token;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+    token.save();
+  }
+}
 
-// export function handleUnpaused(event: UnpausedEvent): void {
-//   let entity = new Unpaused(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.account = event.params.account;
-//   entity.save();
-// }
+export function handleTokenRemoved(event: TokenRemovedEvent): void {
+  let token = Token.load(event.params.token.toHexString());
+
+  if (token !== null) {
+    token.approved = false;
+    token.exists = false;
+
+    token.save();
+  }
+}
+
+export function handleUnpaused(event: UnpausedEvent): void {
+  let campaignFactory = CampaignFactory.load(event.address.toHexString());
+
+  if (campaignFactory !== null) {
+    campaignFactory.paused = false;
+
+    campaignFactory.save();
+  }
+}
 
 export function handleUserAdded(event: UserAddedEvent): void {
-  let user = new User(event.params.userId.toString());
+  let user = new User(event.params.sender.toHexString());
+
+  user.campaignFactory = event.address.toHexString();
   user.exists = true;
   user.joined = event.block.timestamp;
   user.verified = false;
@@ -271,30 +264,11 @@ export function handleUserAdded(event: UserAddedEvent): void {
   user.save();
 }
 
-// export function handleUserApproval(event: UserApprovalEvent): void {
-//   let entity = new UserApproval(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.userId = event.params.userId;
-//   entity.approval = event.params.approval;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+export function handleUserApproval(event: UserApprovalEvent): void {
+  let user = User.load(event.params.user.toHexString());
 
-// export function handleUserModified(event: UserModifiedEvent): void {
-//   let entity = new UserModified(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.userId = event.params.userId;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
-
-// export function handleUserRemoved(event: UserRemovedEvent): void {
-//   let entity = new UserRemoved(
-//     event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-//   );
-//   entity.userId = event.params.userId;
-//   entity.sender = event.params.sender;
-//   entity.save();
-// }
+  if (user !== null) {
+    user.verified = event.params.approval;
+    user.save();
+  }
+}

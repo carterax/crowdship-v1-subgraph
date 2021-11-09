@@ -4,9 +4,9 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "campaign",
+                "type": "address"
             },
             {
                 "indexed": false,
@@ -29,9 +29,9 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "campaign",
+                "type": "address"
             },
             {
                 "indexed": false,
@@ -54,9 +54,9 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "campaign",
+                "type": "address"
             },
             {
                 "indexed": false,
@@ -134,81 +134,6 @@
             }
         ],
         "name": "CampaignDeployed",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-            }
-        ],
-        "name": "CampaignFeaturePaused",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "timeLeft",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-            }
-        ],
-        "name": "CampaignFeatureUnpaused",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "featurePackageId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "amount",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-            }
-        ],
-        "name": "CampaignFeatured",
         "type": "event"
     },
     {
@@ -322,87 +247,6 @@
             }
         ],
         "name": "FactoryConfigUpdated",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "packageId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "cost",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "time",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-            }
-        ],
-        "name": "FeaturePackageAdded",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "packageId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-            }
-        ],
-        "name": "FeaturePackageDestroyed",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "packageId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "cost",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "time",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-            }
-        ],
-        "name": "FeaturePackageModified",
         "type": "event"
     },
     {
@@ -541,12 +385,6 @@
         "anonymous": false,
         "inputs": [
             {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "tokenId",
-                "type": "uint256"
-            },
-            {
                 "indexed": false,
                 "internalType": "address",
                 "name": "token",
@@ -604,6 +442,12 @@
                 "type": "uint256"
             },
             {
+                "indexed": true,
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
                 "indexed": false,
                 "internalType": "bool",
                 "name": "approval",
@@ -617,25 +461,6 @@
             }
         ],
         "name": "UserApproval",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "userId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
-            }
-        ],
-        "name": "UserRemoved",
         "type": "event"
     },
     {
@@ -814,25 +639,6 @@
             }
         ],
         "name": "campaignRevenueFromCommissions",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "campaignRevenueFromFeatures",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -1055,77 +861,6 @@
         "type": "function"
     },
     {
-        "inputs": [],
-        "name": "featurePackageCount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "featurePackages",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "createdAt",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "updatedAt",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "time",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "cost",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "exists",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "featuredCampaignIsPaused",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "bytes32",
@@ -1194,25 +929,6 @@
                 "internalType": "bool",
                 "name": "",
                 "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "pausedFeaturedCampaignTimeLeft",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
             }
         ],
         "stateMutability": "view",
@@ -1325,25 +1041,6 @@
                 "internalType": "bool",
                 "name": "",
                 "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "tokenList",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -1568,11 +1265,6 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_tokenId",
-                "type": "uint256"
-            },
-            {
                 "internalType": "address",
                 "name": "_token",
                 "type": "address"
@@ -1667,19 +1359,6 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "_userId",
-                "type": "uint256"
-            }
-        ],
-        "name": "destroyUser",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
                 "name": "_categoryId",
                 "type": "uint256"
             }
@@ -1703,19 +1382,6 @@
             }
         ],
         "name": "toggleCampaignApproval",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
-            }
-        ],
-        "name": "disableCampaignApproval",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1759,55 +1425,6 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_featurePackageId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "address",
-                "name": "_token",
-                "type": "address"
-            }
-        ],
-        "name": "featureCampaign",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
-            }
-        ],
-        "name": "pauseCampaignFeatured",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
-            }
-        ],
-        "name": "unpauseCampaignFeatured",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
                 "internalType": "bool",
                 "name": "_active",
                 "type": "bool"
@@ -1832,60 +1449,6 @@
             }
         ],
         "name": "modifyCategory",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_cost",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_time",
-                "type": "uint256"
-            }
-        ],
-        "name": "createFeaturePackage",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_packageId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_cost",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_time",
-                "type": "uint256"
-            }
-        ],
-        "name": "modifyFeaturedPackage",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_packageId",
-                "type": "uint256"
-            }
-        ],
-        "name": "destroyFeaturedPackage",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
