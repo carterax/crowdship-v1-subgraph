@@ -125,7 +125,6 @@ export function handleCampaignActiveToggle(
 
   if (campaign !== null) {
     campaign.active = event.params.active;
-    campaign.updatedAt = event.block.timestamp;
 
     campaign.save();
   }
@@ -136,7 +135,6 @@ export function handleCampaignApproval(event: CampaignApprovalEvent): void {
 
   if (campaign !== null) {
     campaign.approved = event.params.approval;
-    campaign.updatedAt = event.block.timestamp;
 
     campaign.save();
   }
@@ -149,29 +147,31 @@ export function handleCampaignCategoryChange(
 
   if (campaign !== null) {
     campaign.category = event.params.newCategory.toString();
-    campaign.updatedAt = event.block.timestamp;
     campaign.save();
   }
 }
 
 export function handleCampaignDeployed(event: CampaignDeployedEvent): void {
-  let campaign = new Campaign(event.params.campaign.toHexString()) as Campaign;
+  if (event.params.approved) {
+    let campaign = new Campaign(
+      event.params.campaign.toHexString()
+    ) as Campaign;
 
-  campaign.campaignFactory = event.params.factory.toHexString();
-  campaign.campaignAddress = event.params.campaign;
-  campaign.rewardsAddress = event.params.campaignRewards;
-  campaign.owner = event.params.userId.toString();
-  campaign.createdAt = event.block.timestamp;
-  campaign.updatedAt = new BigInt(0);
-  campaign.category = event.params.category.toString();
-  campaign.withdrawalsPaused = false;
-  campaign.active = false;
-  campaign.approved = false;
-  campaign.campaignState = 'COLLECTION';
-  campaign.exists = true;
+    campaign.campaignFactory = event.params.factory.toHexString();
+    campaign.campaignAddress = event.params.campaign;
+    campaign.rewardsAddress = event.params.campaignRewards;
+    campaign.owner = event.transaction.from.toHexString();
+    campaign.createdAt = event.block.timestamp;
+    campaign.category = event.params.category.toString();
+    campaign.withdrawalsPaused = false;
+    campaign.active = false;
+    campaign.approved = false;
+    campaign.campaignState = 'COLLECTION';
+    campaign.exists = true;
 
-  campaign.save();
-  CampaignTemplate.create(event.params.campaign);
+    campaign.save();
+    CampaignTemplate.create(event.params.campaign);
+  }
 }
 
 export function handleCategoryAdded(event: CategoryAddedEvent): void {
@@ -253,13 +253,21 @@ export function handleUnpaused(event: UnpausedEvent): void {
 }
 
 export function handleUserAdded(event: UserAddedEvent): void {
-  let user = new User(event.params.sender.toHexString());
+  let user = new User(event.transaction.from.toHexString());
 
   user.campaignFactory = event.address.toHexString();
   user.exists = true;
   user.joined = event.block.timestamp;
   user.verified = false;
-  user.userAddress = event.params.sender;
+  user.userAddress = event.transaction.from;
+  // user.campaignsDeployed = [];
+  // user.campaignsBacked = [];
+  user.contributions = [];
+  user.rewards = [];
+  user.votes = [];
+  user.requests = [];
+  user.reports = [];
+  user.reviews = [];
 
   user.save();
 }

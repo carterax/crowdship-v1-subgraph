@@ -26,10 +26,6 @@ export class CampaignDeadlineExtended__Params {
   get time(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
 }
 
 export class CampaignOwnerSet extends ethereum.Event {
@@ -47,10 +43,6 @@ export class CampaignOwnerSet__Params {
 
   get user(): Address {
     return this._event.parameters[0].value.toAddress();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -70,10 +62,6 @@ export class CampaignOwnershipTransferred__Params {
   get newOwner(): Address {
     return this._event.parameters[0].value.toAddress();
   }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
 }
 
 export class CampaignReported extends ethereum.Event {
@@ -89,7 +77,7 @@ export class CampaignReported__Params {
     this._event = event;
   }
 
-  get sender(): Address {
+  get user(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 }
@@ -107,7 +95,7 @@ export class CampaignReviewed__Params {
     this._event = event;
   }
 
-  get sender(): Address {
+  get user(): Address {
     return this._event.parameters[0].value.toAddress();
   }
 }
@@ -148,10 +136,6 @@ export class CampaignSettingsUpdated__Params {
   get allowContributionAfterTargetIsMet(): boolean {
     return this._event.parameters[5].value.toBoolean();
   }
-
-  get sender(): Address {
-    return this._event.parameters[6].value.toAddress();
-  }
 }
 
 export class CampaignStateChange extends ethereum.Event {
@@ -169,10 +153,6 @@ export class CampaignStateChange__Params {
 
   get state(): i32 {
     return this._event.parameters[0].value.toI32();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -196,10 +176,6 @@ export class CampaignUserDataTransferred__Params {
   get newAddress(): Address {
     return this._event.parameters[1].value.toAddress();
   }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
 }
 
 export class ContributionMade extends ethereum.Event {
@@ -215,20 +191,24 @@ export class ContributionMade__Params {
     this._event = event;
   }
 
-  get amount(): BigInt {
+  get contributionId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get rewardId(): BigInt {
+  get amount(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get withReward(): boolean {
-    return this._event.parameters[2].value.toBoolean();
+  get rewardId(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
   }
 
-  get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
+  get rewardRecipientId(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
+  }
+
+  get withReward(): boolean {
+    return this._event.parameters[4].value.toBoolean();
   }
 }
 
@@ -245,15 +225,15 @@ export class ContributionWithdrawn__Params {
     this._event = event;
   }
 
-  get amount(): BigInt {
+  get contributionId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get user(): Address {
-    return this._event.parameters[1].value.toAddress();
+  get amount(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 
-  get sender(): Address {
+  get user(): Address {
     return this._event.parameters[2].value.toAddress();
   }
 }
@@ -304,10 +284,6 @@ export class RequestAdded__Params {
   get recipient(): Address {
     return this._event.parameters[3].value.toAddress();
   }
-
-  get sender(): Address {
-    return this._event.parameters[4].value.toAddress();
-  }
 }
 
 export class RequestComplete extends ethereum.Event {
@@ -326,10 +302,6 @@ export class RequestComplete__Params {
   get requestId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
 }
 
 export class RequestVoided extends ethereum.Event {
@@ -347,10 +319,6 @@ export class RequestVoided__Params {
 
   get requestId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -432,28 +400,6 @@ export class RoleRevoked__Params {
   }
 }
 
-export class TargetMet extends ethereum.Event {
-  get params(): TargetMet__Params {
-    return new TargetMet__Params(this);
-  }
-}
-
-export class TargetMet__Params {
-  _event: TargetMet;
-
-  constructor(event: TargetMet) {
-    this._event = event;
-  }
-
-  get amount(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-}
-
 export class Unpaused extends ethereum.Event {
   get params(): Unpaused__Params {
     return new Unpaused__Params(this);
@@ -485,16 +431,16 @@ export class VoteCancelled__Params {
     this._event = event;
   }
 
-  get requestId(): BigInt {
+  get voteId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get support(): i32 {
-    return this._event.parameters[1].value.toI32();
+  get requestId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+  get support(): i32 {
+    return this._event.parameters[2].value.toI32();
   }
 }
 
@@ -511,16 +457,16 @@ export class Voted__Params {
     this._event = event;
   }
 
-  get requestId(): BigInt {
+  get voteId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get support(): i32 {
-    return this._event.parameters[1].value.toI32();
+  get requestId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
   }
 
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+  get support(): i32 {
+    return this._event.parameters[2].value.toI32();
   }
 }
 
@@ -767,6 +713,29 @@ export class Campaign extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
+  contributionId(param0: Address): BigInt {
+    let result = super.call(
+      "contributionId",
+      "contributionId(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_contributionId(param0: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "contributionId",
+      "contributionId(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
   currentRunningRequest(): BigInt {
     let result = super.call(
       "currentRunningRequest",
@@ -908,27 +877,6 @@ export class Campaign extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  hasVoted(param0: BigInt, param1: Address): boolean {
-    let result = super.call("hasVoted", "hasVoted(uint256,address):(bool)", [
-      ethereum.Value.fromUnsignedBigInt(param0),
-      ethereum.Value.fromAddress(param1)
-    ]);
-
-    return result[0].toBoolean();
-  }
-
-  try_hasVoted(param0: BigInt, param1: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall("hasVoted", "hasVoted(uint256,address):(bool)", [
-      ethereum.Value.fromUnsignedBigInt(param0),
-      ethereum.Value.fromAddress(param1)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
   minimumContribution(): BigInt {
     let result = super.call(
       "minimumContribution",
@@ -1014,38 +962,6 @@ export class Campaign extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  requestSupport(param0: BigInt, param1: Address): i32 {
-    let result = super.call(
-      "requestSupport",
-      "requestSupport(uint256,address):(uint8)",
-      [
-        ethereum.Value.fromUnsignedBigInt(param0),
-        ethereum.Value.fromAddress(param1)
-      ]
-    );
-
-    return result[0].toI32();
-  }
-
-  try_requestSupport(
-    param0: BigInt,
-    param1: Address
-  ): ethereum.CallResult<i32> {
-    let result = super.tryCall(
-      "requestSupport",
-      "requestSupport(uint256,address):(uint8)",
-      [
-        ethereum.Value.fromUnsignedBigInt(param0),
-        ethereum.Value.fromAddress(param1)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toI32());
   }
 
   requests(param0: BigInt): Campaign__requestsResult {
@@ -1193,52 +1109,6 @@ export class Campaign extends ethereum.SmartContract {
       "totalCampaignContribution",
       "totalCampaignContribution():(uint256)",
       []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  userContributionWithdrawn(param0: Address): boolean {
-    let result = super.call(
-      "userContributionWithdrawn",
-      "userContributionWithdrawn(address):(bool)",
-      [ethereum.Value.fromAddress(param0)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_userContributionWithdrawn(param0: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "userContributionWithdrawn",
-      "userContributionWithdrawn(address):(bool)",
-      [ethereum.Value.fromAddress(param0)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  userTotalContribution(param0: Address): BigInt {
-    let result = super.call(
-      "userTotalContribution",
-      "userTotalContribution(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
-    );
-
-    return result[0].toBigInt();
-  }
-
-  try_userTotalContribution(param0: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "userTotalContribution",
-      "userTotalContribution(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();

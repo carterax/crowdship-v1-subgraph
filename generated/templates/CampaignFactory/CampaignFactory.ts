@@ -30,10 +30,6 @@ export class CampaignActiveToggle__Params {
   get active(): boolean {
     return this._event.parameters[1].value.toBoolean();
   }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
 }
 
 export class CampaignApproval extends ethereum.Event {
@@ -56,10 +52,6 @@ export class CampaignApproval__Params {
   get approval(): boolean {
     return this._event.parameters[1].value.toBoolean();
   }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
 }
 
 export class CampaignCategoryChange extends ethereum.Event {
@@ -81,10 +73,6 @@ export class CampaignCategoryChange__Params {
 
   get newCategory(): BigInt {
     return this._event.parameters[1].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -143,8 +131,8 @@ export class CampaignDeployed__Params {
     return this._event.parameters[5].value.toBigInt();
   }
 
-  get sender(): Address {
-    return this._event.parameters[6].value.toAddress();
+  get approved(): boolean {
+    return this._event.parameters[6].value.toBoolean();
   }
 }
 
@@ -190,10 +178,6 @@ export class CategoryAdded__Params {
   get active(): boolean {
     return this._event.parameters[1].value.toBoolean();
   }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
 }
 
 export class CategoryCommissionUpdated extends ethereum.Event {
@@ -237,10 +221,6 @@ export class CategoryModified__Params {
 
   get active(): boolean {
     return this._event.parameters[1].value.toBoolean();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -382,10 +362,6 @@ export class TokenAdded__Params {
   get token(): Address {
     return this._event.parameters[0].value.toAddress();
   }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
 }
 
 export class TokenApproval extends ethereum.Event {
@@ -408,10 +384,6 @@ export class TokenApproval__Params {
   get state(): boolean {
     return this._event.parameters[1].value.toBoolean();
   }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
 }
 
 export class TokenRemoved extends ethereum.Event {
@@ -429,10 +401,6 @@ export class TokenRemoved__Params {
 
   get token(): Address {
     return this._event.parameters[0].value.toAddress();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -470,10 +438,6 @@ export class UserAdded__Params {
   get userId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
 }
 
 export class UserApproval extends ethereum.Event {
@@ -499,10 +463,6 @@ export class UserApproval__Params {
 
   get approval(): boolean {
     return this._event.parameters[2].value.toBoolean();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[3].value.toAddress();
   }
 }
 
@@ -1954,6 +1914,10 @@ export class CreateCampaignCall__Inputs {
 
   get _categoryId(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _approved(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
   }
 }
 

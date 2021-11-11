@@ -54,9 +54,7 @@ type CampaignFactory @entity {
   users: [User!] @derivedFrom(field: "campaignFactory")
   campaigns: [Campaign!] @derivedFrom(field: "campaignFactory")
   tokens: [Token!] @derivedFrom(field: "campaignFactory")
-  roles: [Role!] @derivedFrom(field: "campaignFactory")
   categories: [Category!] @derivedFrom(field: "campaignFactory")
-  # featurePackages: [FeaturePackage!] @derivedFrom(field: "campaignFactory")
 }
 
 type Token @entity {
@@ -68,29 +66,24 @@ type Token @entity {
   exists: Boolean!
 }
 
-type Role @entity {
-  id: ID!
-  campaignFactory: CampaignFactory!
-  users: [User!]! @derivedFrom(field: "roles")
-}
-
 type User @entity {
   id: ID!
   campaignFactory: CampaignFactory!
-  campaignsDeployed: [Campaign!] @derivedFrom(field: "owner")
-  campaignsBacked: [Campaign!] @derivedFrom(field: "approvers")
+  # campaignsDeployed: [Campaign!]! @derivedFrom(field: "owner")
+  # campaignsBacked: [Campaign!]! @derivedFrom(field: "approvers")
   userAddress: Bytes!
   joined: BigInt!
-  updatedAt: BigInt
   verified: Boolean!
-  roles: [Role!]
-  contributions: [Contribution!] @derivedFrom(field: "owner")
-  withdrawals: [Withdrawal!] @derivedFrom(field: "owner")
-  rewards: [RewardRecipient!] @derivedFrom(field: "owner")
-  votes: [Vote!] @derivedFrom(field: "owner")
-  requests: [Request!] @derivedFrom(field: "owner")
-  reports: [Report!] @derivedFrom(field: "owner")
-  reviews: [Review!] @derivedFrom(field: "owner")
+  transferredFrom: Bytes
+  transferredTo: Bytes
+  totalWithdrawals: BigInt
+  totalContributions: BigInt
+  contributions: [Contribution!]! @derivedFrom(field: "owner")
+  rewards: [RewardRecipient!]! @derivedFrom(field: "owner")
+  votes: [Vote!]! @derivedFrom(field: "owner")
+  requests: [Request!]! @derivedFrom(field: "owner")
+  reports: [Report!]! @derivedFrom(field: "owner")
+  reviews: [Review!]! @derivedFrom(field: "owner")
   exists: Boolean!
 }
 
@@ -106,17 +99,6 @@ type Category @entity {
   exists: Boolean!
 }
 
-# type FeaturePackage @entity {
-#   id: ID!
-#   campaignFactory: CampaignFactory!
-#   createdAt: BigInt!
-#   updatedAt: BigInt!
-#   time: BigInt!
-#   cost: BigInt!
-#   campaigns: [Campaign!]! @derivedFrom(field: "featurePackages")
-#   exists: Boolean!
-# }
-
 type Campaign @entity {
   id: ID!
   campaignFactory: CampaignFactory!
@@ -125,34 +107,30 @@ type Campaign @entity {
   owner: User!
   approvers: [User!]
   createdAt: BigInt!
-  updatedAt: BigInt
   category: Category!
-  # featureFor: BigInt
   active: Boolean!
   approved: Boolean!
   token: Token
   withdrawalsPaused: Boolean!
   allowContributionAfterTargetIsMet: Boolean
-  totalCampaignContribution: BigInt
-  campaignBalance: BigInt
   minimumContribution: BigInt
-  totalApprovers: BigInt
-  totalFactoryRevenue: BigInt
   target: BigInt
   deadline: BigInt
-  totalFinalizedRequests: BigInt
-  totalReports: BigInt
-  totalReviews: BigInt
   goalType: GoalType
   campaignState: CampaignState!
 
+  totalCampaignContribution: BigInt
+  campaignBalance: BigInt
+  totalApprovers: BigInt
+  totalFinalizedRequests: BigInt
+  totalReports: BigInt
+  totalReviews: BigInt
+
   "derived fields"
   requests: [Request!] @derivedFrom(field: "campaign")
-  # featurePackages: [FeaturePackage!]
   reports: [Report!] @derivedFrom(field: "campaign")
   reviews: [Review!] @derivedFrom(field: "campaign")
   contributions: [Contribution!] @derivedFrom(field: "campaign")
-  withdrawals: [Withdrawal!] @derivedFrom(field: "campaign")
   rewards: [Reward!] @derivedFrom(field: "campaign")
   rewardRecipients: [RewardRecipient!] @derivedFrom(field: "campaign")
   exists: Boolean!
@@ -165,21 +143,13 @@ type Contribution @entity {
   amount: BigInt!
   withReward: Boolean!
   reward: RewardRecipient!
-  createdAt: BigInt!
-}
-
-type Withdrawal @entity {
-  id: ID!
-  campaign: Campaign!
-  owner: User!
-  amount: BigInt!
+  withdrawn: Boolean!
   createdAt: BigInt!
 }
 
 type Reward @entity {
   id: ID!
   createdAt: BigInt!
-  updatedAt: BigInt!
   amount: BigInt!
   campaign: Campaign!
   rewardRecipients: [RewardRecipient!]! @derivedFrom(field: "reward")
@@ -210,6 +180,7 @@ type Request @entity {
   totalAbstained: BigInt!
   duration: BigInt!
   void: Boolean!
+  voidedBy: User
   votes: [Vote!]! @derivedFrom(field: "request")
   owner: User!
 }
@@ -222,7 +193,7 @@ type Vote @entity {
   request: Request!
   owner: User!
   support: BigInt!
-  cancelled: Boolean!
+  voted: Boolean!
 }
 
 type Review @entity {

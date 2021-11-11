@@ -1,4 +1,3 @@
-import { FACTORY_ADDRESS } from './../utils/constants';
 import { CampaignFactoryDeployed as CampaignFactoryDeployedEvent } from '../../generated/Factory/Factory';
 import { Factory } from '../../generated/schema';
 import { CampaignFactory as CampaignFactoryContract } from '../../generated/templates/CampaignFactory/CampaignFactory';

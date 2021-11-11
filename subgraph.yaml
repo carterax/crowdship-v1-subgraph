@@ -50,17 +50,17 @@ templates:
           handler: handleCampaignDefaultCommissionUpdated
         - event: CampaignTransactionConfigUpdated(string,uint256)
           handler: handleCampaignTransactionConfigUpdated
-        - event: CampaignActiveToggle(indexed address,bool,address)
+        - event: CampaignActiveToggle(indexed address,bool)
           handler: handleCampaignActiveToggle
-        - event: CampaignApproval(indexed address,bool,address)
+        - event: CampaignApproval(indexed address,bool)
           handler: handleCampaignApproval
-        - event: CampaignCategoryChange(indexed address,uint256,address)
+        - event: CampaignCategoryChange(indexed address,uint256)
           handler: handleCampaignCategoryChange
-        - event: CampaignDeployed(indexed uint256,address,address,address,uint256,uint256,address)
+        - event: CampaignDeployed(indexed uint256,address,address,address,uint256,uint256,bool)
           handler: handleCampaignDeployed
-        - event: CategoryAdded(indexed uint256,bool,address)
+        - event: CategoryAdded(indexed uint256,bool)
           handler: handleCategoryAdded
-        - event: CategoryModified(indexed uint256,bool,address)
+        - event: CategoryModified(indexed uint256,bool)
           handler: handleCategoryModified
         - event: Paused(address)
           handler: handlePaused
@@ -70,17 +70,17 @@ templates:
           handler: handleRoleGranted
         - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
           handler: handleRoleRevoked
-        - event: TokenAdded(indexed address,address)
+        - event: TokenAdded(indexed address)
           handler: handleTokenAdded
-        - event: TokenApproval(indexed address,bool,address)
+        - event: TokenApproval(indexed address,bool)
           handler: handleTokenApproval
-        - event: TokenRemoved(address,address)
+        - event: TokenRemoved(address)
           handler: handleTokenRemoved
         - event: Unpaused(address)
           handler: handleUnpaused
-        - event: UserAdded(indexed uint256,address)
+        - event: UserAdded(indexed uint256)
           handler: handleUserAdded
-        - event: UserApproval(indexed uint256,indexed address,bool,address)
+        - event: UserApproval(indexed uint256,indexed address,bool)
           handler: handleUserApproval
   - kind: ethereum/contract
     name: Campaign
@@ -105,35 +105,33 @@ templates:
         - name: Campaign
           file: ./abis/Campaign.json
       eventHandlers:
-        - event: CampaignOwnershipTransferred(address,address)
+        - event: CampaignOwnershipTransferred(address)
           handler: handleCampaignOwnershipTransferred
-        - event: CampaignSettingsUpdated(uint256,uint256,uint256,uint256,address,bool,address)
+        - event: CampaignSettingsUpdated(uint256,uint256,uint256,uint256,address,bool)
           handler: handleCampaignSettingsUpdated
-        - event: CampaignDeadlineExtended(uint256,address)
+        - event: CampaignDeadlineExtended(uint256)
           handler: handleCampaignDeadlineExtended
         - event: CampaignReported(address)
           handler: handleCampaignReported
-        - event: CampaignUserDataTransferred(address,address,address)
+        - event: CampaignUserDataTransferred(address,address)
           handler: handleCampaignUserDataTransferred
-        - event: ContributionMade(uint256,indexed uint256,bool,address)
+        - event: ContributionMade(indexed uint256,uint256,indexed uint256,indexed uint256,bool)
           handler: handleContributionMade
-        - event: ContributionWithdrawn(uint256,address,address)
+        - event: ContributionWithdrawn(indexed uint256,uint256,address)
           handler: handleContributionWithdrawn
-        - event: TargetMet(uint256,address)
-          handler: handleTargetMet
-        - event: RequestAdded(indexed uint256,uint256,uint256,address,address)
+        - event: RequestAdded(indexed uint256,uint256,uint256,address)
           handler: handleRequestAdded
-        - event: RequestVoided(indexed uint256,address)
+        - event: RequestVoided(indexed uint256)
           handler: handleRequestVoided
-        - event: RequestComplete(indexed uint256,address)
+        - event: RequestComplete(indexed uint256)
           handler: handleRequestComplete
-        - event: Voted(indexed uint256,uint8,address)
+        - event: Voted(indexed uint256,indexed uint256,uint8)
           handler: handleVoted
-        - event: VoteCancelled(indexed uint256,uint8,address)
+        - event: VoteCancelled(indexed uint256,indexed uint256,uint8)
           handler: handleVoteCancelled
         - event: CampaignReviewed(address)
           handler: handleCampaignReviewed
-        - event: CampaignStateChange(uint8,address)
+        - event: CampaignStateChange(uint8)
           handler: handleCampaignStateChange
   - kind: ethereum/contract
     name: CampaignRewards
@@ -152,17 +150,17 @@ templates:
         - name: CampaignRewards
           file: ./abis/CampaignRewards.json
       eventHandlers:
-        - event: RewardCreated(indexed uint256,uint256,uint256,uint256,bool,address)
+        - event: RewardCreated(indexed uint256,uint256,uint256,uint256,bool)
           handler: handleRewardCreated
-        - event: RewardModified(indexed uint256,uint256,uint256,uint256,bool,address)
+        - event: RewardModified(indexed uint256,uint256,uint256,uint256,bool)
           handler: handleRewardModified
-        - event: RewardStockIncreased(indexed uint256,uint256,address)
+        - event: RewardStockIncreased(indexed uint256,uint256)
           handler: handleRewardStockIncreased
-        - event: RewardDestroyed(indexed uint256,address)
+        - event: RewardDestroyed(indexed uint256)
           handler: handleRewardDestroyed
-        - event: RewardRecipientAdded(indexed uint256,uint256,address)
+        - event: RewardRecipientAdded(indexed uint256,uint256,indexed address)
           handler: handleRewardRecipientAdded
-        - event: RewarderApproval(indexed uint256,bool,address)
+        - event: RewarderApproval(indexed uint256,bool)
           handler: handleRewarderApproval
-        - event: RewardRecipientApproval(indexed uint256,address)
+        - event: RewardRecipientApproval(indexed uint256)
           handler: handleRewardRecipientApproval

@@ -7,12 +7,6 @@
                 "internalType": "address",
                 "name": "owner",
                 "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "CampaignRewardOwnerSet",
@@ -50,12 +44,6 @@
                 "internalType": "bool",
                 "name": "active",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "RewardCreated",
@@ -69,12 +57,6 @@
                 "internalType": "uint256",
                 "name": "rewardId",
                 "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "RewardDestroyed",
@@ -112,12 +94,6 @@
                 "internalType": "bool",
                 "name": "active",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "RewardModified",
@@ -139,9 +115,9 @@
                 "type": "uint256"
             },
             {
-                "indexed": false,
+                "indexed": true,
                 "internalType": "address",
-                "name": "sender",
+                "name": "user",
                 "type": "address"
             }
         ],
@@ -156,12 +132,6 @@
                 "internalType": "uint256",
                 "name": "rewardRecipientId",
                 "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "RewardRecipientApproval",
@@ -181,12 +151,6 @@
                 "internalType": "uint256",
                 "name": "count",
                 "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "RewardStockIncreased",
@@ -206,12 +170,6 @@
                 "internalType": "bool",
                 "name": "status",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "RewarderApproval",
@@ -728,7 +686,13 @@
             }
         ],
         "name": "assignReward",
-        "outputs": [],
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
         "stateMutability": "nonpayable",
         "type": "function"
     },

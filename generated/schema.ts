@@ -424,23 +424,6 @@ export class CampaignFactory extends Entity {
     }
   }
 
-  get roles(): Array<string> | null {
-    let value = this.get("roles");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set roles(value: Array<string> | null) {
-    if (!value) {
-      this.unset("roles");
-    } else {
-      this.set("roles", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-
   get categories(): Array<string> | null {
     let value = this.get("categories");
     if (!value || value.kind == ValueKind.NULL) {
@@ -542,59 +525,6 @@ export class Token extends Entity {
   }
 }
 
-export class Role extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("campaignFactory", Value.fromString(""));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Role entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save Role entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("Role", id.toString(), this);
-    }
-  }
-
-  static load(id: string): Role | null {
-    return changetype<Role | null>(store.get("Role", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get campaignFactory(): string {
-    let value = this.get("campaignFactory");
-    return value!.toString();
-  }
-
-  set campaignFactory(value: string) {
-    this.set("campaignFactory", Value.fromString(value));
-  }
-
-  get users(): Array<string> {
-    let value = this.get("users");
-    return value!.toStringArray();
-  }
-
-  set users(value: Array<string>) {
-    this.set("users", Value.fromStringArray(value));
-  }
-}
-
 export class User extends Entity {
   constructor(id: string) {
     super();
@@ -642,43 +572,6 @@ export class User extends Entity {
     this.set("campaignFactory", Value.fromString(value));
   }
 
-  get campaignsDeployed(): Array<string> | null {
-    let value = this.get("campaignsDeployed");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set campaignsDeployed(value: Array<string> | null) {
-    if (!value) {
-      this.unset("campaignsDeployed");
-    } else {
-      this.set(
-        "campaignsDeployed",
-        Value.fromStringArray(<Array<string>>value)
-      );
-    }
-  }
-
-  get campaignsBacked(): Array<string> | null {
-    let value = this.get("campaignsBacked");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set campaignsBacked(value: Array<string> | null) {
-    if (!value) {
-      this.unset("campaignsBacked");
-    } else {
-      this.set("campaignsBacked", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-
   get userAddress(): Bytes {
     let value = this.get("userAddress");
     return value!.toBytes();
@@ -697,23 +590,6 @@ export class User extends Entity {
     this.set("joined", Value.fromBigInt(value));
   }
 
-  get updatedAt(): BigInt | null {
-    let value = this.get("updatedAt");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set updatedAt(value: BigInt | null) {
-    if (!value) {
-      this.unset("updatedAt");
-    } else {
-      this.set("updatedAt", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
   get verified(): boolean {
     let value = this.get("verified");
     return value!.toBoolean();
@@ -723,140 +599,126 @@ export class User extends Entity {
     this.set("verified", Value.fromBoolean(value));
   }
 
-  get roles(): Array<string> | null {
-    let value = this.get("roles");
+  get transferredFrom(): Bytes | null {
+    let value = this.get("transferredFrom");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toStringArray();
+      return value.toBytes();
     }
   }
 
-  set roles(value: Array<string> | null) {
+  set transferredFrom(value: Bytes | null) {
     if (!value) {
-      this.unset("roles");
+      this.unset("transferredFrom");
     } else {
-      this.set("roles", Value.fromStringArray(<Array<string>>value));
+      this.set("transferredFrom", Value.fromBytes(<Bytes>value));
     }
   }
 
-  get contributions(): Array<string> | null {
+  get transferredTo(): Bytes | null {
+    let value = this.get("transferredTo");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set transferredTo(value: Bytes | null) {
+    if (!value) {
+      this.unset("transferredTo");
+    } else {
+      this.set("transferredTo", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get totalWithdrawals(): BigInt | null {
+    let value = this.get("totalWithdrawals");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalWithdrawals(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalWithdrawals");
+    } else {
+      this.set("totalWithdrawals", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get totalContributions(): BigInt | null {
+    let value = this.get("totalContributions");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalContributions(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalContributions");
+    } else {
+      this.set("totalContributions", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get contributions(): Array<string> {
     let value = this.get("contributions");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set contributions(value: Array<string> | null) {
-    if (!value) {
-      this.unset("contributions");
-    } else {
-      this.set("contributions", Value.fromStringArray(<Array<string>>value));
-    }
+  set contributions(value: Array<string>) {
+    this.set("contributions", Value.fromStringArray(value));
   }
 
-  get withdrawals(): Array<string> | null {
-    let value = this.get("withdrawals");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set withdrawals(value: Array<string> | null) {
-    if (!value) {
-      this.unset("withdrawals");
-    } else {
-      this.set("withdrawals", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-
-  get rewards(): Array<string> | null {
+  get rewards(): Array<string> {
     let value = this.get("rewards");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set rewards(value: Array<string> | null) {
-    if (!value) {
-      this.unset("rewards");
-    } else {
-      this.set("rewards", Value.fromStringArray(<Array<string>>value));
-    }
+  set rewards(value: Array<string>) {
+    this.set("rewards", Value.fromStringArray(value));
   }
 
-  get votes(): Array<string> | null {
+  get votes(): Array<string> {
     let value = this.get("votes");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set votes(value: Array<string> | null) {
-    if (!value) {
-      this.unset("votes");
-    } else {
-      this.set("votes", Value.fromStringArray(<Array<string>>value));
-    }
+  set votes(value: Array<string>) {
+    this.set("votes", Value.fromStringArray(value));
   }
 
-  get requests(): Array<string> | null {
+  get requests(): Array<string> {
     let value = this.get("requests");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set requests(value: Array<string> | null) {
-    if (!value) {
-      this.unset("requests");
-    } else {
-      this.set("requests", Value.fromStringArray(<Array<string>>value));
-    }
+  set requests(value: Array<string>) {
+    this.set("requests", Value.fromStringArray(value));
   }
 
-  get reports(): Array<string> | null {
+  get reports(): Array<string> {
     let value = this.get("reports");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set reports(value: Array<string> | null) {
-    if (!value) {
-      this.unset("reports");
-    } else {
-      this.set("reports", Value.fromStringArray(<Array<string>>value));
-    }
+  set reports(value: Array<string>) {
+    this.set("reports", Value.fromStringArray(value));
   }
 
-  get reviews(): Array<string> | null {
+  get reviews(): Array<string> {
     let value = this.get("reviews");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set reviews(value: Array<string> | null) {
-    if (!value) {
-      this.unset("reviews");
-    } else {
-      this.set("reviews", Value.fromStringArray(<Array<string>>value));
-    }
+  set reviews(value: Array<string>) {
+    this.set("reviews", Value.fromStringArray(value));
   }
 
   get exists(): boolean {
@@ -1097,23 +959,6 @@ export class Campaign extends Entity {
     this.set("createdAt", Value.fromBigInt(value));
   }
 
-  get updatedAt(): BigInt | null {
-    let value = this.get("updatedAt");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set updatedAt(value: BigInt | null) {
-    if (!value) {
-      this.unset("updatedAt");
-    } else {
-      this.set("updatedAt", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
   get category(): string {
     let value = this.get("category");
     return value!.toString();
@@ -1176,40 +1021,6 @@ export class Campaign extends Entity {
     this.set("allowContributionAfterTargetIsMet", Value.fromBoolean(value));
   }
 
-  get totalCampaignContribution(): BigInt | null {
-    let value = this.get("totalCampaignContribution");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set totalCampaignContribution(value: BigInt | null) {
-    if (!value) {
-      this.unset("totalCampaignContribution");
-    } else {
-      this.set("totalCampaignContribution", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get campaignBalance(): BigInt | null {
-    let value = this.get("campaignBalance");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set campaignBalance(value: BigInt | null) {
-    if (!value) {
-      this.unset("campaignBalance");
-    } else {
-      this.set("campaignBalance", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
   get minimumContribution(): BigInt | null {
     let value = this.get("minimumContribution");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1224,40 +1035,6 @@ export class Campaign extends Entity {
       this.unset("minimumContribution");
     } else {
       this.set("minimumContribution", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get totalApprovers(): BigInt | null {
-    let value = this.get("totalApprovers");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set totalApprovers(value: BigInt | null) {
-    if (!value) {
-      this.unset("totalApprovers");
-    } else {
-      this.set("totalApprovers", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get totalFactoryRevenue(): BigInt | null {
-    let value = this.get("totalFactoryRevenue");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set totalFactoryRevenue(value: BigInt | null) {
-    if (!value) {
-      this.unset("totalFactoryRevenue");
-    } else {
-      this.set("totalFactoryRevenue", Value.fromBigInt(<BigInt>value));
     }
   }
 
@@ -1292,6 +1069,83 @@ export class Campaign extends Entity {
       this.unset("deadline");
     } else {
       this.set("deadline", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get goalType(): string | null {
+    let value = this.get("goalType");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set goalType(value: string | null) {
+    if (!value) {
+      this.unset("goalType");
+    } else {
+      this.set("goalType", Value.fromString(<string>value));
+    }
+  }
+
+  get campaignState(): string {
+    let value = this.get("campaignState");
+    return value!.toString();
+  }
+
+  set campaignState(value: string) {
+    this.set("campaignState", Value.fromString(value));
+  }
+
+  get totalCampaignContribution(): BigInt | null {
+    let value = this.get("totalCampaignContribution");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalCampaignContribution(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalCampaignContribution");
+    } else {
+      this.set("totalCampaignContribution", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get campaignBalance(): BigInt | null {
+    let value = this.get("campaignBalance");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set campaignBalance(value: BigInt | null) {
+    if (!value) {
+      this.unset("campaignBalance");
+    } else {
+      this.set("campaignBalance", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get totalApprovers(): BigInt | null {
+    let value = this.get("totalApprovers");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set totalApprovers(value: BigInt | null) {
+    if (!value) {
+      this.unset("totalApprovers");
+    } else {
+      this.set("totalApprovers", Value.fromBigInt(<BigInt>value));
     }
   }
 
@@ -1344,32 +1198,6 @@ export class Campaign extends Entity {
     } else {
       this.set("totalReviews", Value.fromBigInt(<BigInt>value));
     }
-  }
-
-  get goalType(): string | null {
-    let value = this.get("goalType");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set goalType(value: string | null) {
-    if (!value) {
-      this.unset("goalType");
-    } else {
-      this.set("goalType", Value.fromString(<string>value));
-    }
-  }
-
-  get campaignState(): string {
-    let value = this.get("campaignState");
-    return value!.toString();
-  }
-
-  set campaignState(value: string) {
-    this.set("campaignState", Value.fromString(value));
   }
 
   get requests(): Array<string> | null {
@@ -1440,23 +1268,6 @@ export class Campaign extends Entity {
     }
   }
 
-  get withdrawals(): Array<string> | null {
-    let value = this.get("withdrawals");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set withdrawals(value: Array<string> | null) {
-    if (!value) {
-      this.unset("withdrawals");
-    } else {
-      this.set("withdrawals", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-
   get rewards(): Array<string> | null {
     let value = this.get("rewards");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1511,6 +1322,7 @@ export class Contribution extends Entity {
     this.set("amount", Value.fromBigInt(BigInt.zero()));
     this.set("withReward", Value.fromBoolean(false));
     this.set("reward", Value.fromString(""));
+    this.set("withdrawn", Value.fromBoolean(false));
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
   }
 
@@ -1585,78 +1397,13 @@ export class Contribution extends Entity {
     this.set("reward", Value.fromString(value));
   }
 
-  get createdAt(): BigInt {
-    let value = this.get("createdAt");
-    return value!.toBigInt();
+  get withdrawn(): boolean {
+    let value = this.get("withdrawn");
+    return value!.toBoolean();
   }
 
-  set createdAt(value: BigInt) {
-    this.set("createdAt", Value.fromBigInt(value));
-  }
-}
-
-export class Withdrawal extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-
-    this.set("campaign", Value.fromString(""));
-    this.set("owner", Value.fromString(""));
-    this.set("amount", Value.fromBigInt(BigInt.zero()));
-    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(id != null, "Cannot save Withdrawal entity without an ID");
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        "Cannot save Withdrawal entity with non-string ID. " +
-          'Considering using .toHex() to convert the "id" to a string.'
-      );
-      store.set("Withdrawal", id.toString(), this);
-    }
-  }
-
-  static load(id: string): Withdrawal | null {
-    return changetype<Withdrawal | null>(store.get("Withdrawal", id));
-  }
-
-  get id(): string {
-    let value = this.get("id");
-    return value!.toString();
-  }
-
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
-  }
-
-  get campaign(): string {
-    let value = this.get("campaign");
-    return value!.toString();
-  }
-
-  set campaign(value: string) {
-    this.set("campaign", Value.fromString(value));
-  }
-
-  get owner(): string {
-    let value = this.get("owner");
-    return value!.toString();
-  }
-
-  set owner(value: string) {
-    this.set("owner", Value.fromString(value));
-  }
-
-  get amount(): BigInt {
-    let value = this.get("amount");
-    return value!.toBigInt();
-  }
-
-  set amount(value: BigInt) {
-    this.set("amount", Value.fromBigInt(value));
+  set withdrawn(value: boolean) {
+    this.set("withdrawn", Value.fromBoolean(value));
   }
 
   get createdAt(): BigInt {
@@ -1675,7 +1422,6 @@ export class Reward extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
-    this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("amount", Value.fromBigInt(BigInt.zero()));
     this.set("campaign", Value.fromString(""));
     this.set("exists", Value.fromBoolean(false));
@@ -1714,15 +1460,6 @@ export class Reward extends Entity {
 
   set createdAt(value: BigInt) {
     this.set("createdAt", Value.fromBigInt(value));
-  }
-
-  get updatedAt(): BigInt {
-    let value = this.get("updatedAt");
-    return value!.toBigInt();
-  }
-
-  set updatedAt(value: BigInt) {
-    this.set("updatedAt", Value.fromBigInt(value));
   }
 
   get amount(): BigInt {
@@ -2010,6 +1747,23 @@ export class Request extends Entity {
     this.set("void", Value.fromBoolean(value));
   }
 
+  get voidedBy(): string | null {
+    let value = this.get("voidedBy");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set voidedBy(value: string | null) {
+    if (!value) {
+      this.unset("voidedBy");
+    } else {
+      this.set("voidedBy", Value.fromString(<string>value));
+    }
+  }
+
   get votes(): Array<string> {
     let value = this.get("votes");
     return value!.toStringArray();
@@ -2040,7 +1794,7 @@ export class Vote extends Entity {
     this.set("request", Value.fromString(""));
     this.set("owner", Value.fromString(""));
     this.set("support", Value.fromBigInt(BigInt.zero()));
-    this.set("cancelled", Value.fromBoolean(false));
+    this.set("voted", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -2123,13 +1877,13 @@ export class Vote extends Entity {
     this.set("support", Value.fromBigInt(value));
   }
 
-  get cancelled(): boolean {
-    let value = this.get("cancelled");
+  get voted(): boolean {
+    let value = this.get("voted");
     return value!.toBoolean();
   }
 
-  set cancelled(value: boolean) {
-    this.set("cancelled", Value.fromBoolean(value));
+  set voted(value: boolean) {
+    this.set("voted", Value.fromBoolean(value));
   }
 }
 

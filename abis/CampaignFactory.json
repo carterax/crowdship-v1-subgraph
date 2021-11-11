@@ -13,12 +13,6 @@
                 "internalType": "bool",
                 "name": "active",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "CampaignActiveToggle",
@@ -38,12 +32,6 @@
                 "internalType": "bool",
                 "name": "approval",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "CampaignApproval",
@@ -63,12 +51,6 @@
                 "internalType": "uint256",
                 "name": "newCategory",
                 "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "CampaignCategoryChange",
@@ -128,9 +110,9 @@
             },
             {
                 "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool"
             }
         ],
         "name": "CampaignDeployed",
@@ -169,12 +151,6 @@
                 "internalType": "bool",
                 "name": "active",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "CategoryAdded",
@@ -213,12 +189,6 @@
                 "internalType": "bool",
                 "name": "active",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "CategoryModified",
@@ -345,12 +315,6 @@
                 "internalType": "address",
                 "name": "token",
                 "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "TokenAdded",
@@ -370,12 +334,6 @@
                 "internalType": "bool",
                 "name": "state",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "TokenApproval",
@@ -388,12 +346,6 @@
                 "indexed": false,
                 "internalType": "address",
                 "name": "token",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
                 "type": "address"
             }
         ],
@@ -421,12 +373,6 @@
                 "internalType": "uint256",
                 "name": "userId",
                 "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "UserAdded",
@@ -452,12 +398,6 @@
                 "internalType": "bool",
                 "name": "approval",
                 "type": "bool"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "sender",
-                "type": "address"
             }
         ],
         "name": "UserApproval",
@@ -1361,6 +1301,11 @@
                 "internalType": "uint256",
                 "name": "_categoryId",
                 "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "_approved",
+                "type": "bool"
             }
         ],
         "name": "createCampaign",

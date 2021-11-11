@@ -26,10 +26,6 @@ export class CampaignRewardOwnerSet__Params {
   get owner(): Address {
     return this._event.parameters[0].value.toAddress();
   }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
 }
 
 export class RewardCreated extends ethereum.Event {
@@ -64,10 +60,6 @@ export class RewardCreated__Params {
   get active(): boolean {
     return this._event.parameters[4].value.toBoolean();
   }
-
-  get sender(): Address {
-    return this._event.parameters[5].value.toAddress();
-  }
 }
 
 export class RewardDestroyed extends ethereum.Event {
@@ -85,10 +77,6 @@ export class RewardDestroyed__Params {
 
   get rewardId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -124,10 +112,6 @@ export class RewardModified__Params {
   get active(): boolean {
     return this._event.parameters[4].value.toBoolean();
   }
-
-  get sender(): Address {
-    return this._event.parameters[5].value.toAddress();
-  }
 }
 
 export class RewardRecipientAdded extends ethereum.Event {
@@ -151,7 +135,7 @@ export class RewardRecipientAdded__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get sender(): Address {
+  get user(): Address {
     return this._event.parameters[2].value.toAddress();
   }
 }
@@ -171,10 +155,6 @@ export class RewardRecipientApproval__Params {
 
   get rewardRecipientId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -198,10 +178,6 @@ export class RewardStockIncreased__Params {
   get count(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
 }
 
 export class RewarderApproval extends ethereum.Event {
@@ -223,10 +199,6 @@ export class RewarderApproval__Params {
 
   get status(): boolean {
     return this._event.parameters[1].value.toBoolean();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -698,6 +670,41 @@ export class CampaignRewards extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
+
+  assignReward(_rewardId: BigInt, _amount: BigInt, _user: Address): BigInt {
+    let result = super.call(
+      "assignReward",
+      "assignReward(uint256,uint256,address):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(_rewardId),
+        ethereum.Value.fromUnsignedBigInt(_amount),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_assignReward(
+    _rewardId: BigInt,
+    _amount: BigInt,
+    _user: Address
+  ): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "assignReward",
+      "assignReward(uint256,uint256,address):(uint256)",
+      [
+        ethereum.Value.fromUnsignedBigInt(_rewardId),
+        ethereum.Value.fromUnsignedBigInt(_amount),
+        ethereum.Value.fromAddress(_user)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
 }
 
 export class AddRoleCall extends ethereum.Call {
@@ -1015,6 +1022,10 @@ export class AssignRewardCall__Outputs {
 
   constructor(call: AssignRewardCall) {
     this._call = call;
+  }
+
+  get value0(): BigInt {
+    return this._call.outputValues[0].value.toBigInt();
   }
 }
 
