@@ -42,7 +42,7 @@ templates:
         - name: CampaignFactory
           file: ./abis/CampaignFactory.json
       eventHandlers:
-        - event: FactoryConfigUpdated(address,address,address)
+        - event: FactoryConfigUpdated(address,address,address,address,address)
           handler: handleFactoryConfigUpdated
         - event: CategoryCommissionUpdated(indexed uint256,uint256)
           handler: handleCategoryCommissionUpdated
@@ -56,7 +56,7 @@ templates:
           handler: handleCampaignApproval
         - event: CampaignCategoryChange(indexed address,uint256)
           handler: handleCampaignCategoryChange
-        - event: CampaignDeployed(indexed uint256,address,address,address,uint256,uint256,bool)
+        - event: CampaignDeployed(address,address,address,address,address,uint256,bool)
           handler: handleCampaignDeployed
         - event: CategoryAdded(indexed uint256,bool)
           handler: handleCategoryAdded
@@ -74,8 +74,6 @@ templates:
           handler: handleTokenAdded
         - event: TokenApproval(indexed address,bool)
           handler: handleTokenApproval
-        - event: TokenRemoved(address)
-          handler: handleTokenRemoved
         - event: Unpaused(address)
           handler: handleUnpaused
         - event: UserAdded(indexed uint256)
@@ -111,6 +109,8 @@ templates:
           handler: handleCampaignSettingsUpdated
         - event: CampaignDeadlineExtended(uint256)
           handler: handleCampaignDeadlineExtended
+        - event: DeadlineThresholdExtended(uint8)
+          handler: handleDeadlineThresholdExtended
         - event: CampaignReported(address)
           handler: handleCampaignReported
         - event: CampaignUserDataTransferred(address,address)
@@ -119,25 +119,17 @@ templates:
           handler: handleContributionMade
         - event: ContributionWithdrawn(indexed uint256,uint256,address)
           handler: handleContributionWithdrawn
-        - event: RequestAdded(indexed uint256,uint256,uint256,address)
-          handler: handleRequestAdded
-        - event: RequestVoided(indexed uint256)
-          handler: handleRequestVoided
         - event: RequestComplete(indexed uint256)
           handler: handleRequestComplete
-        - event: Voted(indexed uint256,indexed uint256,uint8)
-          handler: handleVoted
-        - event: VoteCancelled(indexed uint256,indexed uint256,uint8)
-          handler: handleVoteCancelled
         - event: CampaignReviewed(address)
           handler: handleCampaignReviewed
         - event: CampaignStateChange(uint8)
           handler: handleCampaignStateChange
   - kind: ethereum/contract
-    name: CampaignRewards
+    name: CampaignReward
     network: rinkeby
     source:
-      abi: CampaignRewards
+      abi: CampaignReward
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -145,10 +137,10 @@ templates:
       entities:
         - Reward
         - RewardRecipient
-      file: ./src/mappings/campaignRewards.ts
+      file: ./src/mappings/campaignReward.ts
       abis:
-        - name: CampaignRewards
-          file: ./abis/CampaignRewards.json
+        - name: CampaignReward
+          file: ./abis/CampaignReward.json
       eventHandlers:
         - event: RewardCreated(indexed uint256,uint256,uint256,uint256,bool)
           handler: handleRewardCreated
@@ -158,9 +150,49 @@ templates:
           handler: handleRewardStockIncreased
         - event: RewardDestroyed(indexed uint256)
           handler: handleRewardDestroyed
-        - event: RewardRecipientAdded(indexed uint256,uint256,indexed address)
+        - event: RewardRecipientAdded(indexed uint256,indexed uint256,uint256,indexed address)
           handler: handleRewardRecipientAdded
         - event: RewarderApproval(indexed uint256,bool)
           handler: handleRewarderApproval
         - event: RewardRecipientApproval(indexed uint256)
           handler: handleRewardRecipientApproval
+  - kind: ethereum/contract
+    name: CampaignRequest
+    network: rinkeby
+    source:
+      abi: CampaignRequest
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Request
+      file: ./src/mappings/campaignRequest.ts
+      abis:
+        - name: CampaignRequest
+          file: ./abis/CampaignRequest.json
+      eventHandlers:
+        - event: RequestAdded(indexed uint256,uint256,uint256,address)
+          handler: handleRequestAdded
+        - event: RequestVoided(indexed uint256)
+          handler: handleRequestVoided
+  - kind: ethereum/contract
+    name: CampaignVote
+    network: rinkeby
+    source:
+      abi: CampaignVote
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Vote
+      file: ./src/mappings/campaignVote.ts
+      abis:
+        - name: CampaignVote
+          file: ./abis/CampaignVote.json
+      eventHandlers:
+        - event: Voted(indexed uint256,indexed uint256,uint8)
+          handler: handleVoted
+        - event: VoteCancelled(indexed uint256,indexed uint256,uint8)
+          handler: handleVoteCancelled

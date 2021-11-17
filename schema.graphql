@@ -47,6 +47,11 @@ type CampaignFactory @entity {
   requestFinalizationThreshold: BigInt!
   reportThresholdMark: BigInt!
 
+  campaignCount: BigInt!
+  categoriesCount: BigInt!
+  userCount: BigInt!
+  tokenCount: BigInt!
+
   # totalRevenueFromFeatures: BigInt
   "current owner of the factory"
   owner: ID!
@@ -62,29 +67,26 @@ type Token @entity {
   createdAt: BigInt!
   campaignFactory: CampaignFactory!
   approved: Boolean!
-  campaigns: [Campaign!]! @derivedFrom(field: "token")
-  exists: Boolean!
 }
 
 type User @entity {
   id: ID!
   campaignFactory: CampaignFactory!
-  # campaignsDeployed: [Campaign!]! @derivedFrom(field: "owner")
-  # campaignsBacked: [Campaign!]! @derivedFrom(field: "approvers")
   userAddress: Bytes!
   joined: BigInt!
   verified: Boolean!
   transferredFrom: Bytes
   transferredTo: Bytes
-  totalWithdrawals: BigInt
-  totalContributions: BigInt
+  totalWithdrawals: BigInt!
+  totalContributions: BigInt!
   contributions: [Contribution!]! @derivedFrom(field: "owner")
+  contributionCount: BigInt!
   rewards: [RewardRecipient!]! @derivedFrom(field: "owner")
+  rewardCount: BigInt!
   votes: [Vote!]! @derivedFrom(field: "owner")
   requests: [Request!]! @derivedFrom(field: "owner")
   reports: [Report!]! @derivedFrom(field: "owner")
   reviews: [Review!]! @derivedFrom(field: "owner")
-  exists: Boolean!
 }
 
 type Category @entity {
@@ -96,16 +98,12 @@ type Category @entity {
   createdAt: BigInt!
   updatedAt: BigInt!
   active: Boolean!
-  exists: Boolean!
 }
 
 type Campaign @entity {
   id: ID!
   campaignFactory: CampaignFactory!
-  campaignAddress: Bytes!
-  rewardsAddress: Bytes!
   owner: User!
-  approvers: [User!]
   createdAt: BigInt!
   category: Category!
   active: Boolean!
@@ -115,25 +113,52 @@ type Campaign @entity {
   allowContributionAfterTargetIsMet: Boolean
   minimumContribution: BigInt
   target: BigInt
-  deadline: BigInt
+  deadline: BigInt!
   goalType: GoalType
   campaignState: CampaignState!
+  totalCampaignContribution: BigInt!
+  campaignBalance: BigInt!
+  deadlineExtensionThreshold: BigInt!
+  deadlineExtensionThresholdCount: BigInt!
 
-  totalCampaignContribution: BigInt
-  campaignBalance: BigInt
-  totalApprovers: BigInt
-  totalFinalizedRequests: BigInt
-  totalReports: BigInt
-  totalReviews: BigInt
+  "aggregates"
+  approversCount: BigInt!
+  reportCount: BigInt!
+  reviewCount: BigInt!
+
+  "aux contracts"
+  rewardFactory: RewardFactory!
+  requestFactory: RequestFactory!
+  voteFactory: VoteFactory!
 
   "derived fields"
-  requests: [Request!] @derivedFrom(field: "campaign")
-  reports: [Report!] @derivedFrom(field: "campaign")
-  reviews: [Review!] @derivedFrom(field: "campaign")
-  contributions: [Contribution!] @derivedFrom(field: "campaign")
-  rewards: [Reward!] @derivedFrom(field: "campaign")
-  rewardRecipients: [RewardRecipient!] @derivedFrom(field: "campaign")
-  exists: Boolean!
+  contributions: [Contribution!]! @derivedFrom(field: "campaign")
+  reports: [Report!]! @derivedFrom(field: "campaign")
+  reviews: [Review!]! @derivedFrom(field: "campaign")
+}
+
+type RewardFactory @entity {
+  id: ID!
+  campaign: Campaign!
+  createdAt: BigInt!
+  rewardCount: BigInt!
+  rewards: [Reward!]! @derivedFrom(field: "rewardFactory")
+}
+
+type RequestFactory @entity {
+  id: ID!
+  campaign: Campaign!
+  createdAt: BigInt!
+  requestCount: BigInt!
+  finalizedRequestCount: BigInt!
+  requests: [Request!]! @derivedFrom(field: "requestFactory")
+}
+
+type VoteFactory @entity {
+  id: ID!
+  campaign: Campaign!
+  createdAt: BigInt!
+  votes: [Vote!]! @derivedFrom(field: "voteFactory")
 }
 
 type Contribution @entity {
@@ -151,14 +176,16 @@ type Reward @entity {
   id: ID!
   createdAt: BigInt!
   amount: BigInt!
-  campaign: Campaign!
+  stock: BigInt!
+  deliveryDate: BigInt!
+  active: Boolean!
+  rewardFactory: RewardFactory!
   rewardRecipients: [RewardRecipient!]! @derivedFrom(field: "reward")
   exists: Boolean!
 }
 
 type RewardRecipient @entity {
   id: ID!
-  campaign: Campaign!
   owner: User!
   createdAt: BigInt!
   updatedAt: BigInt!
@@ -172,12 +199,13 @@ type Request @entity {
   createdAt: BigInt!
   updatedAt: BigInt!
   campaign: Campaign!
+  requestFactory: RequestFactory!
   recipient: Bytes!
   complete: Boolean!
   value: BigInt!
-  totalApprovals: BigInt!
-  totalAgainst: BigInt!
-  totalAbstained: BigInt!
+  approvalCount: BigInt!
+  againstCount: BigInt!
+  abstainedCount: BigInt!
   duration: BigInt!
   void: Boolean!
   voidedBy: User
@@ -187,7 +215,7 @@ type Request @entity {
 
 type Vote @entity {
   id: ID!
-  campaign: Campaign!
+  voteFactory: VoteFactory!
   createdAt: BigInt!
   updatedAt: BigInt!
   request: Request!

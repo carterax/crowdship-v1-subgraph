@@ -34,14 +34,42 @@ export class Campaign extends DataSourceTemplate {
   }
 }
 
-export class CampaignRewards extends DataSourceTemplate {
+export class CampaignReward extends DataSourceTemplate {
   static create(address: Address): void {
-    DataSourceTemplate.create("CampaignRewards", [address.toHex()]);
+    DataSourceTemplate.create("CampaignReward", [address.toHex()]);
   }
 
   static createWithContext(address: Address, context: DataSourceContext): void {
     DataSourceTemplate.createWithContext(
-      "CampaignRewards",
+      "CampaignReward",
+      [address.toHex()],
+      context
+    );
+  }
+}
+
+export class CampaignRequest extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("CampaignRequest", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "CampaignRequest",
+      [address.toHex()],
+      context
+    );
+  }
+}
+
+export class CampaignVote extends DataSourceTemplate {
+  static create(address: Address): void {
+    DataSourceTemplate.create("CampaignVote", [address.toHex()]);
+  }
+
+  static createWithContext(address: Address, context: DataSourceContext): void {
+    DataSourceTemplate.createWithContext(
+      "CampaignVote",
       [address.toHex()],
       context
     );

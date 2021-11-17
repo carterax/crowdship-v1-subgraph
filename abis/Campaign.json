@@ -206,6 +206,19 @@
         "inputs": [
             {
                 "indexed": false,
+                "internalType": "uint8",
+                "name": "count",
+                "type": "uint8"
+            }
+        ],
+        "name": "DeadlineThresholdExtended",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
                 "internalType": "address",
                 "name": "account",
                 "type": "address"
@@ -222,53 +235,9 @@
                 "internalType": "uint256",
                 "name": "requestId",
                 "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "duration",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "recipient",
-                "type": "address"
-            }
-        ],
-        "name": "RequestAdded",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "requestId",
-                "type": "uint256"
             }
         ],
         "name": "RequestComplete",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "requestId",
-                "type": "uint256"
-            }
-        ],
-        "name": "RequestVoided",
         "type": "event"
     },
     {
@@ -357,56 +326,6 @@
             }
         ],
         "name": "Unpaused",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "voteId",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "requestId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint8",
-                "name": "support",
-                "type": "uint8"
-            }
-        ],
-        "name": "VoteCancelled",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "voteId",
-                "type": "uint256"
-            },
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "requestId",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "uint8",
-                "name": "support",
-                "type": "uint8"
-            }
-        ],
-        "name": "Voted",
         "type": "event"
     },
     {
@@ -552,12 +471,51 @@
     },
     {
         "inputs": [],
+        "name": "campaignRequestContract",
+        "outputs": [
+            {
+                "internalType": "contract ICampaignRequest",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "campaignRewardContract",
+        "outputs": [
+            {
+                "internalType": "contract ICampaignReward",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
         "name": "campaignState",
         "outputs": [
             {
                 "internalType": "enum Campaign.CAMPAIGN_STATE",
                 "name": "",
                 "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "campaignVoteContract",
+        "outputs": [
+            {
+                "internalType": "contract ICampaignVote",
+                "name": "",
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -584,19 +542,6 @@
     },
     {
         "inputs": [],
-        "name": "currentRunningRequest",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "deadline",
         "outputs": [
             {
@@ -611,19 +556,6 @@
     {
         "inputs": [],
         "name": "deadlineSetTimes",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "finalizedRequestCount",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -735,6 +667,32 @@
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "percent",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "percentBase",
+        "outputs": [
+            {
+                "internalType": "uint8",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "address",
@@ -803,73 +761,6 @@
             {
                 "internalType": "bool",
                 "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "requestCount",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "requests",
-        "outputs": [
-            {
-                "internalType": "address payable",
-                "name": "recipient",
-                "type": "address"
-            },
-            {
-                "internalType": "bool",
-                "name": "complete",
-                "type": "bool"
-            },
-            {
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "approvalCount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "againstCount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "abstainedCount",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "duration",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "void",
                 "type": "bool"
             }
         ],
@@ -972,8 +863,46 @@
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "timeUntilNextTransferConfirmation",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "totalCampaignContribution",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "transferAttemptCount",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -1005,8 +934,18 @@
                 "type": "address"
             },
             {
-                "internalType": "contract CampaignRewards",
-                "name": "_camaignRewards",
+                "internalType": "contract CampaignReward",
+                "name": "_campaignRewards",
+                "type": "address"
+            },
+            {
+                "internalType": "contract CampaignRequest",
+                "name": "_campaignRequests",
+                "type": "address"
+            },
+            {
+                "internalType": "contract CampaignVote",
+                "name": "_campaignVotes",
                 "type": "address"
             },
             {
@@ -1023,6 +962,57 @@
         "name": "__Campaign_init",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "isCampaignAdmin",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCampaignGoalType",
+        "outputs": [
+            {
+                "internalType": "enum Campaign.GOALTYPE",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_state",
+                "type": "uint256"
+            }
+        ],
+        "name": "getCampaignState",
+        "outputs": [
+            {
+                "internalType": "enum Campaign.CAMPAIGN_STATE",
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "stateMutability": "pure",
         "type": "function"
     },
     {
@@ -1162,24 +1152,6 @@
                 "internalType": "address",
                 "name": "_user",
                 "type": "address"
-            },
-            {
-                "internalType": "address payable",
-                "name": "_wallet",
-                "type": "address"
-            }
-        ],
-        "name": "withdrawContributionForUser",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_user",
-                "type": "address"
             }
         ],
         "name": "userContributionLoss",
@@ -1191,73 +1163,6 @@
             }
         ],
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address payable",
-                "name": "_recipient",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_value",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_duration",
-                "type": "uint256"
-            }
-        ],
-        "name": "createRequest",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_requestId",
-                "type": "uint256"
-            }
-        ],
-        "name": "voidRequest",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_requestId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint8",
-                "name": "_support",
-                "type": "uint8"
-            }
-        ],
-        "name": "voteOnRequest",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_requestId",
-                "type": "uint256"
-            }
-        ],
-        "name": "cancelVote",
-        "outputs": [],
-        "stateMutability": "nonpayable",
         "type": "function"
     },
     {

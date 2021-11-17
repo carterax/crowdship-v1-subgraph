@@ -107,24 +107,24 @@ export class CampaignDeployed__Params {
     this._event = event;
   }
 
-  get campaignId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
   get factory(): Address {
-    return this._event.parameters[1].value.toAddress();
+    return this._event.parameters[0].value.toAddress();
   }
 
   get campaign(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[1].value.toAddress();
   }
 
   get campaignRewards(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
+  get campaignRequests(): Address {
     return this._event.parameters[3].value.toAddress();
   }
 
-  get userId(): BigInt {
-    return this._event.parameters[4].value.toBigInt();
+  get campaignVotes(): Address {
+    return this._event.parameters[4].value.toAddress();
   }
 
   get category(): BigInt {
@@ -247,6 +247,14 @@ export class FactoryConfigUpdated__Params {
 
   get campaignRewardsImplementation(): Address {
     return this._event.parameters[2].value.toAddress();
+  }
+
+  get campaignRequestsImplementation(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+
+  get campaignVotesImplementation(): Address {
+    return this._event.parameters[4].value.toAddress();
   }
 }
 
@@ -386,21 +394,47 @@ export class TokenApproval__Params {
   }
 }
 
-export class TokenRemoved extends ethereum.Event {
-  get params(): TokenRemoved__Params {
-    return new TokenRemoved__Params(this);
+export class TrusteeAdded extends ethereum.Event {
+  get params(): TrusteeAdded__Params {
+    return new TrusteeAdded__Params(this);
   }
 }
 
-export class TokenRemoved__Params {
-  _event: TokenRemoved;
+export class TrusteeAdded__Params {
+  _event: TrusteeAdded;
 
-  constructor(event: TokenRemoved) {
+  constructor(event: TrusteeAdded) {
     this._event = event;
   }
 
-  get token(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get trusteeId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get trusteeAddress(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
+export class TrusteeRemoved extends ethereum.Event {
+  get params(): TrusteeRemoved__Params {
+    return new TrusteeRemoved__Params(this);
+  }
+}
+
+export class TrusteeRemoved__Params {
+  _event: TrusteeRemoved;
+
+  constructor(event: TrusteeRemoved) {
+    this._event = event;
+  }
+
+  get trusteeId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get trusteeAddress(): Address {
+    return this._event.parameters[1].value.toAddress();
   }
 }
 
@@ -501,26 +535,18 @@ export class CampaignFactory__campaignCategoriesResult {
 export class CampaignFactory__deployedCampaignsResult {
   value0: Address;
   value1: Address;
-  value2: Address;
+  value2: BigInt;
   value3: BigInt;
   value4: BigInt;
-  value5: BigInt;
-  value6: BigInt;
-  value7: boolean;
-  value8: boolean;
-  value9: boolean;
+  value5: boolean;
 
   constructor(
     value0: Address,
     value1: Address,
-    value2: Address,
+    value2: BigInt,
     value3: BigInt,
     value4: BigInt,
-    value5: BigInt,
-    value6: BigInt,
-    value7: boolean,
-    value8: boolean,
-    value9: boolean
+    value5: boolean
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -528,24 +554,44 @@ export class CampaignFactory__deployedCampaignsResult {
     this.value3 = value3;
     this.value4 = value4;
     this.value5 = value5;
-    this.value6 = value6;
-    this.value7 = value7;
-    this.value8 = value8;
-    this.value9 = value9;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromAddress(this.value0));
     map.set("value1", ethereum.Value.fromAddress(this.value1));
-    map.set("value2", ethereum.Value.fromAddress(this.value2));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
-    map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
-    map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
-    map.set("value7", ethereum.Value.fromBoolean(this.value7));
-    map.set("value8", ethereum.Value.fromBoolean(this.value8));
-    map.set("value9", ethereum.Value.fromBoolean(this.value9));
+    map.set("value5", ethereum.Value.fromBoolean(this.value5));
+    return map;
+  }
+}
+
+export class CampaignFactory__trusteesResult {
+  value0: Address;
+  value1: Address;
+  value2: BigInt;
+  value3: boolean;
+
+  constructor(
+    value0: Address,
+    value1: Address,
+    value2: BigInt,
+    value3: boolean
+  ) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+    this.value3 = value3;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromAddress(this.value1));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromBoolean(this.value3));
     return map;
   }
 }
@@ -802,6 +848,29 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  campaignRequestsImplementation(): Address {
+    let result = super.call(
+      "campaignRequestsImplementation",
+      "campaignRequestsImplementation():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_campaignRequestsImplementation(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "campaignRequestsImplementation",
+      "campaignRequestsImplementation():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   campaignRevenueFromCommissions(param0: BigInt): BigInt {
     let result = super.call(
       "campaignRevenueFromCommissions",
@@ -942,6 +1011,29 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
+  campaignVotesImplementation(): Address {
+    let result = super.call(
+      "campaignVotesImplementation",
+      "campaignVotesImplementation():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_campaignVotesImplementation(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "campaignVotesImplementation",
+      "campaignVotesImplementation():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   categoryCommission(param0: BigInt): BigInt {
     let result = super.call(
       "categoryCommission",
@@ -987,21 +1079,17 @@ export class CampaignFactory extends ethereum.SmartContract {
   deployedCampaigns(param0: BigInt): CampaignFactory__deployedCampaignsResult {
     let result = super.call(
       "deployedCampaigns",
-      "deployedCampaigns(uint256):(address,address,address,uint256,uint256,uint256,uint256,bool,bool,bool)",
+      "deployedCampaigns(uint256):(address,address,uint256,uint256,uint256,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
     return new CampaignFactory__deployedCampaignsResult(
       result[0].toAddress(),
       result[1].toAddress(),
-      result[2].toAddress(),
+      result[2].toBigInt(),
       result[3].toBigInt(),
       result[4].toBigInt(),
-      result[5].toBigInt(),
-      result[6].toBigInt(),
-      result[7].toBoolean(),
-      result[8].toBoolean(),
-      result[9].toBoolean()
+      result[5].toBoolean()
     );
   }
 
@@ -1010,7 +1098,7 @@ export class CampaignFactory extends ethereum.SmartContract {
   ): ethereum.CallResult<CampaignFactory__deployedCampaignsResult> {
     let result = super.tryCall(
       "deployedCampaigns",
-      "deployedCampaigns(uint256):(address,address,address,uint256,uint256,uint256,uint256,bool,bool,bool)",
+      "deployedCampaigns(uint256):(address,address,uint256,uint256,uint256,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -1021,14 +1109,10 @@ export class CampaignFactory extends ethereum.SmartContract {
       new CampaignFactory__deployedCampaignsResult(
         value[0].toAddress(),
         value[1].toAddress(),
-        value[2].toAddress(),
+        value[2].toBigInt(),
         value[3].toBigInt(),
         value[4].toBigInt(),
-        value[5].toBigInt(),
-        value[6].toBigInt(),
-        value[7].toBoolean(),
-        value[8].toBoolean(),
-        value[9].toBoolean()
+        value[5].toBoolean()
       )
     );
   }
@@ -1106,6 +1190,32 @@ export class CampaignFactory extends ethereum.SmartContract {
       ethereum.Value.fromFixedBytes(role),
       ethereum.Value.fromAddress(account)
     ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isUserTrustee(param0: Address, param1: Address): boolean {
+    let result = super.call(
+      "isUserTrustee",
+      "isUserTrustee(address,address):(bool)",
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isUserTrustee(
+    param0: Address,
+    param1: Address
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isUserTrustee",
+      "isUserTrustee(address,address):(bool)",
+      [ethereum.Value.fromAddress(param0), ethereum.Value.fromAddress(param1)]
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1208,6 +1318,43 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
+  trustees(param0: BigInt): CampaignFactory__trusteesResult {
+    let result = super.call(
+      "trustees",
+      "trustees(uint256):(address,address,uint256,bool)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
+
+    return new CampaignFactory__trusteesResult(
+      result[0].toAddress(),
+      result[1].toAddress(),
+      result[2].toBigInt(),
+      result[3].toBoolean()
+    );
+  }
+
+  try_trustees(
+    param0: BigInt
+  ): ethereum.CallResult<CampaignFactory__trusteesResult> {
+    let result = super.tryCall(
+      "trustees",
+      "trustees(uint256):(address,address,uint256,bool)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new CampaignFactory__trusteesResult(
+        value[0].toAddress(),
+        value[1].toAddress(),
+        value[2].toBigInt(),
+        value[3].toBoolean()
+      )
+    );
+  }
+
   userCount(): BigInt {
     let result = super.call("userCount", "userCount():(uint256)", []);
 
@@ -1235,6 +1382,29 @@ export class CampaignFactory extends ethereum.SmartContract {
     let result = super.tryCall("userID", "userID(address):(uint256)", [
       ethereum.Value.fromAddress(param0)
     ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  userTrusteeCount(param0: Address): BigInt {
+    let result = super.call(
+      "userTrusteeCount",
+      "userTrusteeCount(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_userTrusteeCount(param0: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "userTrusteeCount",
+      "userTrusteeCount(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1293,6 +1463,29 @@ export class CampaignFactory extends ethereum.SmartContract {
     let result = super.tryCall(
       "canManageCampaigns",
       "canManageCampaigns(address):(bool)",
+      [ethereum.Value.fromAddress(_user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  userIsVerified(_user: Address): boolean {
+    let result = super.call(
+      "userIsVerified",
+      "userIsVerified(address):(bool)",
+      [ethereum.Value.fromAddress(_user)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_userIsVerified(_user: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "userIsVerified",
+      "userIsVerified(address):(bool)",
       [ethereum.Value.fromAddress(_user)]
     );
     if (result.reverted) {
@@ -1561,6 +1754,14 @@ export class SetFactoryConfigCall__Inputs {
   get _campaignRewardsImplementation(): Address {
     return this._call.inputValues[2].value.toAddress();
   }
+
+  get _campaignRequestsImplementation(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get _campaignVotesImplementation(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
 }
 
 export class SetFactoryConfigCall__Outputs {
@@ -1737,36 +1938,6 @@ export class AddTokenCall__Outputs {
   }
 }
 
-export class RemoveTokenCall extends ethereum.Call {
-  get inputs(): RemoveTokenCall__Inputs {
-    return new RemoveTokenCall__Inputs(this);
-  }
-
-  get outputs(): RemoveTokenCall__Outputs {
-    return new RemoveTokenCall__Outputs(this);
-  }
-}
-
-export class RemoveTokenCall__Inputs {
-  _call: RemoveTokenCall;
-
-  constructor(call: RemoveTokenCall) {
-    this._call = call;
-  }
-
-  get _token(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-}
-
-export class RemoveTokenCall__Outputs {
-  _call: RemoveTokenCall;
-
-  constructor(call: RemoveTokenCall) {
-    this._call = call;
-  }
-}
-
 export class ToggleAcceptedTokenCall extends ethereum.Call {
   get inputs(): ToggleAcceptedTokenCall__Inputs {
     return new ToggleAcceptedTokenCall__Inputs(this);
@@ -1857,6 +2028,66 @@ export class SignUpCall__Outputs {
   _call: SignUpCall;
 
   constructor(call: SignUpCall) {
+    this._call = call;
+  }
+}
+
+export class AddTrusteeCall extends ethereum.Call {
+  get inputs(): AddTrusteeCall__Inputs {
+    return new AddTrusteeCall__Inputs(this);
+  }
+
+  get outputs(): AddTrusteeCall__Outputs {
+    return new AddTrusteeCall__Outputs(this);
+  }
+}
+
+export class AddTrusteeCall__Inputs {
+  _call: AddTrusteeCall;
+
+  constructor(call: AddTrusteeCall) {
+    this._call = call;
+  }
+
+  get _trustee(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class AddTrusteeCall__Outputs {
+  _call: AddTrusteeCall;
+
+  constructor(call: AddTrusteeCall) {
+    this._call = call;
+  }
+}
+
+export class RemoveTrusteeCall extends ethereum.Call {
+  get inputs(): RemoveTrusteeCall__Inputs {
+    return new RemoveTrusteeCall__Inputs(this);
+  }
+
+  get outputs(): RemoveTrusteeCall__Outputs {
+    return new RemoveTrusteeCall__Outputs(this);
+  }
+}
+
+export class RemoveTrusteeCall__Inputs {
+  _call: RemoveTrusteeCall;
+
+  constructor(call: RemoveTrusteeCall) {
+    this._call = call;
+  }
+
+  get _trusteeId(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class RemoveTrusteeCall__Outputs {
+  _call: RemoveTrusteeCall;
+
+  constructor(call: RemoveTrusteeCall) {
     this._call = call;
   }
 }
@@ -1959,40 +2190,6 @@ export class ToggleCampaignApprovalCall__Outputs {
   _call: ToggleCampaignApprovalCall;
 
   constructor(call: ToggleCampaignApprovalCall) {
-    this._call = call;
-  }
-}
-
-export class ToggleCampaignActiveCall extends ethereum.Call {
-  get inputs(): ToggleCampaignActiveCall__Inputs {
-    return new ToggleCampaignActiveCall__Inputs(this);
-  }
-
-  get outputs(): ToggleCampaignActiveCall__Outputs {
-    return new ToggleCampaignActiveCall__Outputs(this);
-  }
-}
-
-export class ToggleCampaignActiveCall__Inputs {
-  _call: ToggleCampaignActiveCall;
-
-  constructor(call: ToggleCampaignActiveCall) {
-    this._call = call;
-  }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get _active(): boolean {
-    return this._call.inputValues[1].value.toBoolean();
-  }
-}
-
-export class ToggleCampaignActiveCall__Outputs {
-  _call: ToggleCampaignActiveCall;
-
-  constructor(call: ToggleCampaignActiveCall) {
     this._call = call;
   }
 }

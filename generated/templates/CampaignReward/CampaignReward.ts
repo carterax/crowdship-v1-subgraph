@@ -28,6 +28,24 @@ export class CampaignRewardOwnerSet__Params {
   }
 }
 
+export class Paused extends ethereum.Event {
+  get params(): Paused__Params {
+    return new Paused__Params(this);
+  }
+}
+
+export class Paused__Params {
+  _event: Paused;
+
+  constructor(event: Paused) {
+    this._event = event;
+  }
+
+  get account(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class RewardCreated extends ethereum.Event {
   get params(): RewardCreated__Params {
     return new RewardCreated__Params(this);
@@ -127,16 +145,20 @@ export class RewardRecipientAdded__Params {
     this._event = event;
   }
 
-  get rewardId(): BigInt {
+  get rewardRecipientId(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get amount(): BigInt {
+  get rewardId(): BigInt {
     return this._event.parameters[1].value.toBigInt();
   }
 
+  get amount(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+
   get user(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[3].value.toAddress();
   }
 }
 
@@ -202,85 +224,25 @@ export class RewarderApproval__Params {
   }
 }
 
-export class RoleAdminChanged extends ethereum.Event {
-  get params(): RoleAdminChanged__Params {
-    return new RoleAdminChanged__Params(this);
+export class Unpaused extends ethereum.Event {
+  get params(): Unpaused__Params {
+    return new Unpaused__Params(this);
   }
 }
 
-export class RoleAdminChanged__Params {
-  _event: RoleAdminChanged;
+export class Unpaused__Params {
+  _event: Unpaused;
 
-  constructor(event: RoleAdminChanged) {
+  constructor(event: Unpaused) {
     this._event = event;
-  }
-
-  get role(): Bytes {
-    return this._event.parameters[0].value.toBytes();
-  }
-
-  get previousAdminRole(): Bytes {
-    return this._event.parameters[1].value.toBytes();
-  }
-
-  get newAdminRole(): Bytes {
-    return this._event.parameters[2].value.toBytes();
-  }
-}
-
-export class RoleGranted extends ethereum.Event {
-  get params(): RoleGranted__Params {
-    return new RoleGranted__Params(this);
-  }
-}
-
-export class RoleGranted__Params {
-  _event: RoleGranted;
-
-  constructor(event: RoleGranted) {
-    this._event = event;
-  }
-
-  get role(): Bytes {
-    return this._event.parameters[0].value.toBytes();
   }
 
   get account(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
-export class RoleRevoked extends ethereum.Event {
-  get params(): RoleRevoked__Params {
-    return new RoleRevoked__Params(this);
-  }
-}
-
-export class RoleRevoked__Params {
-  _event: RoleRevoked;
-
-  constructor(event: RoleRevoked) {
-    this._event = event;
-  }
-
-  get role(): Bytes {
-    return this._event.parameters[0].value.toBytes();
-  }
-
-  get account(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get sender(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-}
-
-export class CampaignRewards__rewardRecipientsResult {
+export class CampaignReward__rewardRecipientsResult {
   value0: BigInt;
   value1: Address;
   value2: boolean;
@@ -308,7 +270,7 @@ export class CampaignRewards__rewardRecipientsResult {
   }
 }
 
-export class CampaignRewards__rewardsResult {
+export class CampaignReward__rewardsResult {
   value0: BigInt;
   value1: BigInt;
   value2: BigInt;
@@ -340,32 +302,9 @@ export class CampaignRewards__rewardsResult {
   }
 }
 
-export class CampaignRewards extends ethereum.SmartContract {
-  static bind(address: Address): CampaignRewards {
-    return new CampaignRewards("CampaignRewards", address);
-  }
-
-  DEFAULT_ADMIN_ROLE(): Bytes {
-    let result = super.call(
-      "DEFAULT_ADMIN_ROLE",
-      "DEFAULT_ADMIN_ROLE():(bytes32)",
-      []
-    );
-
-    return result[0].toBytes();
-  }
-
-  try_DEFAULT_ADMIN_ROLE(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "DEFAULT_ADMIN_ROLE",
-      "DEFAULT_ADMIN_ROLE():(bytes32)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
+export class CampaignReward extends ethereum.SmartContract {
+  static bind(address: Address): CampaignReward {
+    return new CampaignReward("CampaignReward", address);
   }
 
   campaign(): Address {
@@ -467,41 +406,14 @@ export class CampaignRewards extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  getRoleAdmin(role: Bytes): Bytes {
-    let result = super.call("getRoleAdmin", "getRoleAdmin(bytes32):(bytes32)", [
-      ethereum.Value.fromFixedBytes(role)
-    ]);
-
-    return result[0].toBytes();
-  }
-
-  try_getRoleAdmin(role: Bytes): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "getRoleAdmin",
-      "getRoleAdmin(bytes32):(bytes32)",
-      [ethereum.Value.fromFixedBytes(role)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
-  hasRole(role: Bytes, account: Address): boolean {
-    let result = super.call("hasRole", "hasRole(bytes32,address):(bool)", [
-      ethereum.Value.fromFixedBytes(role),
-      ethereum.Value.fromAddress(account)
-    ]);
+  paused(): boolean {
+    let result = super.call("paused", "paused():(bool)", []);
 
     return result[0].toBoolean();
   }
 
-  try_hasRole(role: Bytes, account: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall("hasRole", "hasRole(bytes32,address):(bool)", [
-      ethereum.Value.fromFixedBytes(role),
-      ethereum.Value.fromAddress(account)
-    ]);
+  try_paused(): ethereum.CallResult<boolean> {
+    let result = super.tryCall("paused", "paused():(bool)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -509,14 +421,14 @@ export class CampaignRewards extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  rewardRecipients(param0: BigInt): CampaignRewards__rewardRecipientsResult {
+  rewardRecipients(param0: BigInt): CampaignReward__rewardRecipientsResult {
     let result = super.call(
       "rewardRecipients",
       "rewardRecipients(uint256):(uint256,address,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
-    return new CampaignRewards__rewardRecipientsResult(
+    return new CampaignReward__rewardRecipientsResult(
       result[0].toBigInt(),
       result[1].toAddress(),
       result[2].toBoolean(),
@@ -526,7 +438,7 @@ export class CampaignRewards extends ethereum.SmartContract {
 
   try_rewardRecipients(
     param0: BigInt
-  ): ethereum.CallResult<CampaignRewards__rewardRecipientsResult> {
+  ): ethereum.CallResult<CampaignReward__rewardRecipientsResult> {
     let result = super.tryCall(
       "rewardRecipients",
       "rewardRecipients(uint256):(uint256,address,bool,bool)",
@@ -537,7 +449,7 @@ export class CampaignRewards extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new CampaignRewards__rewardRecipientsResult(
+      new CampaignReward__rewardRecipientsResult(
         value[0].toBigInt(),
         value[1].toAddress(),
         value[2].toBoolean(),
@@ -571,14 +483,14 @@ export class CampaignRewards extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  rewards(param0: BigInt): CampaignRewards__rewardsResult {
+  rewards(param0: BigInt): CampaignReward__rewardsResult {
     let result = super.call(
       "rewards",
       "rewards(uint256):(uint256,uint256,uint256,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
-    return new CampaignRewards__rewardsResult(
+    return new CampaignReward__rewardsResult(
       result[0].toBigInt(),
       result[1].toBigInt(),
       result[2].toBigInt(),
@@ -589,7 +501,7 @@ export class CampaignRewards extends ethereum.SmartContract {
 
   try_rewards(
     param0: BigInt
-  ): ethereum.CallResult<CampaignRewards__rewardsResult> {
+  ): ethereum.CallResult<CampaignReward__rewardsResult> {
     let result = super.tryCall(
       "rewards",
       "rewards(uint256):(uint256,uint256,uint256,bool,bool)",
@@ -600,7 +512,7 @@ export class CampaignRewards extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      new CampaignRewards__rewardsResult(
+      new CampaignReward__rewardsResult(
         value[0].toBigInt(),
         value[1].toBigInt(),
         value[2].toBigInt(),
@@ -608,44 +520,6 @@ export class CampaignRewards extends ethereum.SmartContract {
         value[4].toBoolean()
       )
     );
-  }
-
-  root(): Address {
-    let result = super.call("root", "root():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_root(): ethereum.CallResult<Address> {
-    let result = super.tryCall("root", "root():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  supportsInterface(interfaceId: Bytes): boolean {
-    let result = super.call(
-      "supportsInterface",
-      "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_supportsInterface(interfaceId: Bytes): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "supportsInterface",
-      "supportsInterface(bytes4):(bool)",
-      [ethereum.Value.fromFixedBytes(interfaceId)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   userRewardCount(param0: Address): BigInt {
@@ -707,216 +581,20 @@ export class CampaignRewards extends ethereum.SmartContract {
   }
 }
 
-export class AddRoleCall extends ethereum.Call {
-  get inputs(): AddRoleCall__Inputs {
-    return new AddRoleCall__Inputs(this);
+export class __CampaignReward_initCall extends ethereum.Call {
+  get inputs(): __CampaignReward_initCall__Inputs {
+    return new __CampaignReward_initCall__Inputs(this);
   }
 
-  get outputs(): AddRoleCall__Outputs {
-    return new AddRoleCall__Outputs(this);
-  }
-}
-
-export class AddRoleCall__Inputs {
-  _call: AddRoleCall;
-
-  constructor(call: AddRoleCall) {
-    this._call = call;
-  }
-
-  get _account(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _role(): Bytes {
-    return this._call.inputValues[1].value.toBytes();
+  get outputs(): __CampaignReward_initCall__Outputs {
+    return new __CampaignReward_initCall__Outputs(this);
   }
 }
 
-export class AddRoleCall__Outputs {
-  _call: AddRoleCall;
+export class __CampaignReward_initCall__Inputs {
+  _call: __CampaignReward_initCall;
 
-  constructor(call: AddRoleCall) {
-    this._call = call;
-  }
-}
-
-export class GrantRoleCall extends ethereum.Call {
-  get inputs(): GrantRoleCall__Inputs {
-    return new GrantRoleCall__Inputs(this);
-  }
-
-  get outputs(): GrantRoleCall__Outputs {
-    return new GrantRoleCall__Outputs(this);
-  }
-}
-
-export class GrantRoleCall__Inputs {
-  _call: GrantRoleCall;
-
-  constructor(call: GrantRoleCall) {
-    this._call = call;
-  }
-
-  get role(): Bytes {
-    return this._call.inputValues[0].value.toBytes();
-  }
-
-  get account(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-}
-
-export class GrantRoleCall__Outputs {
-  _call: GrantRoleCall;
-
-  constructor(call: GrantRoleCall) {
-    this._call = call;
-  }
-}
-
-export class RemoveRoleCall extends ethereum.Call {
-  get inputs(): RemoveRoleCall__Inputs {
-    return new RemoveRoleCall__Inputs(this);
-  }
-
-  get outputs(): RemoveRoleCall__Outputs {
-    return new RemoveRoleCall__Outputs(this);
-  }
-}
-
-export class RemoveRoleCall__Inputs {
-  _call: RemoveRoleCall;
-
-  constructor(call: RemoveRoleCall) {
-    this._call = call;
-  }
-
-  get _account(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _role(): Bytes {
-    return this._call.inputValues[1].value.toBytes();
-  }
-}
-
-export class RemoveRoleCall__Outputs {
-  _call: RemoveRoleCall;
-
-  constructor(call: RemoveRoleCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceAdminCall extends ethereum.Call {
-  get inputs(): RenounceAdminCall__Inputs {
-    return new RenounceAdminCall__Inputs(this);
-  }
-
-  get outputs(): RenounceAdminCall__Outputs {
-    return new RenounceAdminCall__Outputs(this);
-  }
-}
-
-export class RenounceAdminCall__Inputs {
-  _call: RenounceAdminCall;
-
-  constructor(call: RenounceAdminCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceAdminCall__Outputs {
-  _call: RenounceAdminCall;
-
-  constructor(call: RenounceAdminCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceRoleCall extends ethereum.Call {
-  get inputs(): RenounceRoleCall__Inputs {
-    return new RenounceRoleCall__Inputs(this);
-  }
-
-  get outputs(): RenounceRoleCall__Outputs {
-    return new RenounceRoleCall__Outputs(this);
-  }
-}
-
-export class RenounceRoleCall__Inputs {
-  _call: RenounceRoleCall;
-
-  constructor(call: RenounceRoleCall) {
-    this._call = call;
-  }
-
-  get role(): Bytes {
-    return this._call.inputValues[0].value.toBytes();
-  }
-
-  get account(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-}
-
-export class RenounceRoleCall__Outputs {
-  _call: RenounceRoleCall;
-
-  constructor(call: RenounceRoleCall) {
-    this._call = call;
-  }
-}
-
-export class RevokeRoleCall extends ethereum.Call {
-  get inputs(): RevokeRoleCall__Inputs {
-    return new RevokeRoleCall__Inputs(this);
-  }
-
-  get outputs(): RevokeRoleCall__Outputs {
-    return new RevokeRoleCall__Outputs(this);
-  }
-}
-
-export class RevokeRoleCall__Inputs {
-  _call: RevokeRoleCall;
-
-  constructor(call: RevokeRoleCall) {
-    this._call = call;
-  }
-
-  get role(): Bytes {
-    return this._call.inputValues[0].value.toBytes();
-  }
-
-  get account(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-}
-
-export class RevokeRoleCall__Outputs {
-  _call: RevokeRoleCall;
-
-  constructor(call: RevokeRoleCall) {
-    this._call = call;
-  }
-}
-
-export class __CampaignRewards_initCall extends ethereum.Call {
-  get inputs(): __CampaignRewards_initCall__Inputs {
-    return new __CampaignRewards_initCall__Inputs(this);
-  }
-
-  get outputs(): __CampaignRewards_initCall__Outputs {
-    return new __CampaignRewards_initCall__Outputs(this);
-  }
-}
-
-export class __CampaignRewards_initCall__Inputs {
-  _call: __CampaignRewards_initCall;
-
-  constructor(call: __CampaignRewards_initCall) {
+  constructor(call: __CampaignReward_initCall) {
     this._call = call;
   }
 
@@ -928,19 +606,15 @@ export class __CampaignRewards_initCall__Inputs {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get _campaignOwner(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
   get _campaignId(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
+    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
-export class __CampaignRewards_initCall__Outputs {
-  _call: __CampaignRewards_initCall;
+export class __CampaignReward_initCall__Outputs {
+  _call: __CampaignReward_initCall;
 
-  constructor(call: __CampaignRewards_initCall) {
+  constructor(call: __CampaignReward_initCall) {
     this._call = call;
   }
 }

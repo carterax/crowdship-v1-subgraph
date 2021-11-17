@@ -6,25 +6,24 @@ import {
   CampaignUserDataTransferred as CampaignUserDataTransferredEvent,
   ContributionMade as ContributionMadeEvent,
   ContributionWithdrawn as ContributionWithdrawnEvent,
-  RequestAdded as RequestAddedEvent,
-  RequestVoided as RequestVoidedEvent,
   RequestComplete as RequestCompleteEvent,
-  Voted as VotedEvent,
-  VoteCancelled as VoteCancelledEvent,
   CampaignReviewed as CampaignReviewedEvent,
   CampaignReported as CampaignReportedEvent,
   CampaignStateChange as CampaignStateChangeEvent,
 } from '../../generated/templates/Campaign/Campaign';
 import {
   Campaign,
+  Token,
   User,
   Contribution,
   RewardRecipient,
   Request,
   Vote,
+  Review,
+  Report,
 } from '../../generated/schema';
 import { CampaignFactory as CampaignFactoryContract } from '../../generated/templates/CampaignFactory/CampaignFactory';
-import { Address, BigInt, log } from '@graphprotocol/graph-ts';
+import { Address, BigInt } from '@graphprotocol/graph-ts';
 
 export function handleCampaignOwnershipTransferred(
   event: CampaignOwnershipTransferredEvent
@@ -53,11 +52,7 @@ export function handleCampaignSettingsUpdated(
     campaign.token = event.params.token.toHexString();
     campaign.allowContributionAfterTargetIsMet =
       event.params.allowContributionAfterTargetIsMet;
-
-    let previousDeadline = campaign.deadline;
-    if (previousDeadline !== null) {
-      campaign.deadline = previousDeadline.plus(event.params.duration);
-    }
+    campaign.deadline = campaign.deadline.plus(event.params.duration);
 
     campaign.save();
   }
@@ -69,12 +64,7 @@ export function handleCampaignDeadlineExtended(
   let campaign = Campaign.load(event.address.toHexString());
 
   if (campaign !== null) {
-    let currentDeadline = campaign.deadline;
-
-    campaign.deadline =
-      currentDeadline !== null
-        ? currentDeadline.plus(event.params.time)
-        : campaign.deadline;
+    campaign.deadline = campaign.deadline.plus(event.params.time);
 
     campaign.save();
   }
@@ -113,7 +103,6 @@ export function handleContributionMade(event: ContributionMadeEvent): void {
         event.params.rewardRecipientId.toString()
       );
 
-      rewardRecipient.campaign = event.address.toHexString();
       rewardRecipient.owner = event.transaction.from.toHexString();
       rewardRecipient.createdAt = event.block.timestamp;
       rewardRecipient.updatedAt = new BigInt(0);
@@ -123,31 +112,30 @@ export function handleContributionMade(event: ContributionMadeEvent): void {
 
       contribution.reward = event.params.rewardRecipientId.toString();
 
+      let allUserRewards = user.rewards;
+      allUserRewards.push(event.params.rewardRecipientId.toString());
+      user.rewards = allUserRewards;
+      user.rewardCount = user.rewardCount.plus(new BigInt(1));
+
       rewardRecipient.save();
     }
 
-    let previousTotalContribution = user.totalContributions;
-    let previousTotalCampaignContribution = campaign.totalCampaignContribution;
-    let previousCampaignBalance = campaign.campaignBalance;
-    let previousTotalApprovers = campaign.totalApprovers;
+    let allCampaignContributions = campaign.contributions;
+    allCampaignContributions.push(event.params.contributionId.toString());
+    campaign.contributions = allCampaignContributions;
 
-    if (
-      previousCampaignBalance !== null &&
-      previousTotalCampaignContribution !== null &&
-      previousTotalApprovers !== null &&
-      previousTotalContribution !== null
-    ) {
-      campaign.campaignBalance = previousCampaignBalance.plus(
-        event.params.amount
-      );
-      campaign.totalCampaignContribution = previousTotalCampaignContribution.plus(
-        event.params.amount
-      );
-      campaign.totalApprovers = previousTotalApprovers.plus(new BigInt(1));
-      user.totalContributions = previousTotalContribution.plus(
-        event.params.amount
-      );
-    }
+    campaign.campaignBalance = campaign.campaignBalance.plus(
+      event.params.amount
+    );
+    campaign.totalCampaignContribution =
+      campaign.totalCampaignContribution.plus(event.params.amount);
+    campaign.approversCount = campaign.approversCount.plus(new BigInt(1));
+
+    let allUserContributions = user.contributions;
+    allUserContributions.push(event.params.contributionId.toString());
+    user.contributions = allUserContributions;
+    user.totalContributions = user.totalContributions.plus(event.params.amount);
+    user.contributionCount = user.contributionCount.plus(new BigInt(1));
 
     campaign.save();
     contribution.save();
@@ -168,38 +156,6 @@ export function handleContributionWithdrawn(
   }
 }
 
-export function handleRequestAdded(event: RequestAddedEvent): void {
-  let request = new Request(event.params.requestId.toString());
-
-  request.createdAt = event.block.timestamp;
-  request.updatedAt = new BigInt(0);
-  request.campaign = event.address.toHexString();
-  request.recipient = event.params.recipient;
-  request.complete = false;
-  request.value = event.params.value;
-  request.totalApprovals = new BigInt(0);
-  request.totalAbstained = new BigInt(0);
-  request.totalAgainst = new BigInt(0);
-  request.duration = event.params.duration;
-  request.void = false;
-  request.votes = [];
-  request.owner = event.transaction.from.toHexString();
-
-  request.save();
-}
-
-export function handleRequestVoided(event: RequestVoidedEvent): void {
-  let request = Request.load(event.params.requestId.toString());
-
-  if (request !== null) {
-    request.void = true;
-    request.voidedBy = event.transaction.from.toHexString();
-    request.updatedAt = event.block.timestamp;
-
-    request.save();
-  }
-}
-
 export function handleRequestComplete(event: RequestCompleteEvent): void {
   let request = Request.load(event.params.requestId.toString());
   let campaign = Campaign.load(event.address.toHexString());
@@ -208,55 +164,84 @@ export function handleRequestComplete(event: RequestCompleteEvent): void {
     request.complete = true;
     request.updatedAt = event.block.timestamp;
 
-    let previousTotalFinalizedRequests = campaign.totalFinalizedRequests;
-    if (previousTotalFinalizedRequests !== null)
-      campaign.totalFinalizedRequests = previousTotalFinalizedRequests.plus(
-        new BigInt(1)
-      );
-
     campaign.save();
     request.save();
   }
 }
 
-export function handleVoted(event: VotedEvent): void {
-  let vote = new Vote(event.params.voteId.toString());
+export function handleCampaignReviewed(event: CampaignReviewedEvent): void {
+  let review = new Review(
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  );
+  let campaign = Campaign.load(event.address.toHexString());
 
-  vote.campaign = event.address.toHexString();
-  vote.createdAt = event.block.timestamp;
-  vote.updatedAt = new BigInt(0);
-  vote.request = event.params.requestId.toString();
-  vote.owner = event.transaction.from.toHexString();
-  vote.support = new BigInt(event.params.support);
-  vote.voted = true;
+  if (campaign !== null) {
+    review.createdAt = event.block.timestamp;
+    review.owner = event.transaction.from.toHexString();
+    review.campaign = event.address.toHexString();
 
-  vote.save();
-}
+    let allCampaignReviews = campaign.reviews;
+    allCampaignReviews.push(
+      event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+    );
 
-export function handleVoteCancelled(event: VoteCancelledEvent): void {
-  let vote = Vote.load(event.params.voteId.toHexString());
-  let request = Request.load(event.params.requestId.toString());
+    campaign.reviews = allCampaignReviews;
+    campaign.reviewCount = campaign.reviewCount.plus(new BigInt(1));
 
-  if (vote !== null && request !== null) {
-    vote.voted = false;
-    vote.updatedAt = event.block.timestamp;
-
-    if (event.params.support === 0) {
-      let previousTotalAgainst = request.totalAgainst;
-
-      if (
-        previousTotalAgainst !== null &&
-        previousTotalAgainst !== new BigInt(0)
-      )
-        request.totalAgainst = previousTotalAgainst.minus(new BigInt(1));
-    }
+    campaign.save();
+    review.save();
   }
 }
 
-export function handleCampaignReviewed(event: CampaignReviewedEvent): void {}
+export function handleCampaignReported(event: CampaignReportedEvent): void {
+  let report = new Report(
+    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+  );
+  let campaign = new Campaign(event.address.toHexString());
 
-export function handleCampaignReported(event: CampaignReportedEvent): void {}
+  if (campaign !== null) {
+    report.createdAt = event.block.timestamp;
+    report.owner = event.transaction.from.toHexString();
+    report.campaign = event.address.toHexString();
+
+    let allCampaignReports = campaign.reports;
+    allCampaignReports.push(
+      event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+    );
+    campaign.reports = allCampaignReports;
+    campaign.reportCount = campaign.reportCount.plus(new BigInt(1));
+
+    campaign.save();
+    report.save();
+  }
+}
 
 export function handleCampaignStateChange(
   event: CampaignStateChangeEvent
-): void {}
+): void {
+  let campaign = Campaign.load(event.address.toHexString());
+
+  if (campaign !== null) {
+    if (event.params.state == 0) {
+      campaign.campaignState = 'COLLECTION';
+    }
+
+    if (event.params.state == 1) {
+      campaign.campaignState = 'LIVE';
+    }
+
+    if (event.params.state == 2) {
+      campaign.campaignState = 'REVIEW';
+    }
+
+    if (event.params.state == 3) {
+      campaign.campaignState = 'COMPLETE';
+    }
+
+    if (event.params.state == 4) {
+      campaign.campaignState = 'UNSUCCESSFUL';
+    }
+
+    campaign.save();
+  }
+}

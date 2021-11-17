@@ -73,12 +73,6 @@
         "anonymous": false,
         "inputs": [
             {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "campaignId",
-                "type": "uint256"
-            },
-            {
                 "indexed": false,
                 "internalType": "address",
                 "name": "factory",
@@ -98,9 +92,15 @@
             },
             {
                 "indexed": false,
-                "internalType": "uint256",
-                "name": "userId",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "campaignRequests",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "campaignVotes",
+                "type": "address"
             },
             {
                 "indexed": false,
@@ -213,6 +213,18 @@
                 "indexed": false,
                 "internalType": "address",
                 "name": "campaignRewardsImplementation",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "campaignRequestsImplementation",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "campaignVotesImplementation",
                 "type": "address"
             }
         ],
@@ -343,13 +355,38 @@
         "anonymous": false,
         "inputs": [
             {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "trusteeId",
+                "type": "uint256"
+            },
+            {
                 "indexed": false,
                 "internalType": "address",
-                "name": "token",
+                "name": "trusteeAddress",
                 "type": "address"
             }
         ],
-        "name": "TokenRemoved",
+        "name": "TrusteeAdded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "uint256",
+                "name": "trusteeId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "trusteeAddress",
+                "type": "address"
+            }
+        ],
+        "name": "TrusteeRemoved",
         "type": "event"
     },
     {
@@ -571,6 +608,19 @@
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "campaignRequestsImplementation",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -679,6 +729,19 @@
         "type": "function"
     },
     {
+        "inputs": [],
+        "name": "campaignVotesImplementation",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [
             {
                 "internalType": "uint256",
@@ -727,11 +790,6 @@
             },
             {
                 "internalType": "address",
-                "name": "campaignRewards",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
                 "name": "owner",
                 "type": "address"
             },
@@ -751,23 +809,8 @@
                 "type": "uint256"
             },
             {
-                "internalType": "uint256",
-                "name": "featureFor",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "active",
-                "type": "bool"
-            },
-            {
                 "internalType": "bool",
                 "name": "approved",
-                "type": "bool"
-            },
-            {
-                "internalType": "bool",
-                "name": "exists",
                 "type": "bool"
             }
         ],
@@ -851,6 +894,30 @@
             }
         ],
         "name": "hasRole",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "isUserTrustee",
         "outputs": [
             {
                 "internalType": "bool",
@@ -1006,6 +1073,40 @@
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "trustees",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "trustee",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "trustor",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "createdAt",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bool",
+                "name": "isTrusted",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "userCount",
         "outputs": [
@@ -1027,6 +1128,25 @@
             }
         ],
         "name": "userID",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "userTrusteeCount",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -1107,8 +1227,18 @@
                 "type": "address"
             },
             {
-                "internalType": "contract CampaignRewards",
+                "internalType": "contract CampaignReward",
                 "name": "_campaignRewardsImplementation",
+                "type": "address"
+            },
+            {
+                "internalType": "contract CampaignRequest",
+                "name": "_campaignRequestsImplementation",
+                "type": "address"
+            },
+            {
+                "internalType": "contract CampaignVote",
+                "name": "_campaignVotesImplementation",
                 "type": "address"
             }
         ],
@@ -1208,19 +1338,6 @@
                 "internalType": "address",
                 "name": "_token",
                 "type": "address"
-            }
-        ],
-        "name": "removeToken",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_token",
-                "type": "address"
             },
             {
                 "internalType": "bool",
@@ -1280,6 +1397,51 @@
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
+            }
+        ],
+        "name": "userIsVerified",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_trustee",
+                "type": "address"
+            }
+        ],
+        "name": "addTrustee",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_trusteeId",
+                "type": "uint256"
+            }
+        ],
+        "name": "removeTrustee",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
                 "name": "_userId",
                 "type": "uint256"
@@ -1327,24 +1489,6 @@
             }
         ],
         "name": "toggleCampaignApproval",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
-            },
-            {
-                "internalType": "bool",
-                "name": "_active",
-                "type": "bool"
-            }
-        ],
-        "name": "toggleCampaignActive",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

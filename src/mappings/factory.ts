@@ -1,3 +1,4 @@
+import { BigInt } from '@graphprotocol/graph-ts';
 import { CampaignFactoryDeployed as CampaignFactoryDeployedEvent } from '../../generated/Factory/Factory';
 import { Factory } from '../../generated/schema';
 import { CampaignFactory as CampaignFactoryContract } from '../../generated/templates/CampaignFactory/CampaignFactory';
@@ -19,6 +20,9 @@ export function handleCampaignFactoryDeployed(
   campaignFactory.owner = event.params.owner.toHexString();
   campaignFactory.createdAt = event.block.timestamp;
   campaignFactory.paused = false;
+  campaignFactory.campaignCount = campaignFactory.campaignCount.plus(
+    new BigInt(1)
+  );
 
   campaignFactory.deadlineStrikesAllowed = campaignFactoryContract.campaignTransactionConfig(
     'deadlineStrikesAllowed'
