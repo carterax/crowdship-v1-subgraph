@@ -25,8 +25,6 @@ import {
   User,
   Category,
   Token,
-  Request,
-  Vote,
 } from '../../generated/schema';
 import {
   Campaign as CampaignTemplate,

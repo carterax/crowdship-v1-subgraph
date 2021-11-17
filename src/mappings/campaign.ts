@@ -1,5 +1,4 @@
 import {
-  CampaignOwnerSet as CampaignOwnerSetEvent,
   CampaignOwnershipTransferred as CampaignOwnershipTransferredEvent,
   CampaignSettingsUpdated as CampaignSettingsUpdatedEvent,
   CampaignDeadlineExtended as CampaignDeadlineExtendedEvent,
