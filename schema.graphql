@@ -198,7 +198,6 @@ type Request @entity {
   id: ID!
   createdAt: BigInt!
   updatedAt: BigInt!
-  campaign: Campaign!
   requestFactory: RequestFactory!
   recipient: Bytes!
   complete: Boolean!

@@ -1728,7 +1728,6 @@ export class Request extends Entity {
 
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
-    this.set("campaign", Value.fromString(""));
     this.set("requestFactory", Value.fromString(""));
     this.set("recipient", Value.fromBytes(Bytes.empty()));
     this.set("complete", Value.fromBoolean(false));
@@ -1783,15 +1782,6 @@ export class Request extends Entity {
 
   set updatedAt(value: BigInt) {
     this.set("updatedAt", Value.fromBigInt(value));
-  }
-
-  get campaign(): string {
-    let value = this.get("campaign");
-    return value!.toString();
-  }
-
-  set campaign(value: string) {
-    this.set("campaign", Value.fromString(value));
   }
 
   get requestFactory(): string {

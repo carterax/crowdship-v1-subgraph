@@ -13,12 +13,11 @@ import {
 } from '../../generated/templates/Campaign/Campaign';
 import {
   Campaign,
-  Token,
   User,
   Contribution,
   RewardRecipient,
   Request,
-  Vote,
+  RequestFactory,
   Review,
   Report,
 } from '../../generated/schema';
@@ -157,15 +156,22 @@ export function handleContributionWithdrawn(
 }
 
 export function handleRequestComplete(event: RequestCompleteEvent): void {
-  let request = Request.load(event.params.requestId.toString());
   let campaign = Campaign.load(event.address.toHexString());
 
-  if (request !== null && campaign !== null) {
-    request.complete = true;
-    request.updatedAt = event.block.timestamp;
+  if (campaign !== null) {
+    let requestFactory = RequestFactory.load(campaign.requestFactory);
+    let request = Request.load(event.params.requestId.toString());
 
-    campaign.save();
-    request.save();
+    if (request !== null && requestFactory !== null) {
+      request.complete = true;
+      request.updatedAt = event.block.timestamp;
+
+      requestFactory.finalizedRequestCount =
+        requestFactory.finalizedRequestCount.plus(new BigInt(1));
+
+      requestFactory.save();
+      request.save();
+    }
   }
 }
 

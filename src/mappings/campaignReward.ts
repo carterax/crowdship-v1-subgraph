@@ -7,13 +7,7 @@ import {
   RewarderApproval as RewarderApprovalEvent,
   RewardRecipientApproval as RewardRecipientApprovalEvent,
 } from '../../generated/templates/CampaignReward/CampaignReward';
-import {
-  Campaign,
-  Reward,
-  RewardFactory,
-  User,
-  RewardRecipient,
-} from '../../generated/schema';
+import { Reward, RewardFactory, RewardRecipient } from '../../generated/schema';
 import { BigInt } from '@graphprotocol/graph-ts';
 
 export function handleRewardCreated(event: RewardCreatedEvent): void {
