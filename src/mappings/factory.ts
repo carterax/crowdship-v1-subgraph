@@ -1,10 +1,11 @@
-import { BigInt } from '@graphprotocol/graph-ts';
 import { CampaignFactoryDeployed as CampaignFactoryDeployedEvent } from '../../generated/Factory/Factory';
 import { Factory } from '../../generated/schema';
 import { CampaignFactory as CampaignFactoryContract } from '../../generated/templates/CampaignFactory/CampaignFactory';
 
 import { CampaignFactory } from '../../generated/schema';
 import { CampaignFactory as CampaignFactoryTemplate } from '../../generated/templates';
+
+import { ZERO_BI } from '../utils/constants';
 
 export function handleCampaignFactoryDeployed(
   event: CampaignFactoryDeployedEvent
@@ -20,42 +21,64 @@ export function handleCampaignFactoryDeployed(
   campaignFactory.owner = event.params.owner.toHexString();
   campaignFactory.createdAt = event.block.timestamp;
   campaignFactory.paused = false;
-  campaignFactory.campaignCount = campaignFactory.campaignCount.plus(
-    new BigInt(1)
-  );
+
+  campaignFactory.campaignCount = ZERO_BI;
+  campaignFactory.categoriesCount = ZERO_BI;
+  campaignFactory.userCount = ZERO_BI;
+  campaignFactory.tokenCount = ZERO_BI;
+
+  campaignFactory.defaultCommission =
+    campaignFactoryContract.campaignTransactionConfig('defaultCommission');
 
   campaignFactory.deadlineStrikesAllowed =
     campaignFactoryContract.campaignTransactionConfig('deadlineStrikesAllowed');
+
+  campaignFactory.maximumContributionAllowed =
+    campaignFactoryContract.campaignTransactionConfig(
+      'minimumContributionAllowed'
+    );
+
   campaignFactory.maximumContributionAllowed =
     campaignFactoryContract.campaignTransactionConfig(
       'maximumContributionAllowed'
     );
+
   campaignFactory.minimumRequestAmountAllowed =
     campaignFactoryContract.campaignTransactionConfig(
       'minimumRequestAmountAllowed'
     );
+
   campaignFactory.maximumRequestAmountAllowed =
     campaignFactoryContract.campaignTransactionConfig(
       'maximumRequestAmountAllowed'
     );
+
   campaignFactory.minimumCampaignTarget =
     campaignFactoryContract.campaignTransactionConfig('minimumCampaignTarget');
+
   campaignFactory.maximumCampaignTarget =
     campaignFactoryContract.campaignTransactionConfig('maximumCampaignTarget');
+
   campaignFactory.maxDeadlineExtension =
     campaignFactoryContract.campaignTransactionConfig('maxDeadlineExtension');
+
   campaignFactory.minDeadlineExtension =
     campaignFactoryContract.campaignTransactionConfig('minDeadlineExtension');
+
   campaignFactory.minRequestDuration =
     campaignFactoryContract.campaignTransactionConfig('minRequestDuration');
+
   campaignFactory.maxRequestDuration =
     campaignFactoryContract.campaignTransactionConfig('maxRequestDuration');
+
   campaignFactory.reviewThresholdMark =
     campaignFactoryContract.campaignTransactionConfig('reviewThresholdMark');
+
   campaignFactory.requestFinalizationThreshold =
     campaignFactoryContract.campaignTransactionConfig(
       'requestFinalizationThreshold'
     );
+
   campaignFactory.reportThresholdMark =
     campaignFactoryContract.campaignTransactionConfig('reportThresholdMark');
 

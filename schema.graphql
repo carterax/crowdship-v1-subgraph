@@ -20,18 +20,20 @@ type Factory @entity {
 type CampaignFactory @entity {
   "campaign factory address"
   id: ID!
+
   "factory this campaignFactory belongs to"
   origin: Factory!
+
   factoryWallet: Bytes!
   createdAt: BigInt!
   campaignImplementation: Bytes
   campaignRewardsImplementation: Bytes
-  defaultCommission: BigInt
   factoryRevenue: BigInt
   totalRevenueFromCommissions: BigInt
   paused: Boolean!
 
   "campaign rules"
+  defaultCommission: BigInt!
   deadlineStrikesAllowed: BigInt!
   minimumContributionAllowed: BigInt!
   maximumContributionAllowed: BigInt!
@@ -47,6 +49,7 @@ type CampaignFactory @entity {
   requestFinalizationThreshold: BigInt!
   reportThresholdMark: BigInt!
 
+  "aggregates"
   campaignCount: BigInt!
   categoriesCount: BigInt!
   userCount: BigInt!
@@ -54,12 +57,13 @@ type CampaignFactory @entity {
 
   # totalRevenueFromFeatures: BigInt
   "current owner of the factory"
-  owner: ID!
+  owner: User!
+
   "derived fields"
-  users: [User!] @derivedFrom(field: "campaignFactory")
-  campaigns: [Campaign!] @derivedFrom(field: "campaignFactory")
-  tokens: [Token!] @derivedFrom(field: "campaignFactory")
-  categories: [Category!] @derivedFrom(field: "campaignFactory")
+  users: [User!]! @derivedFrom(field: "campaignFactory")
+  campaigns: [Campaign!]! @derivedFrom(field: "campaignFactory")
+  tokens: [Token!]! @derivedFrom(field: "campaignFactory")
+  categories: [Category!]! @derivedFrom(field: "campaignFactory")
 }
 
 type Token @entity {
@@ -79,10 +83,12 @@ type User @entity {
   transferredTo: Bytes
   totalWithdrawals: BigInt!
   totalContributions: BigInt!
-  contributions: [Contribution!]! @derivedFrom(field: "owner")
   contributionCount: BigInt!
-  rewards: [RewardRecipient!]! @derivedFrom(field: "owner")
   rewardCount: BigInt!
+
+  "derived fields"
+  contributions: [Contribution!]! @derivedFrom(field: "owner")
+  rewards: [RewardRecipient!]! @derivedFrom(field: "owner")
   votes: [Vote!]! @derivedFrom(field: "owner")
   requests: [Request!]! @derivedFrom(field: "owner")
   reports: [Report!]! @derivedFrom(field: "owner")
@@ -92,7 +98,7 @@ type User @entity {
 type Category @entity {
   id: ID!
   campaignFactory: CampaignFactory!
-  campaigns: [Campaign!] @derivedFrom(field: "category")
+  campaigns: [Campaign!]! @derivedFrom(field: "category")
   totalCampaign: BigInt!
   commission: BigInt!
   createdAt: BigInt!

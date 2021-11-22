@@ -6,6 +6,7 @@ import {
   Value,
   ValueKind,
   store,
+  Address,
   Bytes,
   BigInt,
   BigDecimal
@@ -74,6 +75,7 @@ export class CampaignFactory extends Entity {
     this.set("factoryWallet", Value.fromBytes(Bytes.empty()));
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("paused", Value.fromBoolean(false));
+    this.set("defaultCommission", Value.fromBigInt(BigInt.zero()));
     this.set("deadlineStrikesAllowed", Value.fromBigInt(BigInt.zero()));
     this.set("minimumContributionAllowed", Value.fromBigInt(BigInt.zero()));
     this.set("maximumContributionAllowed", Value.fromBigInt(BigInt.zero()));
@@ -182,23 +184,6 @@ export class CampaignFactory extends Entity {
     }
   }
 
-  get defaultCommission(): BigInt | null {
-    let value = this.get("defaultCommission");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set defaultCommission(value: BigInt | null) {
-    if (!value) {
-      this.unset("defaultCommission");
-    } else {
-      this.set("defaultCommission", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
   get factoryRevenue(): BigInt | null {
     let value = this.get("factoryRevenue");
     if (!value || value.kind == ValueKind.NULL) {
@@ -240,6 +225,15 @@ export class CampaignFactory extends Entity {
 
   set paused(value: boolean) {
     this.set("paused", Value.fromBoolean(value));
+  }
+
+  get defaultCommission(): BigInt {
+    let value = this.get("defaultCommission");
+    return value!.toBigInt();
+  }
+
+  set defaultCommission(value: BigInt) {
+    this.set("defaultCommission", Value.fromBigInt(value));
   }
 
   get deadlineStrikesAllowed(): BigInt {
@@ -413,72 +407,40 @@ export class CampaignFactory extends Entity {
     this.set("owner", Value.fromString(value));
   }
 
-  get users(): Array<string> | null {
+  get users(): Array<string> {
     let value = this.get("users");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set users(value: Array<string> | null) {
-    if (!value) {
-      this.unset("users");
-    } else {
-      this.set("users", Value.fromStringArray(<Array<string>>value));
-    }
+  set users(value: Array<string>) {
+    this.set("users", Value.fromStringArray(value));
   }
 
-  get campaigns(): Array<string> | null {
+  get campaigns(): Array<string> {
     let value = this.get("campaigns");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set campaigns(value: Array<string> | null) {
-    if (!value) {
-      this.unset("campaigns");
-    } else {
-      this.set("campaigns", Value.fromStringArray(<Array<string>>value));
-    }
+  set campaigns(value: Array<string>) {
+    this.set("campaigns", Value.fromStringArray(value));
   }
 
-  get tokens(): Array<string> | null {
+  get tokens(): Array<string> {
     let value = this.get("tokens");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set tokens(value: Array<string> | null) {
-    if (!value) {
-      this.unset("tokens");
-    } else {
-      this.set("tokens", Value.fromStringArray(<Array<string>>value));
-    }
+  set tokens(value: Array<string>) {
+    this.set("tokens", Value.fromStringArray(value));
   }
 
-  get categories(): Array<string> | null {
+  get categories(): Array<string> {
     let value = this.get("categories");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set categories(value: Array<string> | null) {
-    if (!value) {
-      this.unset("categories");
-    } else {
-      this.set("categories", Value.fromStringArray(<Array<string>>value));
-    }
+  set categories(value: Array<string>) {
+    this.set("categories", Value.fromStringArray(value));
   }
 }
 
@@ -675,15 +637,6 @@ export class User extends Entity {
     this.set("totalContributions", Value.fromBigInt(value));
   }
 
-  get contributions(): Array<string> {
-    let value = this.get("contributions");
-    return value!.toStringArray();
-  }
-
-  set contributions(value: Array<string>) {
-    this.set("contributions", Value.fromStringArray(value));
-  }
-
   get contributionCount(): BigInt {
     let value = this.get("contributionCount");
     return value!.toBigInt();
@@ -693,15 +646,6 @@ export class User extends Entity {
     this.set("contributionCount", Value.fromBigInt(value));
   }
 
-  get rewards(): Array<string> {
-    let value = this.get("rewards");
-    return value!.toStringArray();
-  }
-
-  set rewards(value: Array<string>) {
-    this.set("rewards", Value.fromStringArray(value));
-  }
-
   get rewardCount(): BigInt {
     let value = this.get("rewardCount");
     return value!.toBigInt();
@@ -709,6 +653,24 @@ export class User extends Entity {
 
   set rewardCount(value: BigInt) {
     this.set("rewardCount", Value.fromBigInt(value));
+  }
+
+  get contributions(): Array<string> {
+    let value = this.get("contributions");
+    return value!.toStringArray();
+  }
+
+  set contributions(value: Array<string>) {
+    this.set("contributions", Value.fromStringArray(value));
+  }
+
+  get rewards(): Array<string> {
+    let value = this.get("rewards");
+    return value!.toStringArray();
+  }
+
+  set rewards(value: Array<string>) {
+    this.set("rewards", Value.fromStringArray(value));
   }
 
   get votes(): Array<string> {
@@ -796,21 +758,13 @@ export class Category extends Entity {
     this.set("campaignFactory", Value.fromString(value));
   }
 
-  get campaigns(): Array<string> | null {
+  get campaigns(): Array<string> {
     let value = this.get("campaigns");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
+    return value!.toStringArray();
   }
 
-  set campaigns(value: Array<string> | null) {
-    if (!value) {
-      this.unset("campaigns");
-    } else {
-      this.set("campaigns", Value.fromStringArray(<Array<string>>value));
-    }
+  set campaigns(value: Array<string>) {
+    this.set("campaigns", Value.fromStringArray(value));
   }
 
   get totalCampaign(): BigInt {

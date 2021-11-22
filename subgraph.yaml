@@ -4,9 +4,9 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: rinkeby
+    network: mainnet
     source:
-      address: '0xC9F4D522CF5559A4b41C1FC99737446f70d2A17C'
+      address: '0xCfEB869F69431e42cdB54A4F4f105C19C080A601'
       abi: Factory
     mapping:
       kind: ethereum/events
@@ -17,14 +17,16 @@ dataSources:
       abis:
         - name: Factory
           file: ./abis/Factory.json
+        - name: CampaignFactory
+          file: ./abis/CampaignFactory.json
       eventHandlers:
         - event: CampaignFactoryDeployed(indexed address,address,address,uint256)
           handler: handleCampaignFactoryDeployed
       file: ./src/mappings/factory.ts
 templates:
-  - kind: ethereum/contract
-    name: CampaignFactory
-    network: rinkeby
+  - name: CampaignFactory
+    kind: ethereum/contract
+    network: mainnet
     source:
       abi: CampaignFactory
     mapping:
@@ -36,7 +38,6 @@ templates:
         - User
         - Category
         - Token
-        - FeaturePackage
       file: ./src/mappings/campaignFactory.ts
       abis:
         - name: CampaignFactory
@@ -50,10 +51,10 @@ templates:
           handler: handleCampaignDefaultCommissionUpdated
         - event: CampaignTransactionConfigUpdated(string,uint256)
           handler: handleCampaignTransactionConfigUpdated
-        - event: CampaignActiveToggle(indexed address,bool)
-          handler: handleCampaignActiveToggle
-        - event: CampaignApproval(indexed address,bool)
+        - event: CampaignApproval(indexed address)
           handler: handleCampaignApproval
+        - event: CampaignActivation(indexed address)
+          handler: handleCampaignActivation
         - event: CampaignCategoryChange(indexed address,uint256)
           handler: handleCampaignCategoryChange
         - event: CampaignDeployed(address,address,address,address,address,uint256,bool)
@@ -64,12 +65,6 @@ templates:
           handler: handleCategoryModified
         - event: Paused(address)
           handler: handlePaused
-        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
-          handler: handleRoleAdminChanged
-        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleGranted
-        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
-          handler: handleRoleRevoked
         - event: TokenAdded(indexed address)
           handler: handleTokenAdded
         - event: TokenApproval(indexed address,bool)
@@ -80,9 +75,9 @@ templates:
           handler: handleUserAdded
         - event: UserApproval(indexed uint256,indexed address,bool)
           handler: handleUserApproval
-  - kind: ethereum/contract
-    name: Campaign
-    network: rinkeby
+  - name: Campaign
+    kind: ethereum/contract
+    network: mainnet
     source:
       abi: Campaign
     mapping:
@@ -91,7 +86,6 @@ templates:
       language: wasm/assemblyscript
       entities:
         - Contribution
-        - Withdrawal
         - Reward
         - RewardRecipient
         - Request
@@ -125,9 +119,9 @@ templates:
           handler: handleCampaignReviewed
         - event: CampaignStateChange(uint8)
           handler: handleCampaignStateChange
-  - kind: ethereum/contract
-    name: CampaignReward
-    network: rinkeby
+  - name: CampaignReward
+    kind: ethereum/contract
+    network: mainnet
     source:
       abi: CampaignReward
     mapping:
@@ -156,9 +150,9 @@ templates:
           handler: handleRewarderApproval
         - event: RewardRecipientApproval(indexed uint256)
           handler: handleRewardRecipientApproval
-  - kind: ethereum/contract
-    name: CampaignRequest
-    network: rinkeby
+  - name: CampaignRequest
+    kind: ethereum/contract
+    network: mainnet
     source:
       abi: CampaignRequest
     mapping:
@@ -176,9 +170,9 @@ templates:
           handler: handleRequestAdded
         - event: RequestVoided(indexed uint256)
           handler: handleRequestVoided
-  - kind: ethereum/contract
-    name: CampaignVote
-    network: rinkeby
+  - name: CampaignVote
+    kind: ethereum/contract
+    network: mainnet
     source:
       abi: CampaignVote
     mapping:

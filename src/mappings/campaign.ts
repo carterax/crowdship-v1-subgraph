@@ -22,6 +22,7 @@ import {
 } from '../../generated/schema';
 import { CampaignFactory as CampaignFactoryContract } from '../../generated/templates/CampaignFactory/CampaignFactory';
 import { Address, BigInt } from '@graphprotocol/graph-ts';
+import { ONE_BI } from '../utils/constants';
 
 export function handleCampaignOwnershipTransferred(
   event: CampaignOwnershipTransferredEvent
@@ -71,86 +72,111 @@ export function handleCampaignDeadlineExtended(
 export function handleCampaignUserDataTransferred(
   event: CampaignUserDataTransferredEvent
 ): void {
-  let oldUser = User.load(event.params.oldAddress.toHexString());
-  let newUser = User.load(event.params.oldAddress.toHexString());
+  let campaign = Campaign.load(event.address.toHexString());
 
-  if (oldUser !== null && newUser !== null) {
-    oldUser.transferredTo = event.params.newAddress;
-    newUser.transferredFrom = event.params.oldAddress;
-    oldUser.save();
-    newUser.save();
+  if (campaign !== null) {
+    let oldUser = User.load(
+      campaign.campaignFactory +
+        '-user-' +
+        event.params.oldAddress.toHexString()
+    );
+    let newUser = User.load(
+      campaign.campaignFactory +
+        '-user-' +
+        event.params.oldAddress.toHexString()
+    );
+
+    if (oldUser !== null && newUser !== null) {
+      oldUser.transferredTo = event.params.newAddress;
+      newUser.transferredFrom = event.params.oldAddress;
+
+      oldUser.save();
+      newUser.save();
+    }
   }
 }
 
 export function handleContributionMade(event: ContributionMadeEvent): void {
-  let user = User.load(event.transaction.from.toHexString());
   let campaign = Campaign.load(event.address.toHexString());
 
-  if (user !== null && campaign !== null) {
-    let contribution = new Contribution(event.params.contributionId.toString());
+  if (campaign !== null) {
+    let user = User.load(
+      campaign.campaignFactory + '-user-' + event.transaction.from.toHexString()
+    );
 
-    contribution.owner = event.transaction.from.toHexString();
-    contribution.campaign = event.address.toHexString();
-    contribution.amount = event.params.amount;
-    contribution.withReward = event.params.withReward;
-    contribution.withdrawn = false;
-    contribution.createdAt = event.block.timestamp;
-
-    if (event.params.withReward) {
-      let rewardRecipient = new RewardRecipient(
-        event.params.rewardRecipientId.toString()
+    if (user !== null) {
+      let contribution = new Contribution(
+        `${event.address.toHexString()}-contribution-${event.params.contributionId.toString()}`
       );
 
-      rewardRecipient.owner = event.transaction.from.toHexString();
-      rewardRecipient.createdAt = event.block.timestamp;
-      rewardRecipient.updatedAt = new BigInt(0);
-      rewardRecipient.reward = event.params.rewardId.toString();
-      rewardRecipient.deliveredByCampaign = false;
-      rewardRecipient.receivedByUser = false;
+      contribution.owner = event.transaction.from.toHexString();
+      contribution.campaign = event.address.toHexString();
+      contribution.amount = event.params.amount;
+      contribution.withReward = event.params.withReward;
+      contribution.withdrawn = false;
+      contribution.createdAt = event.block.timestamp;
 
-      contribution.reward = event.params.rewardRecipientId.toString();
+      if (event.params.withReward) {
+        let rewardRecipient = new RewardRecipient(
+          campaign.rewardFactory +
+            'rewardrecipient' +
+            event.params.rewardRecipientId.toString()
+        );
 
-      let allUserRewards = user.rewards;
-      allUserRewards.push(event.params.rewardRecipientId.toString());
-      user.rewards = allUserRewards;
-      user.rewardCount = user.rewardCount.plus(new BigInt(1));
+        rewardRecipient.owner = event.transaction.from.toHexString();
+        rewardRecipient.createdAt = event.block.timestamp;
+        rewardRecipient.updatedAt = new BigInt(0);
+        rewardRecipient.reward = event.params.rewardId.toString();
+        rewardRecipient.deliveredByCampaign = false;
+        rewardRecipient.receivedByUser = false;
 
-      rewardRecipient.save();
+        contribution.reward = event.params.rewardRecipientId.toString();
+
+        user.rewardCount = user.rewardCount.plus(ONE_BI);
+
+        rewardRecipient.save();
+      }
+
+      let allCampaignContributions = campaign.contributions;
+      allCampaignContributions.push(event.params.contributionId.toString());
+      campaign.contributions = allCampaignContributions;
+
+      campaign.campaignBalance = campaign.campaignBalance.plus(
+        event.params.amount
+      );
+      campaign.totalCampaignContribution =
+        campaign.totalCampaignContribution.plus(event.params.amount);
+      campaign.approversCount = campaign.approversCount.plus(ONE_BI);
+
+      user.totalContributions = user.totalContributions.plus(
+        event.params.amount
+      );
+      user.contributionCount = user.contributionCount.plus(ONE_BI);
+
+      campaign.save();
+      contribution.save();
+      user.save();
     }
-
-    let allCampaignContributions = campaign.contributions;
-    allCampaignContributions.push(event.params.contributionId.toString());
-    campaign.contributions = allCampaignContributions;
-
-    campaign.campaignBalance = campaign.campaignBalance.plus(
-      event.params.amount
-    );
-    campaign.totalCampaignContribution =
-      campaign.totalCampaignContribution.plus(event.params.amount);
-    campaign.approversCount = campaign.approversCount.plus(new BigInt(1));
-
-    let allUserContributions = user.contributions;
-    allUserContributions.push(event.params.contributionId.toString());
-    user.contributions = allUserContributions;
-    user.totalContributions = user.totalContributions.plus(event.params.amount);
-    user.contributionCount = user.contributionCount.plus(new BigInt(1));
-
-    campaign.save();
-    contribution.save();
-    user.save();
   }
 }
 
 export function handleContributionWithdrawn(
   event: ContributionWithdrawnEvent
 ): void {
-  let contribution = Contribution.load(event.params.contributionId.toString());
   let campaign = Campaign.load(event.address.toHexString());
 
-  if (contribution !== null && campaign !== null) {
-    contribution.withdrawn = true;
+  if (campaign !== null) {
+    let contribution = Contribution.load(
+      campaign.campaignFactory +
+        '-contribution-' +
+        event.params.contributionId.toString()
+    );
 
-    contribution.save();
+    if (contribution !== null) {
+      contribution.withdrawn = true;
+
+      contribution.save();
+    }
   }
 }
 
@@ -159,14 +185,16 @@ export function handleRequestComplete(event: RequestCompleteEvent): void {
 
   if (campaign !== null) {
     let requestFactory = RequestFactory.load(campaign.requestFactory);
-    let request = Request.load(event.params.requestId.toString());
+    let request = Request.load(
+      campaign.requestFactory + '-request-' + event.params.requestId.toString()
+    );
 
     if (request !== null && requestFactory !== null) {
       request.complete = true;
       request.updatedAt = event.block.timestamp;
 
       requestFactory.finalizedRequestCount =
-        requestFactory.finalizedRequestCount.plus(new BigInt(1));
+        requestFactory.finalizedRequestCount.plus(ONE_BI);
 
       requestFactory.save();
       request.save();
@@ -176,7 +204,7 @@ export function handleRequestComplete(event: RequestCompleteEvent): void {
 
 export function handleCampaignReviewed(event: CampaignReviewedEvent): void {
   let review = new Review(
-    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+    event.transaction.hash.toHex() + '-review-' + event.logIndex.toString()
   );
   let campaign = Campaign.load(event.address.toHexString());
 
@@ -185,13 +213,7 @@ export function handleCampaignReviewed(event: CampaignReviewedEvent): void {
     review.owner = event.transaction.from.toHexString();
     review.campaign = event.address.toHexString();
 
-    let allCampaignReviews = campaign.reviews;
-    allCampaignReviews.push(
-      event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-    );
-
-    campaign.reviews = allCampaignReviews;
-    campaign.reviewCount = campaign.reviewCount.plus(new BigInt(1));
+    campaign.reviewCount = campaign.reviewCount.plus(ONE_BI);
 
     campaign.save();
     review.save();
@@ -200,21 +222,16 @@ export function handleCampaignReviewed(event: CampaignReviewedEvent): void {
 
 export function handleCampaignReported(event: CampaignReportedEvent): void {
   let report = new Report(
-    event.transaction.hash.toHex() + '-' + event.logIndex.toString()
+    event.transaction.hash.toHex() + '-report-' + event.logIndex.toString()
   );
-  let campaign = new Campaign(event.address.toHexString());
+  let campaign = Campaign.load(event.address.toHexString());
 
   if (campaign !== null) {
     report.createdAt = event.block.timestamp;
     report.owner = event.transaction.from.toHexString();
     report.campaign = event.address.toHexString();
 
-    let allCampaignReports = campaign.reports;
-    allCampaignReports.push(
-      event.transaction.hash.toHex() + '-' + event.logIndex.toString()
-    );
-    campaign.reports = allCampaignReports;
-    campaign.reportCount = campaign.reportCount.plus(new BigInt(1));
+    campaign.reportCount = campaign.reportCount.plus(ONE_BI);
 
     campaign.save();
     report.save();
