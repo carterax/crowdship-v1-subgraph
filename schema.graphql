@@ -24,13 +24,16 @@ type CampaignFactory @entity {
   "factory this campaignFactory belongs to"
   origin: Factory!
 
-  factoryWallet: Bytes!
   createdAt: BigInt!
-  campaignImplementation: Bytes
-  campaignRewardsImplementation: Bytes
   factoryRevenue: BigInt
   totalRevenueFromCommissions: BigInt
   paused: Boolean!
+
+  "contract implementations"
+  campaignImplementation: Bytes
+  campaignRewardImplementation: Bytes
+  campaignRequestImplementation: Bytes
+  campaignVoteImplementation: Bytes
 
   "campaign rules"
   defaultCommission: BigInt!
@@ -56,8 +59,8 @@ type CampaignFactory @entity {
   tokenCount: BigInt!
 
   # totalRevenueFromFeatures: BigInt
-  "current owner of the factory"
-  owner: User!
+  "governance contract address"
+  governance: Bytes!
 
   "derived fields"
   users: [User!]! @derivedFrom(field: "campaignFactory")

@@ -1,5 +1,8 @@
 import {
-  FactoryConfigUpdated as FactoryConfigUpdatedEvent,
+  CampaignImplementationUpdated as CampaignImplementationUpdatedEvent,
+  CampaignRewardImplementationUpdated as CampaignRewardImplementationUpdatedEvent,
+  CampaignRequestImplementationUpdated as CampaignRequestImplementationUpdatedEvent,
+  CampaignVoteImplementationUpdated as CampaignVoteImplementationUpdatedEvent,
   CategoryCommissionUpdated as CategoryCommissionUpdatedEvent,
   CampaignDefaultCommissionUpdated as CampaignDefaultCommissionUpdatedEvent,
   CampaignTransactionConfigUpdated as CampaignTransactionConfigUpdatedEvent,
@@ -37,17 +40,53 @@ import {
 
 import { ONE_BI, ZERO_BI } from '../utils/constants';
 
-export function handleFactoryConfigUpdated(
-  event: FactoryConfigUpdatedEvent
+export function handleCampaignImplementationUpdated(
+  event: CampaignImplementationUpdatedEvent
 ): void {
   let campaignFactory = CampaignFactory.load(event.address.toHexString());
 
   if (campaignFactory !== null) {
     campaignFactory.campaignImplementation =
       event.params.campaignImplementation;
-    campaignFactory.campaignRewardsImplementation =
-      event.params.campaignRewardsImplementation;
-    campaignFactory.factoryWallet = event.params.factoryWallet;
+
+    campaignFactory.save();
+  }
+}
+
+export function handleCampaignRewardImplementationUpdated(
+  event: CampaignRewardImplementationUpdatedEvent
+): void {
+  let campaignFactory = CampaignFactory.load(event.address.toHexString());
+
+  if (campaignFactory !== null) {
+    campaignFactory.campaignRewardImplementation =
+      event.params.campaignRewardImplementation;
+
+    campaignFactory.save();
+  }
+}
+
+export function handleCampaignRequestImplementationUpdated(
+  event: CampaignRequestImplementationUpdatedEvent
+): void {
+  let campaignFactory = CampaignFactory.load(event.address.toHexString());
+
+  if (campaignFactory !== null) {
+    campaignFactory.campaignRequestImplementation =
+      event.params.campaignRequestImplementation;
+
+    campaignFactory.save();
+  }
+}
+
+export function handleCampaignVoteImplementationUpdated(
+  event: CampaignVoteImplementationUpdatedEvent
+): void {
+  let campaignFactory = CampaignFactory.load(event.address.toHexString());
+
+  if (campaignFactory !== null) {
+    campaignFactory.campaignVoteImplementation =
+      event.params.campaignVoteImplementation;
 
     campaignFactory.save();
   }

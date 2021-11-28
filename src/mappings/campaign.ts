@@ -9,6 +9,7 @@ import {
   CampaignReviewed as CampaignReviewedEvent,
   CampaignReported as CampaignReportedEvent,
   CampaignStateChange as CampaignStateChangeEvent,
+  WithdrawalStateUpdated as WithdrawalStateUpdatedEvent,
 } from '../../generated/templates/Campaign/Campaign';
 import {
   Campaign,
@@ -263,6 +264,18 @@ export function handleCampaignStateChange(
     if (event.params.state == 4) {
       campaign.campaignState = 'UNSUCCESSFUL';
     }
+
+    campaign.save();
+  }
+}
+
+export function WithdrawalStateUpdated(
+  event: WithdrawalStateUpdatedEvent
+): void {
+  let campaign = Campaign.load(event.address.toHexString());
+
+  if (campaign !== null) {
+    campaign.withdrawalsPaused = event.params.withdrawalState;
 
     campaign.save();
   }

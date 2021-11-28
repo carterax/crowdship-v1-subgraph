@@ -27,16 +27,12 @@ export class CampaignFactoryDeployed__Params {
     return this._event.parameters[0].value.toAddress();
   }
 
-  get factoryWallet(): Address {
+  get governance(): Address {
     return this._event.parameters[1].value.toAddress();
   }
 
-  get owner(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-
   get campaignIndex(): BigInt {
-    return this._event.parameters[3].value.toBigInt();
+    return this._event.parameters[2].value.toBigInt();
   }
 }
 
@@ -113,8 +109,12 @@ export class CreateCampaignFactoryCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _wallet(): Address {
+  get _governance(): Address {
     return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _config(): Array<BigInt> {
+    return this._call.inputValues[2].value.toBigIntArray();
   }
 }
 

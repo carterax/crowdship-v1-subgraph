@@ -20,7 +20,7 @@ dataSources:
         - name: CampaignFactory
           file: ./abis/CampaignFactory.json
       eventHandlers:
-        - event: CampaignFactoryDeployed(indexed address,address,address,uint256)
+        - event: CampaignFactoryDeployed(indexed address,address,uint256)
           handler: handleCampaignFactoryDeployed
       file: ./src/mappings/factory.ts
 templates:
@@ -43,8 +43,14 @@ templates:
         - name: CampaignFactory
           file: ./abis/CampaignFactory.json
       eventHandlers:
-        - event: FactoryConfigUpdated(address,address,address,address,address)
-          handler: handleFactoryConfigUpdated
+        - event: CampaignImplementationUpdated(indexed address)
+          handler: handleCampaignImplementationUpdated
+        - event: CampaignRewardImplementationUpdated(indexed address)
+          handler: handleCampaignRewardImplementationUpdated
+        - event: CampaignRequestImplementationUpdated(indexed address)
+          handler: handleCampaignRequestImplementationUpdated
+        - event: CampaignVoteImplementationUpdated(indexed address)
+          handler: handleCampaignVoteImplementationUpdated
         - event: CategoryCommissionUpdated(indexed uint256,uint256)
           handler: handleCategoryCommissionUpdated
         - event: CampaignDefaultCommissionUpdated(uint256)
@@ -96,6 +102,8 @@ templates:
       abis:
         - name: Campaign
           file: ./abis/Campaign.json
+        - name: CampaignFactory
+          file: ./abis/CampaignFactory.json
       eventHandlers:
         - event: CampaignOwnershipTransferred(address)
           handler: handleCampaignOwnershipTransferred
@@ -119,6 +127,8 @@ templates:
           handler: handleCampaignReviewed
         - event: CampaignStateChange(uint8)
           handler: handleCampaignStateChange
+        - event: WithdrawalStateUpdated(bool)
+          handler: handledWithdrawalStateUpdated
   - name: CampaignReward
     kind: ethereum/contract
     network: mainnet

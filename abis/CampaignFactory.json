@@ -110,6 +110,45 @@
         "anonymous": false,
         "inputs": [
             {
+                "indexed": true,
+                "internalType": "address",
+                "name": "campaignImplementation",
+                "type": "address"
+            }
+        ],
+        "name": "CampaignImplementationUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "campaignRequestImplementation",
+                "type": "address"
+            }
+        ],
+        "name": "CampaignRequestImplementationUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "campaignRewardImplementation",
+                "type": "address"
+            }
+        ],
+        "name": "CampaignRewardImplementationUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
                 "indexed": false,
                 "internalType": "string",
                 "name": "prop",
@@ -123,6 +162,19 @@
             }
         ],
         "name": "CampaignTransactionConfigUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "campaignVoteImplementation",
+                "type": "address"
+            }
+        ],
+        "name": "CampaignVoteImplementationUpdated",
         "type": "event"
     },
     {
@@ -180,43 +232,6 @@
             }
         ],
         "name": "CategoryModified",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "factoryWallet",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "campaignImplementation",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "campaignRewardsImplementation",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "campaignRequestsImplementation",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "campaignVotesImplementation",
-                "type": "address"
-            }
-        ],
-        "name": "FactoryConfigUpdated",
         "type": "event"
     },
     {
@@ -352,45 +367,6 @@
         ],
         "name": "UserApproval",
         "type": "event"
-    },
-    {
-        "inputs": [],
-        "name": "MANAGE_CAMPAIGNS",
-        "outputs": [
-            {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "MANAGE_CATEGORIES",
-        "outputs": [
-            {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "MANAGE_USERS",
-        "outputs": [
-            {
-                "internalType": "bytes32",
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
     },
     {
         "inputs": [
@@ -719,10 +695,10 @@
     },
     {
         "inputs": [],
-        "name": "factoryWallet",
+        "name": "governance",
         "outputs": [
             {
-                "internalType": "address payable",
+                "internalType": "address",
                 "name": "",
                 "type": "address"
             }
@@ -762,19 +738,6 @@
                 "internalType": "bool",
                 "name": "",
                 "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "root",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -945,14 +908,14 @@
     {
         "inputs": [
             {
-                "internalType": "address payable",
-                "name": "_wallet",
+                "internalType": "address",
+                "name": "_governance",
                 "type": "address"
             },
             {
-                "internalType": "address",
-                "name": "_root",
-                "type": "address"
+                "internalType": "uint256[15]",
+                "name": "_config",
+                "type": "uint256[15]"
             }
         ],
         "name": "__CampaignFactory_init",
@@ -963,32 +926,51 @@
     {
         "inputs": [
             {
-                "internalType": "address payable",
-                "name": "_wallet",
-                "type": "address"
-            },
-            {
                 "internalType": "contract Campaign",
                 "name": "_campaignImplementation",
                 "type": "address"
-            },
+            }
+        ],
+        "name": "setCampaignImplementation",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
                 "internalType": "contract CampaignReward",
                 "name": "_campaignRewardsImplementation",
                 "type": "address"
-            },
+            }
+        ],
+        "name": "setCampaignRewardImplementation",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
                 "internalType": "contract CampaignRequest",
                 "name": "_campaignRequestsImplementation",
                 "type": "address"
-            },
+            }
+        ],
+        "name": "setCampaignRequestImplementation",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
                 "internalType": "contract CampaignVote",
                 "name": "_campaignVotesImplementation",
                 "type": "address"
             }
         ],
-        "name": "setFactoryConfig",
+        "name": "setCampaignVoteImplementation",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

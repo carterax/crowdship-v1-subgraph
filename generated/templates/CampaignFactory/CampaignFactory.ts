@@ -128,6 +128,60 @@ export class CampaignDeployed__Params {
   }
 }
 
+export class CampaignImplementationUpdated extends ethereum.Event {
+  get params(): CampaignImplementationUpdated__Params {
+    return new CampaignImplementationUpdated__Params(this);
+  }
+}
+
+export class CampaignImplementationUpdated__Params {
+  _event: CampaignImplementationUpdated;
+
+  constructor(event: CampaignImplementationUpdated) {
+    this._event = event;
+  }
+
+  get campaignImplementation(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class CampaignRequestImplementationUpdated extends ethereum.Event {
+  get params(): CampaignRequestImplementationUpdated__Params {
+    return new CampaignRequestImplementationUpdated__Params(this);
+  }
+}
+
+export class CampaignRequestImplementationUpdated__Params {
+  _event: CampaignRequestImplementationUpdated;
+
+  constructor(event: CampaignRequestImplementationUpdated) {
+    this._event = event;
+  }
+
+  get campaignRequestImplementation(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class CampaignRewardImplementationUpdated extends ethereum.Event {
+  get params(): CampaignRewardImplementationUpdated__Params {
+    return new CampaignRewardImplementationUpdated__Params(this);
+  }
+}
+
+export class CampaignRewardImplementationUpdated__Params {
+  _event: CampaignRewardImplementationUpdated;
+
+  constructor(event: CampaignRewardImplementationUpdated) {
+    this._event = event;
+  }
+
+  get campaignRewardImplementation(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+}
+
 export class CampaignTransactionConfigUpdated extends ethereum.Event {
   get params(): CampaignTransactionConfigUpdated__Params {
     return new CampaignTransactionConfigUpdated__Params(this);
@@ -147,6 +201,24 @@ export class CampaignTransactionConfigUpdated__Params {
 
   get value(): BigInt {
     return this._event.parameters[1].value.toBigInt();
+  }
+}
+
+export class CampaignVoteImplementationUpdated extends ethereum.Event {
+  get params(): CampaignVoteImplementationUpdated__Params {
+    return new CampaignVoteImplementationUpdated__Params(this);
+  }
+}
+
+export class CampaignVoteImplementationUpdated__Params {
+  _event: CampaignVoteImplementationUpdated;
+
+  constructor(event: CampaignVoteImplementationUpdated) {
+    this._event = event;
+  }
+
+  get campaignVoteImplementation(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
@@ -213,40 +285,6 @@ export class CategoryModified__Params {
 
   get active(): boolean {
     return this._event.parameters[1].value.toBoolean();
-  }
-}
-
-export class FactoryConfigUpdated extends ethereum.Event {
-  get params(): FactoryConfigUpdated__Params {
-    return new FactoryConfigUpdated__Params(this);
-  }
-}
-
-export class FactoryConfigUpdated__Params {
-  _event: FactoryConfigUpdated;
-
-  constructor(event: FactoryConfigUpdated) {
-    this._event = event;
-  }
-
-  get factoryWallet(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get campaignImplementation(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-
-  get campaignRewardsImplementation(): Address {
-    return this._event.parameters[2].value.toAddress();
-  }
-
-  get campaignRequestsImplementation(): Address {
-    return this._event.parameters[3].value.toAddress();
-  }
-
-  get campaignVotesImplementation(): Address {
-    return this._event.parameters[4].value.toAddress();
   }
 }
 
@@ -549,67 +587,6 @@ export class CampaignFactory__usersResult {
 export class CampaignFactory extends ethereum.SmartContract {
   static bind(address: Address): CampaignFactory {
     return new CampaignFactory("CampaignFactory", address);
-  }
-
-  MANAGE_CAMPAIGNS(): Bytes {
-    let result = super.call(
-      "MANAGE_CAMPAIGNS",
-      "MANAGE_CAMPAIGNS():(bytes32)",
-      []
-    );
-
-    return result[0].toBytes();
-  }
-
-  try_MANAGE_CAMPAIGNS(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "MANAGE_CAMPAIGNS",
-      "MANAGE_CAMPAIGNS():(bytes32)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
-  MANAGE_CATEGORIES(): Bytes {
-    let result = super.call(
-      "MANAGE_CATEGORIES",
-      "MANAGE_CATEGORIES():(bytes32)",
-      []
-    );
-
-    return result[0].toBytes();
-  }
-
-  try_MANAGE_CATEGORIES(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall(
-      "MANAGE_CATEGORIES",
-      "MANAGE_CATEGORIES():(bytes32)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
-  }
-
-  MANAGE_USERS(): Bytes {
-    let result = super.call("MANAGE_USERS", "MANAGE_USERS():(bytes32)", []);
-
-    return result[0].toBytes();
-  }
-
-  try_MANAGE_USERS(): ethereum.CallResult<Bytes> {
-    let result = super.tryCall("MANAGE_USERS", "MANAGE_USERS():(bytes32)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
   approvedCampaignTransactionConfig(param0: string): boolean {
@@ -1033,18 +1010,14 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  factoryWallet(): Address {
-    let result = super.call("factoryWallet", "factoryWallet():(address)", []);
+  governance(): Address {
+    let result = super.call("governance", "governance():(address)", []);
 
     return result[0].toAddress();
   }
 
-  try_factoryWallet(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "factoryWallet",
-      "factoryWallet():(address)",
-      []
-    );
+  try_governance(): ethereum.CallResult<Address> {
+    let result = super.tryCall("governance", "governance():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -1091,21 +1064,6 @@ export class CampaignFactory extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  root(): Address {
-    let result = super.call("root", "root():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_root(): ethereum.CallResult<Address> {
-    let result = super.tryCall("root", "root():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   tokenInList(param0: Address): boolean {
@@ -1345,12 +1303,12 @@ export class __CampaignFactory_initCall__Inputs {
     this._call = call;
   }
 
-  get _wallet(): Address {
+  get _governance(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _root(): Address {
-    return this._call.inputValues[1].value.toAddress();
+  get _config(): Array<BigInt> {
+    return this._call.inputValues[1].value.toBigIntArray();
   }
 }
 
@@ -1362,48 +1320,122 @@ export class __CampaignFactory_initCall__Outputs {
   }
 }
 
-export class SetFactoryConfigCall extends ethereum.Call {
-  get inputs(): SetFactoryConfigCall__Inputs {
-    return new SetFactoryConfigCall__Inputs(this);
+export class SetCampaignImplementationCall extends ethereum.Call {
+  get inputs(): SetCampaignImplementationCall__Inputs {
+    return new SetCampaignImplementationCall__Inputs(this);
   }
 
-  get outputs(): SetFactoryConfigCall__Outputs {
-    return new SetFactoryConfigCall__Outputs(this);
+  get outputs(): SetCampaignImplementationCall__Outputs {
+    return new SetCampaignImplementationCall__Outputs(this);
   }
 }
 
-export class SetFactoryConfigCall__Inputs {
-  _call: SetFactoryConfigCall;
+export class SetCampaignImplementationCall__Inputs {
+  _call: SetCampaignImplementationCall;
 
-  constructor(call: SetFactoryConfigCall) {
+  constructor(call: SetCampaignImplementationCall) {
     this._call = call;
   }
 
-  get _wallet(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
   get _campaignImplementation(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _campaignRewardsImplementation(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
-  get _campaignRequestsImplementation(): Address {
-    return this._call.inputValues[3].value.toAddress();
-  }
-
-  get _campaignVotesImplementation(): Address {
-    return this._call.inputValues[4].value.toAddress();
+    return this._call.inputValues[0].value.toAddress();
   }
 }
 
-export class SetFactoryConfigCall__Outputs {
-  _call: SetFactoryConfigCall;
+export class SetCampaignImplementationCall__Outputs {
+  _call: SetCampaignImplementationCall;
 
-  constructor(call: SetFactoryConfigCall) {
+  constructor(call: SetCampaignImplementationCall) {
+    this._call = call;
+  }
+}
+
+export class SetCampaignRewardImplementationCall extends ethereum.Call {
+  get inputs(): SetCampaignRewardImplementationCall__Inputs {
+    return new SetCampaignRewardImplementationCall__Inputs(this);
+  }
+
+  get outputs(): SetCampaignRewardImplementationCall__Outputs {
+    return new SetCampaignRewardImplementationCall__Outputs(this);
+  }
+}
+
+export class SetCampaignRewardImplementationCall__Inputs {
+  _call: SetCampaignRewardImplementationCall;
+
+  constructor(call: SetCampaignRewardImplementationCall) {
+    this._call = call;
+  }
+
+  get _campaignRewardsImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetCampaignRewardImplementationCall__Outputs {
+  _call: SetCampaignRewardImplementationCall;
+
+  constructor(call: SetCampaignRewardImplementationCall) {
+    this._call = call;
+  }
+}
+
+export class SetCampaignRequestImplementationCall extends ethereum.Call {
+  get inputs(): SetCampaignRequestImplementationCall__Inputs {
+    return new SetCampaignRequestImplementationCall__Inputs(this);
+  }
+
+  get outputs(): SetCampaignRequestImplementationCall__Outputs {
+    return new SetCampaignRequestImplementationCall__Outputs(this);
+  }
+}
+
+export class SetCampaignRequestImplementationCall__Inputs {
+  _call: SetCampaignRequestImplementationCall;
+
+  constructor(call: SetCampaignRequestImplementationCall) {
+    this._call = call;
+  }
+
+  get _campaignRequestsImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetCampaignRequestImplementationCall__Outputs {
+  _call: SetCampaignRequestImplementationCall;
+
+  constructor(call: SetCampaignRequestImplementationCall) {
+    this._call = call;
+  }
+}
+
+export class SetCampaignVoteImplementationCall extends ethereum.Call {
+  get inputs(): SetCampaignVoteImplementationCall__Inputs {
+    return new SetCampaignVoteImplementationCall__Inputs(this);
+  }
+
+  get outputs(): SetCampaignVoteImplementationCall__Outputs {
+    return new SetCampaignVoteImplementationCall__Outputs(this);
+  }
+}
+
+export class SetCampaignVoteImplementationCall__Inputs {
+  _call: SetCampaignVoteImplementationCall;
+
+  constructor(call: SetCampaignVoteImplementationCall) {
+    this._call = call;
+  }
+
+  get _campaignVotesImplementation(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class SetCampaignVoteImplementationCall__Outputs {
+  _call: SetCampaignVoteImplementationCall;
+
+  constructor(call: SetCampaignVoteImplementationCall) {
     this._call = call;
   }
 }

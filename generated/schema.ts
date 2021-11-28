@@ -72,7 +72,6 @@ export class CampaignFactory extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("origin", Value.fromString(""));
-    this.set("factoryWallet", Value.fromBytes(Bytes.empty()));
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("paused", Value.fromBoolean(false));
     this.set("defaultCommission", Value.fromBigInt(BigInt.zero()));
@@ -94,7 +93,7 @@ export class CampaignFactory extends Entity {
     this.set("categoriesCount", Value.fromBigInt(BigInt.zero()));
     this.set("userCount", Value.fromBigInt(BigInt.zero()));
     this.set("tokenCount", Value.fromBigInt(BigInt.zero()));
-    this.set("owner", Value.fromString(""));
+    this.set("governance", Value.fromBytes(Bytes.empty()));
   }
 
   save(): void {
@@ -132,15 +131,6 @@ export class CampaignFactory extends Entity {
     this.set("origin", Value.fromString(value));
   }
 
-  get factoryWallet(): Bytes {
-    let value = this.get("factoryWallet");
-    return value!.toBytes();
-  }
-
-  set factoryWallet(value: Bytes) {
-    this.set("factoryWallet", Value.fromBytes(value));
-  }
-
   get createdAt(): BigInt {
     let value = this.get("createdAt");
     return value!.toBigInt();
@@ -148,40 +138,6 @@ export class CampaignFactory extends Entity {
 
   set createdAt(value: BigInt) {
     this.set("createdAt", Value.fromBigInt(value));
-  }
-
-  get campaignImplementation(): Bytes | null {
-    let value = this.get("campaignImplementation");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set campaignImplementation(value: Bytes | null) {
-    if (!value) {
-      this.unset("campaignImplementation");
-    } else {
-      this.set("campaignImplementation", Value.fromBytes(<Bytes>value));
-    }
-  }
-
-  get campaignRewardsImplementation(): Bytes | null {
-    let value = this.get("campaignRewardsImplementation");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set campaignRewardsImplementation(value: Bytes | null) {
-    if (!value) {
-      this.unset("campaignRewardsImplementation");
-    } else {
-      this.set("campaignRewardsImplementation", Value.fromBytes(<Bytes>value));
-    }
   }
 
   get factoryRevenue(): BigInt | null {
@@ -225,6 +181,74 @@ export class CampaignFactory extends Entity {
 
   set paused(value: boolean) {
     this.set("paused", Value.fromBoolean(value));
+  }
+
+  get campaignImplementation(): Bytes | null {
+    let value = this.get("campaignImplementation");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set campaignImplementation(value: Bytes | null) {
+    if (!value) {
+      this.unset("campaignImplementation");
+    } else {
+      this.set("campaignImplementation", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get campaignRewardImplementation(): Bytes | null {
+    let value = this.get("campaignRewardImplementation");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set campaignRewardImplementation(value: Bytes | null) {
+    if (!value) {
+      this.unset("campaignRewardImplementation");
+    } else {
+      this.set("campaignRewardImplementation", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get campaignRequestImplementation(): Bytes | null {
+    let value = this.get("campaignRequestImplementation");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set campaignRequestImplementation(value: Bytes | null) {
+    if (!value) {
+      this.unset("campaignRequestImplementation");
+    } else {
+      this.set("campaignRequestImplementation", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get campaignVoteImplementation(): Bytes | null {
+    let value = this.get("campaignVoteImplementation");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set campaignVoteImplementation(value: Bytes | null) {
+    if (!value) {
+      this.unset("campaignVoteImplementation");
+    } else {
+      this.set("campaignVoteImplementation", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get defaultCommission(): BigInt {
@@ -398,13 +422,13 @@ export class CampaignFactory extends Entity {
     this.set("tokenCount", Value.fromBigInt(value));
   }
 
-  get owner(): string {
-    let value = this.get("owner");
-    return value!.toString();
+  get governance(): Bytes {
+    let value = this.get("governance");
+    return value!.toBytes();
   }
 
-  set owner(value: string) {
-    this.set("owner", Value.fromString(value));
+  set governance(value: Bytes) {
+    this.set("governance", Value.fromBytes(value));
   }
 
   get users(): Array<string> {

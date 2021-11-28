@@ -11,13 +11,7 @@
             {
                 "indexed": false,
                 "internalType": "address",
-                "name": "factoryWallet",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "owner",
+                "name": "governance",
                 "type": "address"
             },
             {
@@ -70,9 +64,14 @@
                 "type": "address"
             },
             {
-                "internalType": "address payable",
-                "name": "_wallet",
+                "internalType": "address",
+                "name": "_governance",
                 "type": "address"
+            },
+            {
+                "internalType": "uint256[15]",
+                "name": "_config",
+                "type": "uint256[15]"
             }
         ],
         "name": "createCampaignFactory",

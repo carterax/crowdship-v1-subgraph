@@ -17,8 +17,7 @@ export function handleCampaignFactoryDeployed(
       event.params.campaignFactory
     );
   campaignFactory.origin = event.address.toHexString();
-  campaignFactory.factoryWallet = event.params.factoryWallet;
-  campaignFactory.owner = event.params.owner.toHexString();
+  campaignFactory.governance = event.params.governance;
   campaignFactory.createdAt = event.block.timestamp;
   campaignFactory.paused = false;
 

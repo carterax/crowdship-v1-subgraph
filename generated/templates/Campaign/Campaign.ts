@@ -388,6 +388,24 @@ export class Unpaused__Params {
   }
 }
 
+export class WithdrawalStateUpdated extends ethereum.Event {
+  get params(): WithdrawalStateUpdated__Params {
+    return new WithdrawalStateUpdated__Params(this);
+  }
+}
+
+export class WithdrawalStateUpdated__Params {
+  _event: WithdrawalStateUpdated;
+
+  constructor(event: WithdrawalStateUpdated) {
+    this._event = event;
+  }
+
+  get withdrawalState(): boolean {
+    return this._event.parameters[0].value.toBoolean();
+  }
+}
+
 export class Campaign extends ethereum.SmartContract {
   static bind(address: Address): Campaign {
     return new Campaign("Campaign", address);
