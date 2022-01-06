@@ -96,30 +96,47 @@ export class Voted__Params {
   get support(): i32 {
     return this._event.parameters[2].value.toI32();
   }
+
+  get hashedVote(): string {
+    return this._event.parameters[3].value.toString();
+  }
 }
 
 export class CampaignVote__votesResult {
-  value0: i32;
-  value1: BigInt;
-  value2: boolean;
-  value3: Address;
+  value0: BigInt;
+  value1: i32;
+  value2: BigInt;
+  value3: string;
+  value4: boolean;
+  value5: Address;
 
-  constructor(value0: i32, value1: BigInt, value2: boolean, value3: Address) {
+  constructor(
+    value0: BigInt,
+    value1: i32,
+    value2: BigInt,
+    value3: string,
+    value4: boolean,
+    value5: Address
+  ) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
+    this.value4 = value4;
+    this.value5 = value5;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set(
-      "value0",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value0))
+      "value1",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value1))
     );
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromBoolean(this.value2));
-    map.set("value3", ethereum.Value.fromAddress(this.value3));
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value3", ethereum.Value.fromString(this.value3));
+    map.set("value4", ethereum.Value.fromBoolean(this.value4));
+    map.set("value5", ethereum.Value.fromAddress(this.value5));
     return map;
   }
 }
@@ -129,20 +146,20 @@ export class CampaignVote extends ethereum.SmartContract {
     return new CampaignVote("CampaignVote", address);
   }
 
-  campaignContract(): Address {
+  campaignFactoryInterface(): Address {
     let result = super.call(
-      "campaignContract",
-      "campaignContract():(address)",
+      "campaignFactoryInterface",
+      "campaignFactoryInterface():(address)",
       []
     );
 
     return result[0].toAddress();
   }
 
-  try_campaignContract(): ethereum.CallResult<Address> {
+  try_campaignFactoryInterface(): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "campaignContract",
-      "campaignContract():(address)",
+      "campaignFactoryInterface",
+      "campaignFactoryInterface():(address)",
       []
     );
     if (result.reverted) {
@@ -152,20 +169,20 @@ export class CampaignVote extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  campaignFactoryContract(): Address {
+  campaignInterface(): Address {
     let result = super.call(
-      "campaignFactoryContract",
-      "campaignFactoryContract():(address)",
+      "campaignInterface",
+      "campaignInterface():(address)",
       []
     );
 
     return result[0].toAddress();
   }
 
-  try_campaignFactoryContract(): ethereum.CallResult<Address> {
+  try_campaignInterface(): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "campaignFactoryContract",
-      "campaignFactoryContract():(address)",
+      "campaignInterface",
+      "campaignInterface():(address)",
       []
     );
     if (result.reverted) {
@@ -173,21 +190,6 @@ export class CampaignVote extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  campaignID(): BigInt {
-    let result = super.call("campaignID", "campaignID():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_campaignID(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("campaignID", "campaignID():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   paused(): boolean {
@@ -205,20 +207,14 @@ export class CampaignVote extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  voteId(param0: Address, param1: BigInt): BigInt {
-    let result = super.call("voteId", "voteId(address,uint256):(uint256)", [
-      ethereum.Value.fromAddress(param0),
-      ethereum.Value.fromUnsignedBigInt(param1)
-    ]);
+  voteCount(): BigInt {
+    let result = super.call("voteCount", "voteCount():(uint256)", []);
 
     return result[0].toBigInt();
   }
 
-  try_voteId(param0: Address, param1: BigInt): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("voteId", "voteId(address,uint256):(uint256)", [
-      ethereum.Value.fromAddress(param0),
-      ethereum.Value.fromUnsignedBigInt(param1)
-    ]);
+  try_voteCount(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("voteCount", "voteCount():(uint256)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -226,26 +222,37 @@ export class CampaignVote extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  votes(param0: BigInt): CampaignVote__votesResult {
+  votes(param0: Address, param1: BigInt): CampaignVote__votesResult {
     let result = super.call(
       "votes",
-      "votes(uint256):(uint8,uint256,bool,address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "votes(address,uint256):(uint256,uint8,uint256,string,bool,address)",
+      [
+        ethereum.Value.fromAddress(param0),
+        ethereum.Value.fromUnsignedBigInt(param1)
+      ]
     );
 
     return new CampaignVote__votesResult(
-      result[0].toI32(),
-      result[1].toBigInt(),
-      result[2].toBoolean(),
-      result[3].toAddress()
+      result[0].toBigInt(),
+      result[1].toI32(),
+      result[2].toBigInt(),
+      result[3].toString(),
+      result[4].toBoolean(),
+      result[5].toAddress()
     );
   }
 
-  try_votes(param0: BigInt): ethereum.CallResult<CampaignVote__votesResult> {
+  try_votes(
+    param0: Address,
+    param1: BigInt
+  ): ethereum.CallResult<CampaignVote__votesResult> {
     let result = super.tryCall(
       "votes",
-      "votes(uint256):(uint8,uint256,bool,address)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "votes(address,uint256):(uint256,uint8,uint256,string,bool,address)",
+      [
+        ethereum.Value.fromAddress(param0),
+        ethereum.Value.fromUnsignedBigInt(param1)
+      ]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -253,10 +260,12 @@ export class CampaignVote extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(
       new CampaignVote__votesResult(
-        value[0].toI32(),
-        value[1].toBigInt(),
-        value[2].toBoolean(),
-        value[3].toAddress()
+        value[0].toBigInt(),
+        value[1].toI32(),
+        value[2].toBigInt(),
+        value[3].toString(),
+        value[4].toBoolean(),
+        value[5].toAddress()
       )
     );
   }
@@ -285,10 +294,6 @@ export class __CampaignVote_initCall__Inputs {
 
   get _campaign(): Address {
     return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
@@ -323,6 +328,10 @@ export class VoteOnRequestCall__Inputs {
 
   get _support(): i32 {
     return this._call.inputValues[1].value.toI32();
+  }
+
+  get _hashedVote(): string {
+    return this._call.inputValues[2].value.toString();
   }
 }
 

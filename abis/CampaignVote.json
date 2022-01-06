@@ -70,6 +70,12 @@
                 "internalType": "uint8",
                 "name": "support",
                 "type": "uint8"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "hashedVote",
+                "type": "string"
             }
         ],
         "name": "Voted",
@@ -77,20 +83,7 @@
     },
     {
         "inputs": [],
-        "name": "campaignContract",
-        "outputs": [
-            {
-                "internalType": "contract ICampaign",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "campaignFactoryContract",
+        "name": "campaignFactoryInterface",
         "outputs": [
             {
                 "internalType": "contract ICampaignFactory",
@@ -103,12 +96,12 @@
     },
     {
         "inputs": [],
-        "name": "campaignID",
+        "name": "campaignInterface",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "contract ICampaign",
                 "name": "",
-                "type": "uint256"
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -128,19 +121,8 @@
         "type": "function"
     },
     {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "voteId",
+        "inputs": [],
+        "name": "voteCount",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -154,6 +136,11 @@
     {
         "inputs": [
             {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
@@ -161,6 +148,11 @@
         ],
         "name": "votes",
         "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
             {
                 "internalType": "uint8",
                 "name": "support",
@@ -170,6 +162,11 @@
                 "internalType": "uint256",
                 "name": "requestId",
                 "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "hashedVote",
+                "type": "string"
             },
             {
                 "internalType": "bool",
@@ -196,11 +193,6 @@
                 "internalType": "contract Campaign",
                 "name": "_campaign",
                 "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
             }
         ],
         "name": "__CampaignVote_init",
@@ -219,6 +211,11 @@
                 "internalType": "uint8",
                 "name": "_support",
                 "type": "uint8"
+            },
+            {
+                "internalType": "string",
+                "name": "_hashedVote",
+                "type": "string"
             }
         ],
         "name": "voteOnRequest",

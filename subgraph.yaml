@@ -65,21 +65,21 @@ templates:
           handler: handleCampaignCategoryChange
         - event: CampaignDeployed(address,address,address,address,address,uint256,bool)
           handler: handleCampaignDeployed
-        - event: CategoryAdded(indexed uint256,bool)
+        - event: CategoryAdded(indexed uint256,bool,string)
           handler: handleCategoryAdded
-        - event: CategoryModified(indexed uint256,bool)
+        - event: CategoryModified(indexed uint256,bool,string)
           handler: handleCategoryModified
         - event: Paused(address)
           handler: handlePaused
-        - event: TokenAdded(indexed address)
+        - event: TokenAdded(indexed address,bool)
           handler: handleTokenAdded
         - event: TokenApproval(indexed address,bool)
           handler: handleTokenApproval
         - event: Unpaused(address)
           handler: handleUnpaused
-        - event: UserAdded(indexed uint256)
+        - event: UserAdded(indexed address)
           handler: handleUserAdded
-        - event: UserApproval(indexed uint256,indexed address,bool)
+        - event: UserApproval(indexed address,bool)
           handler: handleUserApproval
   - name: Campaign
     kind: ethereum/contract
@@ -113,7 +113,7 @@ templates:
           handler: handleCampaignDeadlineExtended
         - event: DeadlineThresholdExtended(uint8)
           handler: handleDeadlineThresholdExtended
-        - event: CampaignReported(address)
+        - event: CampaignReported(address,string)
           handler: handleCampaignReported
         - event: CampaignUserDataTransferred(address,address)
           handler: handleCampaignUserDataTransferred
@@ -123,7 +123,7 @@ templates:
           handler: handleContributionWithdrawn
         - event: RequestComplete(indexed uint256)
           handler: handleRequestComplete
-        - event: CampaignReviewed(address)
+        - event: CampaignReviewed(address,string)
           handler: handleCampaignReviewed
         - event: CampaignStateChange(uint8)
           handler: handleCampaignStateChange
@@ -146,7 +146,7 @@ templates:
         - name: CampaignReward
           file: ./abis/CampaignReward.json
       eventHandlers:
-        - event: RewardCreated(indexed uint256,uint256,uint256,uint256,bool)
+        - event: RewardCreated(indexed uint256,uint256,uint256,uint256,string,bool)
           handler: handleRewardCreated
         - event: RewardModified(indexed uint256,uint256,uint256,uint256,bool)
           handler: handleRewardModified
@@ -176,7 +176,7 @@ templates:
         - name: CampaignRequest
           file: ./abis/CampaignRequest.json
       eventHandlers:
-        - event: RequestAdded(indexed uint256,uint256,uint256,address)
+        - event: RequestAdded(indexed uint256,uint256,uint256,string,address)
           handler: handleRequestAdded
         - event: RequestVoided(indexed uint256)
           handler: handleRequestVoided
@@ -196,7 +196,7 @@ templates:
         - name: CampaignVote
           file: ./abis/CampaignVote.json
       eventHandlers:
-        - event: Voted(indexed uint256,indexed uint256,uint8)
+        - event: Voted(indexed uint256,indexed uint256,uint8,string)
           handler: handleVoted
         - event: VoteCancelled(indexed uint256,indexed uint256,uint8)
           handler: handleVoteCancelled

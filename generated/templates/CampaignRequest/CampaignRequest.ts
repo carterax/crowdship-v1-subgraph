@@ -53,8 +53,12 @@ export class RequestAdded__Params {
     return this._event.parameters[2].value.toBigInt();
   }
 
+  get hashedRequest(): string {
+    return this._event.parameters[3].value.toString();
+  }
+
   get recipient(): Address {
-    return this._event.parameters[3].value.toAddress();
+    return this._event.parameters[4].value.toAddress();
   }
 }
 
@@ -101,8 +105,9 @@ export class CampaignRequest__requestsResult {
   value3: BigInt;
   value4: BigInt;
   value5: BigInt;
-  value6: boolean;
+  value6: string;
   value7: boolean;
+  value8: boolean;
 
   constructor(
     value0: Address,
@@ -111,8 +116,9 @@ export class CampaignRequest__requestsResult {
     value3: BigInt,
     value4: BigInt,
     value5: BigInt,
-    value6: boolean,
-    value7: boolean
+    value6: string,
+    value7: boolean,
+    value8: boolean
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -122,6 +128,7 @@ export class CampaignRequest__requestsResult {
     this.value5 = value5;
     this.value6 = value6;
     this.value7 = value7;
+    this.value8 = value8;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -132,8 +139,9 @@ export class CampaignRequest__requestsResult {
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
     map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
     map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
-    map.set("value6", ethereum.Value.fromBoolean(this.value6));
+    map.set("value6", ethereum.Value.fromString(this.value6));
     map.set("value7", ethereum.Value.fromBoolean(this.value7));
+    map.set("value8", ethereum.Value.fromBoolean(this.value8));
     return map;
   }
 }
@@ -189,19 +197,50 @@ export class CampaignRequest extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  campaignID(): BigInt {
-    let result = super.call("campaignID", "campaignID():(uint256)", []);
+  campaignFactoryInterface(): Address {
+    let result = super.call(
+      "campaignFactoryInterface",
+      "campaignFactoryInterface():(address)",
+      []
+    );
 
-    return result[0].toBigInt();
+    return result[0].toAddress();
   }
 
-  try_campaignID(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("campaignID", "campaignID():(uint256)", []);
+  try_campaignFactoryInterface(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "campaignFactoryInterface",
+      "campaignFactoryInterface():(address)",
+      []
+    );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  campaignInterface(): Address {
+    let result = super.call(
+      "campaignInterface",
+      "campaignInterface():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_campaignInterface(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "campaignInterface",
+      "campaignInterface():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   currentRunningRequest(): BigInt {
@@ -283,7 +322,7 @@ export class CampaignRequest extends ethereum.SmartContract {
   requests(param0: BigInt): CampaignRequest__requestsResult {
     let result = super.call(
       "requests",
-      "requests(uint256):(address,uint256,uint256,uint256,uint256,uint256,bool,bool)",
+      "requests(uint256):(address,uint256,uint256,uint256,uint256,uint256,string,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -294,8 +333,9 @@ export class CampaignRequest extends ethereum.SmartContract {
       result[3].toBigInt(),
       result[4].toBigInt(),
       result[5].toBigInt(),
-      result[6].toBoolean(),
-      result[7].toBoolean()
+      result[6].toString(),
+      result[7].toBoolean(),
+      result[8].toBoolean()
     );
   }
 
@@ -304,7 +344,7 @@ export class CampaignRequest extends ethereum.SmartContract {
   ): ethereum.CallResult<CampaignRequest__requestsResult> {
     let result = super.tryCall(
       "requests",
-      "requests(uint256):(address,uint256,uint256,uint256,uint256,uint256,bool,bool)",
+      "requests(uint256):(address,uint256,uint256,uint256,uint256,uint256,string,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -319,8 +359,9 @@ export class CampaignRequest extends ethereum.SmartContract {
         value[3].toBigInt(),
         value[4].toBigInt(),
         value[5].toBigInt(),
-        value[6].toBoolean(),
-        value[7].toBoolean()
+        value[6].toString(),
+        value[7].toBoolean(),
+        value[8].toBoolean()
       )
     );
   }
@@ -349,10 +390,6 @@ export class __CampaignRequest_initCall__Inputs {
 
   get _campaign(): Address {
     return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
@@ -391,6 +428,10 @@ export class CreateRequestCall__Inputs {
 
   get _duration(): BigInt {
     return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get _hashedRequest(): string {
+    return this._call.inputValues[3].value.toString();
   }
 }
 

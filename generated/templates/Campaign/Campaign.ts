@@ -80,6 +80,10 @@ export class CampaignReported__Params {
   get user(): Address {
     return this._event.parameters[0].value.toAddress();
   }
+
+  get hashedReport(): string {
+    return this._event.parameters[1].value.toString();
+  }
 }
 
 export class CampaignReviewed extends ethereum.Event {
@@ -97,6 +101,10 @@ export class CampaignReviewed__Params {
 
   get user(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+
+  get hashedReview(): string {
+    return this._event.parameters[1].value.toString();
   }
 }
 
@@ -573,21 +581,6 @@ export class Campaign extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  campaignID(): BigInt {
-    let result = super.call("campaignID", "campaignID():(uint256)", []);
-
-    return result[0].toBigInt();
-  }
-
-  try_campaignID(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("campaignID", "campaignID():(uint256)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   campaignRequestContract(): Address {
@@ -1400,10 +1393,6 @@ export class __Campaign_initCall__Inputs {
   get _root(): Address {
     return this._call.inputValues[4].value.toAddress();
   }
-
-  get _campaignId(): BigInt {
-    return this._call.inputValues[5].value.toBigInt();
-  }
 }
 
 export class __Campaign_initCall__Outputs {
@@ -1728,6 +1717,10 @@ export class ReviewCampaignPerformanceCall__Inputs {
   constructor(call: ReviewCampaignPerformanceCall) {
     this._call = call;
   }
+
+  get _hashedReview(): string {
+    return this._call.inputValues[0].value.toString();
+  }
 }
 
 export class ReviewCampaignPerformanceCall__Outputs {
@@ -1779,6 +1772,10 @@ export class ReportCampaignCall__Inputs {
 
   constructor(call: ReportCampaignCall) {
     this._call = call;
+  }
+
+  get _hashedReport(): string {
+    return this._call.inputValues[0].value.toString();
   }
 }
 

@@ -739,6 +739,7 @@ export class Category extends Entity {
     super();
     this.set("id", Value.fromString(id));
 
+    this.set("title", Value.fromString(""));
     this.set("campaignFactory", Value.fromString(""));
     this.set("totalCampaign", Value.fromBigInt(BigInt.zero()));
     this.set("commission", Value.fromBigInt(BigInt.zero()));
@@ -771,6 +772,15 @@ export class Category extends Entity {
 
   set id(value: string) {
     this.set("id", Value.fromString(value));
+  }
+
+  get title(): string {
+    let value = this.get("title");
+    return value!.toString();
+  }
+
+  set title(value: string) {
+    this.set("title", Value.fromString(value));
   }
 
   get campaignFactory(): string {

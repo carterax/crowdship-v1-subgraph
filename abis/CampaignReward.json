@@ -54,6 +54,12 @@
             },
             {
                 "indexed": false,
+                "internalType": "string",
+                "name": "hashedReward",
+                "type": "string"
+            },
+            {
+                "indexed": false,
                 "internalType": "bool",
                 "name": "active",
                 "type": "bool"
@@ -222,20 +228,7 @@
     },
     {
         "inputs": [],
-        "name": "campaignContract",
-        "outputs": [
-            {
-                "internalType": "contract ICampaign",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "campaignFactoryContract",
+        "name": "campaignFactoryInterface",
         "outputs": [
             {
                 "internalType": "contract ICampaignFactory",
@@ -248,12 +241,12 @@
     },
     {
         "inputs": [],
-        "name": "campaignID",
+        "name": "campaignInterface",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "contract ICampaign",
                 "name": "",
-                "type": "uint256"
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -364,6 +357,11 @@
                 "type": "uint256"
             },
             {
+                "internalType": "string",
+                "name": "hashed",
+                "type": "string"
+            },
+            {
                 "internalType": "bool",
                 "name": "exists",
                 "type": "bool"
@@ -407,11 +405,6 @@
                 "internalType": "contract Campaign",
                 "name": "_campaign",
                 "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
             }
         ],
         "name": "__CampaignReward_init",
@@ -435,6 +428,11 @@
                 "internalType": "uint256",
                 "name": "_stock",
                 "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_hashedReward",
+                "type": "string"
             },
             {
                 "internalType": "bool",

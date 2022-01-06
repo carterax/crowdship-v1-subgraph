@@ -4,7 +4,7 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "address",
+                "internalType": "contract Campaign",
                 "name": "campaign",
                 "type": "address"
             }
@@ -17,7 +17,7 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "address",
+                "internalType": "contract Campaign",
                 "name": "campaign",
                 "type": "address"
             }
@@ -30,7 +30,7 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "address",
+                "internalType": "contract Campaign",
                 "name": "campaign",
                 "type": "address"
             },
@@ -191,6 +191,12 @@
                 "internalType": "bool",
                 "name": "active",
                 "type": "bool"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "title",
+                "type": "string"
             }
         ],
         "name": "CategoryAdded",
@@ -229,6 +235,12 @@
                 "internalType": "bool",
                 "name": "active",
                 "type": "bool"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "title",
+                "type": "string"
             }
         ],
         "name": "CategoryModified",
@@ -255,6 +267,12 @@
                 "internalType": "address",
                 "name": "token",
                 "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "approval",
+                "type": "bool"
             }
         ],
         "name": "TokenAdded",
@@ -335,9 +353,9 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "uint256",
+                "internalType": "address",
                 "name": "userId",
-                "type": "uint256"
+                "type": "address"
             }
         ],
         "name": "UserAdded",
@@ -346,12 +364,6 @@
     {
         "anonymous": false,
         "inputs": [
-            {
-                "indexed": true,
-                "internalType": "uint256",
-                "name": "userId",
-                "type": "uint256"
-            },
             {
                 "indexed": true,
                 "internalType": "address",
@@ -411,6 +423,11 @@
                 "internalType": "uint256",
                 "name": "updatedAt",
                 "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "title",
+                "type": "string"
             },
             {
                 "internalType": "bool",
@@ -481,9 +498,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
+                "internalType": "address",
                 "name": "",
-                "type": "uint256"
+                "type": "address"
             }
         ],
         "name": "campaignRevenueFromCommissions",
@@ -500,44 +517,6 @@
     {
         "inputs": [],
         "name": "campaignRewardsImplementation",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "campaignToID",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "campaignToOwner",
         "outputs": [
             {
                 "internalType": "address",
@@ -602,6 +581,55 @@
     {
         "inputs": [
             {
+                "internalType": "contract Campaign",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "campaigns",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "createdAt",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "updatedAt",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "category",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "hashedCampaignInfo",
+                "type": "string"
+            },
+            {
+                "internalType": "bool",
+                "name": "active",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
@@ -634,46 +662,16 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
+                "internalType": "string",
                 "name": "",
-                "type": "uint256"
+                "type": "string"
             }
         ],
-        "name": "deployedCampaigns",
+        "name": "categoryTitleIsTaken",
         "outputs": [
             {
-                "internalType": "address",
-                "name": "campaign",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "createdAt",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "updatedAt",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "category",
-                "type": "uint256"
-            },
-            {
                 "internalType": "bool",
-                "name": "active",
-                "type": "bool"
-            },
-            {
-                "internalType": "bool",
-                "name": "approved",
+                "name": "",
                 "type": "bool"
             }
         ],
@@ -751,30 +749,21 @@
                 "type": "address"
             }
         ],
-        "name": "tokenInList",
+        "name": "tokens",
         "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
             {
                 "internalType": "address",
-                "name": "",
+                "name": "token",
                 "type": "address"
-            }
-        ],
-        "name": "tokensApproved",
-        "outputs": [
+            },
+            {
+                "internalType": "string",
+                "name": "hashedToken",
+                "type": "string"
+            },
             {
                 "internalType": "bool",
-                "name": "",
+                "name": "approved",
                 "type": "bool"
             }
         ],
@@ -836,25 +825,6 @@
                 "type": "address"
             }
         ],
-        "name": "userID",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
         "name": "userTrusteeCount",
         "outputs": [
             {
@@ -869,18 +839,13 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
+                "internalType": "address",
                 "name": "",
-                "type": "uint256"
+                "type": "address"
             }
         ],
         "name": "users",
         "outputs": [
-            {
-                "internalType": "address",
-                "name": "userAddress",
-                "type": "address"
-            },
             {
                 "internalType": "uint256",
                 "name": "joined",
@@ -892,13 +857,13 @@
                 "type": "uint256"
             },
             {
-                "internalType": "bool",
-                "name": "verified",
-                "type": "bool"
+                "internalType": "string",
+                "name": "hashedUser",
+                "type": "string"
             },
             {
                 "internalType": "bool",
-                "name": "exists",
+                "name": "verified",
                 "type": "bool"
             }
         ],
@@ -1053,6 +1018,16 @@
                 "internalType": "address",
                 "name": "_token",
                 "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "_approved",
+                "type": "bool"
+            },
+            {
+                "internalType": "string",
+                "name": "_hashedToken",
+                "type": "string"
             }
         ],
         "name": "addToken",
@@ -1116,7 +1091,13 @@
         "type": "function"
     },
     {
-        "inputs": [],
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "_hashedUser",
+                "type": "string"
+            }
+        ],
         "name": "signUp",
         "outputs": [],
         "stateMutability": "nonpayable",
@@ -1170,9 +1151,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_userId",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "_user",
+                "type": "address"
             },
             {
                 "internalType": "bool",
@@ -1196,6 +1177,11 @@
                 "internalType": "bool",
                 "name": "_approved",
                 "type": "bool"
+            },
+            {
+                "internalType": "string",
+                "name": "_hashedCampaignInfo",
+                "type": "string"
             }
         ],
         "name": "createCampaign",
@@ -1206,9 +1192,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
+                "internalType": "contract Campaign",
+                "name": "_campaign",
+                "type": "address"
             }
         ],
         "name": "activateCampaign",
@@ -1219,9 +1205,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
+                "internalType": "contract Campaign",
+                "name": "_campaign",
+                "type": "address"
             }
         ],
         "name": "approveCampaign",
@@ -1232,9 +1218,9 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
+                "internalType": "contract Campaign",
+                "name": "_campaign",
+                "type": "address"
             },
             {
                 "internalType": "uint256",
@@ -1253,6 +1239,11 @@
                 "internalType": "bool",
                 "name": "_active",
                 "type": "bool"
+            },
+            {
+                "internalType": "string",
+                "name": "_title",
+                "type": "string"
             }
         ],
         "name": "createCategory",
@@ -1271,6 +1262,11 @@
                 "internalType": "bool",
                 "name": "_active",
                 "type": "bool"
+            },
+            {
+                "internalType": "string",
+                "name": "_title",
+                "type": "string"
             }
         ],
         "name": "modifyCategory",

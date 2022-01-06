@@ -100,6 +100,7 @@ type User @entity {
 
 type Category @entity {
   id: ID!
+  title: String!
   campaignFactory: CampaignFactory!
   campaigns: [Campaign!]! @derivedFrom(field: "category")
   totalCampaign: BigInt!

@@ -31,13 +31,16 @@ export function handleCampaignOwnershipTransferred(
   let campaign = Campaign.load(event.address.toHexString());
 
   if (campaign !== null) {
-    let campaignFactoryContract = CampaignFactoryContract.bind(
-      Address.fromString(campaign.campaignFactory)
+    let newOwner = User.load(
+      `${Address.fromString(
+        campaign.campaignFactory
+      )}-user-${event.params.newOwner.toHexString()}`
     );
-    let userId = campaignFactoryContract.userID(event.params.newOwner);
 
-    campaign.owner = userId.toString();
-    campaign.save();
+    if (newOwner !== null) {
+      campaign.owner = newOwner.id;
+      campaign.save();
+    }
   }
 }
 

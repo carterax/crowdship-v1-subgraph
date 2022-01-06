@@ -35,6 +35,12 @@
             },
             {
                 "indexed": false,
+                "internalType": "string",
+                "name": "hashedRequest",
+                "type": "string"
+            },
+            {
+                "indexed": false,
                 "internalType": "address",
                 "name": "recipient",
                 "type": "address"
@@ -74,7 +80,7 @@
         "name": "campaignContract",
         "outputs": [
             {
-                "internalType": "contract ICampaign",
+                "internalType": "contract Campaign",
                 "name": "",
                 "type": "address"
             }
@@ -87,6 +93,19 @@
         "name": "campaignFactoryContract",
         "outputs": [
             {
+                "internalType": "contract CampaignFactory",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "campaignFactoryInterface",
+        "outputs": [
+            {
                 "internalType": "contract ICampaignFactory",
                 "name": "",
                 "type": "address"
@@ -97,12 +116,12 @@
     },
     {
         "inputs": [],
-        "name": "campaignID",
+        "name": "campaignInterface",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "contract ICampaign",
                 "name": "",
-                "type": "uint256"
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -201,6 +220,11 @@
                 "type": "uint256"
             },
             {
+                "internalType": "string",
+                "name": "hashedRequest",
+                "type": "string"
+            },
+            {
                 "internalType": "bool",
                 "name": "complete",
                 "type": "bool"
@@ -225,11 +249,6 @@
                 "internalType": "contract Campaign",
                 "name": "_campaign",
                 "type": "address"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_campaignId",
-                "type": "uint256"
             }
         ],
         "name": "__CampaignRequest_init",
@@ -253,6 +272,11 @@
                 "internalType": "uint256",
                 "name": "_duration",
                 "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_hashedRequest",
+                "type": "string"
             }
         ],
         "name": "createRequest",

@@ -176,9 +176,7 @@ export function handleCampaignApproval(event: CampaignApprovalEvent): void {
     let campaignFactoryContract = CampaignFactoryContract.bind(event.address);
     let campaignContract = CampaignContract.bind(event.params.campaign);
 
-    let campaignInfo = campaignFactoryContract.deployedCampaigns(
-      campaignContract.campaignID()
-    );
+    let campaignInfo = campaignFactoryContract.campaigns(event.address);
 
     let campaignRewards = campaignContract.campaignRewardContract(),
       campaignRequests = campaignContract.campaignRequestContract(),
@@ -352,7 +350,7 @@ export function handleCategoryAdded(event: CategoryAddedEvent): void {
     let category = new Category(
       `${event.address.toHexString()}-category-${event.params.categoryId.toString()}`
     );
-
+    category.title = event.params.title;
     category.campaignFactory = event.address.toHexString();
     category.totalCampaign = ZERO_BI;
     category.commission = ZERO_BI;
@@ -376,6 +374,7 @@ export function handleCategoryModified(event: CategoryModifiedEvent): void {
   if (category !== null) {
     category.updatedAt = event.block.timestamp;
     category.active = event.params.active;
+    category.title = event.params.title;
 
     category.save();
   }
@@ -401,7 +400,7 @@ export function handleTokenAdded(event: TokenAddedEvent): void {
 
     token.campaignFactory = event.address.toHexString();
     token.createdAt = event.block.timestamp;
-    token.approved = false;
+    token.approved = event.params.approval;
 
     campaignFactory.tokenCount = campaignFactory.tokenCount.plus(ONE_BI);
 

@@ -242,6 +242,10 @@ export class CategoryAdded__Params {
   get active(): boolean {
     return this._event.parameters[1].value.toBoolean();
   }
+
+  get title(): string {
+    return this._event.parameters[2].value.toString();
+  }
 }
 
 export class CategoryCommissionUpdated extends ethereum.Event {
@@ -286,6 +290,10 @@ export class CategoryModified__Params {
   get active(): boolean {
     return this._event.parameters[1].value.toBoolean();
   }
+
+  get title(): string {
+    return this._event.parameters[2].value.toString();
+  }
 }
 
 export class Paused extends ethereum.Event {
@@ -321,6 +329,10 @@ export class TokenAdded__Params {
 
   get token(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+
+  get approval(): boolean {
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -421,8 +433,8 @@ export class UserAdded__Params {
     this._event = event;
   }
 
-  get userId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
+  get userId(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
@@ -439,16 +451,12 @@ export class UserApproval__Params {
     this._event = event;
   }
 
-  get userId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
   get user(): Address {
-    return this._event.parameters[1].value.toAddress();
+    return this._event.parameters[0].value.toAddress();
   }
 
   get approval(): boolean {
-    return this._event.parameters[2].value.toBoolean();
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -456,21 +464,24 @@ export class CampaignFactory__campaignCategoriesResult {
   value0: BigInt;
   value1: BigInt;
   value2: BigInt;
-  value3: boolean;
+  value3: string;
   value4: boolean;
+  value5: boolean;
 
   constructor(
     value0: BigInt,
     value1: BigInt,
     value2: BigInt,
-    value3: boolean,
-    value4: boolean
+    value3: string,
+    value4: boolean,
+    value5: boolean
   ) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
     this.value4 = value4;
+    this.value5 = value5;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -478,27 +489,28 @@ export class CampaignFactory__campaignCategoriesResult {
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
-    map.set("value3", ethereum.Value.fromBoolean(this.value3));
+    map.set("value3", ethereum.Value.fromString(this.value3));
     map.set("value4", ethereum.Value.fromBoolean(this.value4));
+    map.set("value5", ethereum.Value.fromBoolean(this.value5));
     return map;
   }
 }
 
-export class CampaignFactory__deployedCampaignsResult {
+export class CampaignFactory__campaignsResult {
   value0: Address;
-  value1: Address;
+  value1: BigInt;
   value2: BigInt;
   value3: BigInt;
-  value4: BigInt;
+  value4: string;
   value5: boolean;
   value6: boolean;
 
   constructor(
     value0: Address,
-    value1: Address,
+    value1: BigInt,
     value2: BigInt,
     value3: BigInt,
-    value4: BigInt,
+    value4: string,
     value5: boolean,
     value6: boolean
   ) {
@@ -514,12 +526,32 @@ export class CampaignFactory__deployedCampaignsResult {
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromAddress(this.value0));
-    map.set("value1", ethereum.Value.fromAddress(this.value1));
+    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromUnsignedBigInt(this.value3));
-    map.set("value4", ethereum.Value.fromUnsignedBigInt(this.value4));
+    map.set("value4", ethereum.Value.fromString(this.value4));
     map.set("value5", ethereum.Value.fromBoolean(this.value5));
     map.set("value6", ethereum.Value.fromBoolean(this.value6));
+    return map;
+  }
+}
+
+export class CampaignFactory__tokensResult {
+  value0: Address;
+  value1: string;
+  value2: boolean;
+
+  constructor(value0: Address, value1: string, value2: boolean) {
+    this.value0 = value0;
+    this.value1 = value1;
+    this.value2 = value2;
+  }
+
+  toMap(): TypedMap<string, ethereum.Value> {
+    let map = new TypedMap<string, ethereum.Value>();
+    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value1", ethereum.Value.fromString(this.value1));
+    map.set("value2", ethereum.Value.fromBoolean(this.value2));
     return map;
   }
 }
@@ -553,33 +585,24 @@ export class CampaignFactory__trusteesResult {
 }
 
 export class CampaignFactory__usersResult {
-  value0: Address;
+  value0: BigInt;
   value1: BigInt;
-  value2: BigInt;
+  value2: string;
   value3: boolean;
-  value4: boolean;
 
-  constructor(
-    value0: Address,
-    value1: BigInt,
-    value2: BigInt,
-    value3: boolean,
-    value4: boolean
-  ) {
+  constructor(value0: BigInt, value1: BigInt, value2: string, value3: boolean) {
     this.value0 = value0;
     this.value1 = value1;
     this.value2 = value2;
     this.value3 = value3;
-    this.value4 = value4;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromAddress(this.value0));
+    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
+    map.set("value2", ethereum.Value.fromString(this.value2));
     map.set("value3", ethereum.Value.fromBoolean(this.value3));
-    map.set("value4", ethereum.Value.fromBoolean(this.value4));
     return map;
   }
 }
@@ -619,7 +642,7 @@ export class CampaignFactory extends ethereum.SmartContract {
   ): CampaignFactory__campaignCategoriesResult {
     let result = super.call(
       "campaignCategories",
-      "campaignCategories(uint256):(uint256,uint256,uint256,bool,bool)",
+      "campaignCategories(uint256):(uint256,uint256,uint256,string,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -627,8 +650,9 @@ export class CampaignFactory extends ethereum.SmartContract {
       result[0].toBigInt(),
       result[1].toBigInt(),
       result[2].toBigInt(),
-      result[3].toBoolean(),
-      result[4].toBoolean()
+      result[3].toString(),
+      result[4].toBoolean(),
+      result[5].toBoolean()
     );
   }
 
@@ -637,7 +661,7 @@ export class CampaignFactory extends ethereum.SmartContract {
   ): ethereum.CallResult<CampaignFactory__campaignCategoriesResult> {
     let result = super.tryCall(
       "campaignCategories",
-      "campaignCategories(uint256):(uint256,uint256,uint256,bool,bool)",
+      "campaignCategories(uint256):(uint256,uint256,uint256,string,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -649,8 +673,9 @@ export class CampaignFactory extends ethereum.SmartContract {
         value[0].toBigInt(),
         value[1].toBigInt(),
         value[2].toBigInt(),
-        value[3].toBoolean(),
-        value[4].toBoolean()
+        value[3].toString(),
+        value[4].toBoolean(),
+        value[5].toBoolean()
       )
     );
   }
@@ -743,23 +768,23 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  campaignRevenueFromCommissions(param0: BigInt): BigInt {
+  campaignRevenueFromCommissions(param0: Address): BigInt {
     let result = super.call(
       "campaignRevenueFromCommissions",
-      "campaignRevenueFromCommissions(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "campaignRevenueFromCommissions(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
 
     return result[0].toBigInt();
   }
 
   try_campaignRevenueFromCommissions(
-    param0: BigInt
+    param0: Address
   ): ethereum.CallResult<BigInt> {
     let result = super.tryCall(
       "campaignRevenueFromCommissions",
-      "campaignRevenueFromCommissions(uint256):(uint256)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "campaignRevenueFromCommissions(address):(uint256)",
+      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -783,50 +808,6 @@ export class CampaignFactory extends ethereum.SmartContract {
       "campaignRewardsImplementation",
       "campaignRewardsImplementation():(address)",
       []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  campaignToID(param0: Address): BigInt {
-    let result = super.call("campaignToID", "campaignToID(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_campaignToID(param0: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "campaignToID",
-      "campaignToID(address):(uint256)",
-      [ethereum.Value.fromAddress(param0)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
-  campaignToOwner(param0: Address): Address {
-    let result = super.call(
-      "campaignToOwner",
-      "campaignToOwner(address):(address)",
-      [ethereum.Value.fromAddress(param0)]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_campaignToOwner(param0: Address): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "campaignToOwner",
-      "campaignToOwner(address):(address)",
-      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -906,6 +887,49 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
+  campaigns(param0: Address): CampaignFactory__campaignsResult {
+    let result = super.call(
+      "campaigns",
+      "campaigns(address):(address,uint256,uint256,uint256,string,bool,bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return new CampaignFactory__campaignsResult(
+      result[0].toAddress(),
+      result[1].toBigInt(),
+      result[2].toBigInt(),
+      result[3].toBigInt(),
+      result[4].toString(),
+      result[5].toBoolean(),
+      result[6].toBoolean()
+    );
+  }
+
+  try_campaigns(
+    param0: Address
+  ): ethereum.CallResult<CampaignFactory__campaignsResult> {
+    let result = super.tryCall(
+      "campaigns",
+      "campaigns(address):(address,uint256,uint256,uint256,string,bool,bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(
+      new CampaignFactory__campaignsResult(
+        value[0].toAddress(),
+        value[1].toBigInt(),
+        value[2].toBigInt(),
+        value[3].toBigInt(),
+        value[4].toString(),
+        value[5].toBoolean(),
+        value[6].toBoolean()
+      )
+    );
+  }
+
   categoryCommission(param0: BigInt): BigInt {
     let result = super.call(
       "categoryCommission",
@@ -948,47 +972,27 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  deployedCampaigns(param0: BigInt): CampaignFactory__deployedCampaignsResult {
+  categoryTitleIsTaken(param0: string): boolean {
     let result = super.call(
-      "deployedCampaigns",
-      "deployedCampaigns(uint256):(address,address,uint256,uint256,uint256,bool,bool)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "categoryTitleIsTaken",
+      "categoryTitleIsTaken(string):(bool)",
+      [ethereum.Value.fromString(param0)]
     );
 
-    return new CampaignFactory__deployedCampaignsResult(
-      result[0].toAddress(),
-      result[1].toAddress(),
-      result[2].toBigInt(),
-      result[3].toBigInt(),
-      result[4].toBigInt(),
-      result[5].toBoolean(),
-      result[6].toBoolean()
-    );
+    return result[0].toBoolean();
   }
 
-  try_deployedCampaigns(
-    param0: BigInt
-  ): ethereum.CallResult<CampaignFactory__deployedCampaignsResult> {
+  try_categoryTitleIsTaken(param0: string): ethereum.CallResult<boolean> {
     let result = super.tryCall(
-      "deployedCampaigns",
-      "deployedCampaigns(uint256):(address,address,uint256,uint256,uint256,bool,bool)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "categoryTitleIsTaken",
+      "categoryTitleIsTaken(string):(bool)",
+      [ethereum.Value.fromString(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new CampaignFactory__deployedCampaignsResult(
-        value[0].toAddress(),
-        value[1].toAddress(),
-        value[2].toBigInt(),
-        value[3].toBigInt(),
-        value[4].toBigInt(),
-        value[5].toBoolean(),
-        value[6].toBoolean()
-      )
-    );
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   factoryRevenue(): BigInt {
@@ -1066,46 +1070,37 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
-  tokenInList(param0: Address): boolean {
-    let result = super.call("tokenInList", "tokenInList(address):(bool)", [
+  tokens(param0: Address): CampaignFactory__tokensResult {
+    let result = super.call("tokens", "tokens(address):(address,string,bool)", [
       ethereum.Value.fromAddress(param0)
     ]);
 
-    return result[0].toBoolean();
-  }
-
-  try_tokenInList(param0: Address): ethereum.CallResult<boolean> {
-    let result = super.tryCall("tokenInList", "tokenInList(address):(bool)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
-  tokensApproved(param0: Address): boolean {
-    let result = super.call(
-      "tokensApproved",
-      "tokensApproved(address):(bool)",
-      [ethereum.Value.fromAddress(param0)]
+    return new CampaignFactory__tokensResult(
+      result[0].toAddress(),
+      result[1].toString(),
+      result[2].toBoolean()
     );
-
-    return result[0].toBoolean();
   }
 
-  try_tokensApproved(param0: Address): ethereum.CallResult<boolean> {
+  try_tokens(
+    param0: Address
+  ): ethereum.CallResult<CampaignFactory__tokensResult> {
     let result = super.tryCall(
-      "tokensApproved",
-      "tokensApproved(address):(bool)",
+      "tokens",
+      "tokens(address):(address,string,bool)",
       [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
+    return ethereum.CallResult.fromValue(
+      new CampaignFactory__tokensResult(
+        value[0].toAddress(),
+        value[1].toString(),
+        value[2].toBoolean()
+      )
+    );
   }
 
   trustees(param0: BigInt): CampaignFactory__trusteesResult {
@@ -1160,25 +1155,6 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  userID(param0: Address): BigInt {
-    let result = super.call("userID", "userID(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-
-    return result[0].toBigInt();
-  }
-
-  try_userID(param0: Address): ethereum.CallResult<BigInt> {
-    let result = super.tryCall("userID", "userID(address):(uint256)", [
-      ethereum.Value.fromAddress(param0)
-    ]);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
-  }
-
   userTrusteeCount(param0: Address): BigInt {
     let result = super.call(
       "userTrusteeCount",
@@ -1202,27 +1178,28 @@ export class CampaignFactory extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  users(param0: BigInt): CampaignFactory__usersResult {
+  users(param0: Address): CampaignFactory__usersResult {
     let result = super.call(
       "users",
-      "users(uint256):(address,uint256,uint256,bool,bool)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "users(address):(uint256,uint256,string,bool)",
+      [ethereum.Value.fromAddress(param0)]
     );
 
     return new CampaignFactory__usersResult(
-      result[0].toAddress(),
+      result[0].toBigInt(),
       result[1].toBigInt(),
-      result[2].toBigInt(),
-      result[3].toBoolean(),
-      result[4].toBoolean()
+      result[2].toString(),
+      result[3].toBoolean()
     );
   }
 
-  try_users(param0: BigInt): ethereum.CallResult<CampaignFactory__usersResult> {
+  try_users(
+    param0: Address
+  ): ethereum.CallResult<CampaignFactory__usersResult> {
     let result = super.tryCall(
       "users",
-      "users(uint256):(address,uint256,uint256,bool,bool)",
-      [ethereum.Value.fromUnsignedBigInt(param0)]
+      "users(address):(uint256,uint256,string,bool)",
+      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -1230,11 +1207,10 @@ export class CampaignFactory extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(
       new CampaignFactory__usersResult(
-        value[0].toAddress(),
+        value[0].toBigInt(),
         value[1].toBigInt(),
-        value[2].toBigInt(),
-        value[3].toBoolean(),
-        value[4].toBoolean()
+        value[2].toString(),
+        value[3].toBoolean()
       )
     );
   }
@@ -1596,6 +1572,14 @@ export class AddTokenCall__Inputs {
   get _token(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
+
+  get _approved(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+
+  get _hashedToken(): string {
+    return this._call.inputValues[2].value.toString();
+  }
 }
 
 export class AddTokenCall__Outputs {
@@ -1690,6 +1674,10 @@ export class SignUpCall__Inputs {
   constructor(call: SignUpCall) {
     this._call = call;
   }
+
+  get _hashedUser(): string {
+    return this._call.inputValues[0].value.toString();
+  }
 }
 
 export class SignUpCall__Outputs {
@@ -1777,8 +1765,8 @@ export class ToggleUserApprovalCall__Inputs {
     this._call = call;
   }
 
-  get _userId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get _user(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 
   get _approval(): boolean {
@@ -1818,6 +1806,10 @@ export class CreateCampaignCall__Inputs {
   get _approved(): boolean {
     return this._call.inputValues[1].value.toBoolean();
   }
+
+  get _hashedCampaignInfo(): string {
+    return this._call.inputValues[2].value.toString();
+  }
 }
 
 export class CreateCampaignCall__Outputs {
@@ -1845,8 +1837,8 @@ export class ActivateCampaignCall__Inputs {
     this._call = call;
   }
 
-  get _campaignId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get _campaign(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 }
 
@@ -1875,8 +1867,8 @@ export class ApproveCampaignCall__Inputs {
     this._call = call;
   }
 
-  get _campaignId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get _campaign(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 }
 
@@ -1905,8 +1897,8 @@ export class ModifyCampaignCategoryCall__Inputs {
     this._call = call;
   }
 
-  get _campaignId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+  get _campaign(): Address {
+    return this._call.inputValues[0].value.toAddress();
   }
 
   get _newCategoryId(): BigInt {
@@ -1942,6 +1934,10 @@ export class CreateCategoryCall__Inputs {
   get _active(): boolean {
     return this._call.inputValues[0].value.toBoolean();
   }
+
+  get _title(): string {
+    return this._call.inputValues[1].value.toString();
+  }
 }
 
 export class CreateCategoryCall__Outputs {
@@ -1975,6 +1971,10 @@ export class ModifyCategoryCall__Inputs {
 
   get _active(): boolean {
     return this._call.inputValues[1].value.toBoolean();
+  }
+
+  get _title(): string {
+    return this._call.inputValues[2].value.toString();
   }
 }
 
