@@ -32,7 +32,7 @@ export function handleCampaignFactoryDeployed(
   campaignFactory.deadlineStrikesAllowed =
     campaignFactoryContract.campaignTransactionConfig('deadlineStrikesAllowed');
 
-  campaignFactory.maximumContributionAllowed =
+  campaignFactory.minimumContributionAllowed =
     campaignFactoryContract.campaignTransactionConfig(
       'minimumContributionAllowed'
     );

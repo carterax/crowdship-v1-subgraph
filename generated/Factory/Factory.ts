@@ -109,12 +109,28 @@ export class CreateCampaignFactoryCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _governance(): Address {
+  get _campaignImplementation(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
+  get _campaignRequestImplementation(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get _campaignVoteImplementation(): Address {
+    return this._call.inputValues[3].value.toAddress();
+  }
+
+  get _campaignRewardImplementation(): Address {
+    return this._call.inputValues[4].value.toAddress();
+  }
+
+  get _governance(): Address {
+    return this._call.inputValues[5].value.toAddress();
+  }
+
   get _config(): Array<BigInt> {
-    return this._call.inputValues[2].value.toBigIntArray();
+    return this._call.inputValues[6].value.toBigIntArray();
   }
 }
 

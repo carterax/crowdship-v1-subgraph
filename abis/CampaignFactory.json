@@ -878,6 +878,26 @@
                 "type": "address"
             },
             {
+                "internalType": "address",
+                "name": "_campaignImplementation",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_campaignRequestImplementation",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_campaignVoteImplementation",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "_campaignRewardImplementation",
+                "type": "address"
+            },
+            {
                 "internalType": "uint256[15]",
                 "name": "_config",
                 "type": "uint256[15]"
