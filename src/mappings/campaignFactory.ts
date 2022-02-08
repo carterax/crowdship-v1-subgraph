@@ -271,7 +271,7 @@ export function handleCampaignCategoryChange(
   let campaign = Campaign.load(event.params.campaign.toHexString());
 
   if (campaign !== null) {
-    campaign.category = event.params.newCategory.toString();
+    campaign.category = `${event.address.toHexString()}-category-${event.params.newCategory.toString()}`;
 
     campaign.save();
   }
@@ -296,9 +296,9 @@ export function handleCampaignDeployed(event: CampaignDeployedEvent): void {
       );
 
       campaign.campaignFactory = event.params.factory.toHexString();
-      campaign.owner = event.transaction.from.toHexString();
+      campaign.owner = `${event.address.toHexString()}-user-${event.transaction.from.toHexString()}`;
       campaign.createdAt = event.block.timestamp;
-      campaign.category = event.params.category.toString();
+      campaign.category = `${event.address.toHexString()}-category-${event.params.category.toString()}`;
       campaign.approved = event.params.approved;
       campaign.withdrawalsPaused = false;
       campaign.deadline = ZERO_BI;

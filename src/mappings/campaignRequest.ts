@@ -3,6 +3,7 @@ import {
   RequestVoided as RequestVoidedEvent,
 } from '../../generated/templates/CampaignRequest/CampaignRequest';
 import { RequestFactory, Request } from '../../generated/schema';
+import { Address } from '@graphprotocol/graph-ts';
 
 import { ONE_BI, ZERO_BI } from '../utils/constants';
 
@@ -24,7 +25,9 @@ export function handleRequestAdded(event: RequestAddedEvent): void {
     request.abstainedCount = ZERO_BI;
     request.duration = event.params.duration;
     request.void = false;
-    request.owner = event.transaction.from.toHexString();
+    request.owner = `${Address.fromString(
+      requestFactory.campaign
+    )}-user-${event.transaction.from.toHexString()}`;
 
     requestFactory.requestCount = requestFactory.requestCount.plus(ONE_BI);
 
@@ -37,10 +40,13 @@ export function handleRequestVoided(event: RequestVoidedEvent): void {
   let request = Request.load(
     `${event.address.toHexString()}-request-${event.params.requestId.toString()}`
   );
+  let requestFactory = RequestFactory.load(event.address.toHexString());
 
-  if (request !== null) {
+  if (request !== null && requestFactory !== null) {
     request.void = true;
-    request.voidedBy = event.transaction.from.toHexString();
+    request.voidedBy = `${Address.fromString(
+      requestFactory.campaign
+    )}-user-${event.transaction.from.toHexString()}`;
     request.updatedAt = event.block.timestamp;
 
     request.save();

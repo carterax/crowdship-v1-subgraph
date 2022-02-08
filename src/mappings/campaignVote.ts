@@ -3,7 +3,7 @@ import {
   VoteCancelled as VoteCancelledEvent,
 } from '../../generated/templates/CampaignVote/CampaignVote';
 import { Campaign, VoteFactory, Vote, Request } from '../../generated/schema';
-import { BigInt } from '@graphprotocol/graph-ts';
+import { BigInt, Address } from '@graphprotocol/graph-ts';
 import { ONE_BI, ZERO_BI } from '../utils/constants';
 
 export function handleVoted(event: VotedEvent): void {
@@ -27,7 +27,9 @@ export function handleVoted(event: VotedEvent): void {
         vote.createdAt = event.block.timestamp;
         vote.updatedAt = ZERO_BI;
         vote.request = event.params.requestId.toString();
-        vote.owner = event.transaction.from.toHexString();
+        vote.owner = `${Address.fromString(
+          voteFactory.campaign
+        )}-user-${event.transaction.from.toHexString()}`;
         vote.support = new BigInt(event.params.support);
         vote.voted = true;
 

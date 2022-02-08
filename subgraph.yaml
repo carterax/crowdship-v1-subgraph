@@ -6,7 +6,7 @@ dataSources:
     name: Factory
     network: rinkeby
     source:
-      address: '0xDF8492a1AE129F6E977f27d4e8a78995ABD87031'
+      address: '0x0ACB807f76f7efEf7F89488F3297488dCa51a07c'
       abi: Factory
     mapping:
       kind: ethereum/events
@@ -20,7 +20,7 @@ dataSources:
         - name: CampaignFactory
           file: ./abis/CampaignFactory.json
       eventHandlers:
-        - event: CampaignFactoryDeployed(indexed address,address,uint256)
+        - event: CampaignFactoryDeployed(indexed address,address,address,address,address,address,uint256)
           handler: handleCampaignFactoryDeployed
       file: ./src/mappings/factory.ts
 templates:

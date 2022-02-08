@@ -500,6 +500,11 @@
                 "internalType": "bool",
                 "name": "_active",
                 "type": "bool"
+            },
+            {
+                "internalType": "string",
+                "name": "_hashedReward",
+                "type": "string"
             }
         ],
         "name": "modifyReward",

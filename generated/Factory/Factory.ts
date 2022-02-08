@@ -31,8 +31,24 @@ export class CampaignFactoryDeployed__Params {
     return this._event.parameters[1].value.toAddress();
   }
 
+  get campaignImplementation(): Address {
+    return this._event.parameters[2].value.toAddress();
+  }
+
+  get campaignRequestImplementation(): Address {
+    return this._event.parameters[3].value.toAddress();
+  }
+
+  get campaignVoteImplementation(): Address {
+    return this._event.parameters[4].value.toAddress();
+  }
+
+  get campaignRewardImplementation(): Address {
+    return this._event.parameters[5].value.toAddress();
+  }
+
   get campaignIndex(): BigInt {
-    return this._event.parameters[2].value.toBigInt();
+    return this._event.parameters[6].value.toBigInt();
   }
 }
 

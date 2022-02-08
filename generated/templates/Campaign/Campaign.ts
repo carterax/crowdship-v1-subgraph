@@ -1420,8 +1420,12 @@ export class TransferCampaignOwnershipCall__Inputs {
     this._call = call;
   }
 
-  get _newRoot(): Address {
+  get _oldRoot(): Address {
     return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _newRoot(): Address {
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 

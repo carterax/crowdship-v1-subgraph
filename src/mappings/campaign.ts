@@ -21,7 +21,6 @@ import {
   Review,
   Report,
 } from '../../generated/schema';
-import { CampaignFactory as CampaignFactoryContract } from '../../generated/templates/CampaignFactory/CampaignFactory';
 import { Address, BigInt } from '@graphprotocol/graph-ts';
 import { ONE_BI } from '../utils/constants';
 
@@ -52,7 +51,9 @@ export function handleCampaignSettingsUpdated(
   if (campaign !== null) {
     campaign.target = event.params.target;
     campaign.minimumContribution = event.params.minimumContribution;
-    campaign.token = event.params.token.toHexString();
+    campaign.token = `${Address.fromString(
+      campaign.campaignFactory
+    )}-token-${event.params.token.toHexString()}`;
     campaign.allowContributionAfterTargetIsMet =
       event.params.allowContributionAfterTargetIsMet;
     campaign.deadline = campaign.deadline.plus(event.params.duration);
@@ -91,8 +92,12 @@ export function handleCampaignUserDataTransferred(
     );
 
     if (oldUser !== null && newUser !== null) {
-      oldUser.transferredTo = event.params.newAddress;
-      newUser.transferredFrom = event.params.oldAddress;
+      oldUser.transferredTo = `${Address.fromString(
+        campaign.campaignFactory
+      )}-user-${event.params.newAddress.toHexString()}`;
+      newUser.transferredFrom = `${Address.fromString(
+        campaign.campaignFactory
+      )}-user-${event.params.oldAddress.toHexString()}`;
 
       oldUser.save();
       newUser.save();

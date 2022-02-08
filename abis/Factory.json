@@ -16,6 +16,30 @@
             },
             {
                 "indexed": false,
+                "internalType": "address",
+                "name": "campaignImplementation",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "campaignRequestImplementation",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "campaignVoteImplementation",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "campaignRewardImplementation",
+                "type": "address"
+            },
+            {
+                "indexed": false,
                 "internalType": "uint256",
                 "name": "campaignIndex",
                 "type": "uint256"

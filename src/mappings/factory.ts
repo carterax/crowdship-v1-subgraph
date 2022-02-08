@@ -18,6 +18,13 @@ export function handleCampaignFactoryDeployed(
     );
   campaignFactory.origin = event.address.toHexString();
   campaignFactory.governance = event.params.governance;
+  campaignFactory.campaignImplementation = event.params.campaignImplementation;
+  campaignFactory.campaignRequestImplementation =
+    event.params.campaignRequestImplementation;
+  campaignFactory.campaignVoteImplementation =
+    event.params.campaignVoteImplementation;
+  campaignFactory.campaignRewardImplementation =
+    event.params.campaignRewardImplementation;
   campaignFactory.createdAt = event.block.timestamp;
   campaignFactory.paused = false;
 

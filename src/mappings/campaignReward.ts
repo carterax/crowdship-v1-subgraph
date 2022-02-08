@@ -9,6 +9,7 @@ import {
 } from '../../generated/templates/CampaignReward/CampaignReward';
 import { Reward, RewardFactory, RewardRecipient } from '../../generated/schema';
 
+import { Address } from '@graphprotocol/graph-ts';
 import { ONE_BI, ZERO_BI } from '../utils/constants';
 
 export function handleRewardCreated(event: RewardCreatedEvent): void {
@@ -27,6 +28,7 @@ export function handleRewardCreated(event: RewardCreatedEvent): void {
     reward.exists = true;
 
     let currentRewardCount = rewardFactory.rewardCount;
+
     if (rewardFactory.rewardCount !== null) {
       currentRewardCount = rewardFactory.rewardCount.plus(ONE_BI);
       rewardFactory.rewardCount = currentRewardCount;
@@ -85,15 +87,18 @@ export function handleRewardDestroyed(event: RewardDestroyedEvent): void {
 export function handleRewardRecipientAdded(
   event: RewardRecipientAddedEvent
 ): void {
+  let rewardFactory = RewardFactory.load(event.address.toHexString());
   let rewardRecipient = new RewardRecipient(
-    event.params.rewardRecipientId.toString()
+    `${event.address.toHexString()}-rewardRecipient-${event.params.rewardRecipientId.toString()}`
   );
   let reward = Reward.load(
     `${event.address.toHexString()}-reward-${event.params.rewardId.toString()}`
   );
 
-  if (reward !== null) {
-    rewardRecipient.owner = event.transaction.from.toHexString();
+  if (reward !== null && rewardFactory !== null) {
+    rewardRecipient.owner = `${Address.fromString(
+      rewardFactory.campaign
+    )}-user-${event.transaction.from.toHexString()}`;
     rewardRecipient.createdAt = event.block.timestamp;
     rewardRecipient.updatedAt = ZERO_BI;
     rewardRecipient.reward = event.params.rewardId.toString();

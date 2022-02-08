@@ -82,8 +82,8 @@ type User @entity {
   userAddress: Bytes!
   joined: BigInt!
   verified: Boolean!
-  transferredFrom: Bytes
-  transferredTo: Bytes
+  transferredFrom: User
+  transferredTo: User
   totalWithdrawals: BigInt!
   totalContributions: BigInt!
   contributionCount: BigInt!

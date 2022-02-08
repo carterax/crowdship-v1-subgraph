@@ -609,37 +609,37 @@ export class User extends Entity {
     this.set("verified", Value.fromBoolean(value));
   }
 
-  get transferredFrom(): Bytes | null {
+  get transferredFrom(): string | null {
     let value = this.get("transferredFrom");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set transferredFrom(value: Bytes | null) {
+  set transferredFrom(value: string | null) {
     if (!value) {
       this.unset("transferredFrom");
     } else {
-      this.set("transferredFrom", Value.fromBytes(<Bytes>value));
+      this.set("transferredFrom", Value.fromString(<string>value));
     }
   }
 
-  get transferredTo(): Bytes | null {
+  get transferredTo(): string | null {
     let value = this.get("transferredTo");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set transferredTo(value: Bytes | null) {
+  set transferredTo(value: string | null) {
     if (!value) {
       this.unset("transferredTo");
     } else {
-      this.set("transferredTo", Value.fromBytes(<Bytes>value));
+      this.set("transferredTo", Value.fromString(<string>value));
     }
   }
 

@@ -612,6 +612,52 @@ export class CampaignFactory extends ethereum.SmartContract {
     return new CampaignFactory("CampaignFactory", address);
   }
 
+  accountInTransit(param0: Address): boolean {
+    let result = super.call(
+      "accountInTransit",
+      "accountInTransit(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_accountInTransit(param0: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "accountInTransit",
+      "accountInTransit(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  accountTransitStartedBy(param0: Address): Address {
+    let result = super.call(
+      "accountTransitStartedBy",
+      "accountTransitStartedBy(address):(address)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_accountTransitStartedBy(param0: Address): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "accountTransitStartedBy",
+      "accountTransitStartedBy(address):(address)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   approvedCampaignTransactionConfig(param0: string): boolean {
     let result = super.call(
       "approvedCampaignTransactionConfig",
@@ -1153,6 +1199,25 @@ export class CampaignFactory extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  userExists(param0: Address): boolean {
+    let result = super.call("userExists", "userExists(address):(bool)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toBoolean();
+  }
+
+  try_userExists(param0: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall("userExists", "userExists(address):(bool)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   userTrusteeCount(param0: Address): BigInt {
@@ -1700,6 +1765,66 @@ export class SignUpCall__Outputs {
   _call: SignUpCall;
 
   constructor(call: SignUpCall) {
+    this._call = call;
+  }
+}
+
+export class InitiateUserTransferCall extends ethereum.Call {
+  get inputs(): InitiateUserTransferCall__Inputs {
+    return new InitiateUserTransferCall__Inputs(this);
+  }
+
+  get outputs(): InitiateUserTransferCall__Outputs {
+    return new InitiateUserTransferCall__Outputs(this);
+  }
+}
+
+export class InitiateUserTransferCall__Inputs {
+  _call: InitiateUserTransferCall;
+
+  constructor(call: InitiateUserTransferCall) {
+    this._call = call;
+  }
+
+  get _user(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _forSelf(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class InitiateUserTransferCall__Outputs {
+  _call: InitiateUserTransferCall;
+
+  constructor(call: InitiateUserTransferCall) {
+    this._call = call;
+  }
+}
+
+export class DeactivateAccountTransferCall extends ethereum.Call {
+  get inputs(): DeactivateAccountTransferCall__Inputs {
+    return new DeactivateAccountTransferCall__Inputs(this);
+  }
+
+  get outputs(): DeactivateAccountTransferCall__Outputs {
+    return new DeactivateAccountTransferCall__Outputs(this);
+  }
+}
+
+export class DeactivateAccountTransferCall__Inputs {
+  _call: DeactivateAccountTransferCall;
+
+  constructor(call: DeactivateAccountTransferCall) {
+    this._call = call;
+  }
+}
+
+export class DeactivateAccountTransferCall__Outputs {
+  _call: DeactivateAccountTransferCall;
+
+  constructor(call: DeactivateAccountTransferCall) {
     this._call = call;
   }
 }

@@ -734,6 +734,10 @@ export class ModifyRewardCall__Inputs {
   get _active(): boolean {
     return this._call.inputValues[4].value.toBoolean();
   }
+
+  get _hashedReward(): string {
+    return this._call.inputValues[5].value.toString();
+  }
 }
 
 export class ModifyRewardCall__Outputs {
