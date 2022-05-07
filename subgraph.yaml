@@ -6,7 +6,7 @@ dataSources:
     name: Factory
     network: rinkeby
     source:
-      address: '0x0ACB807f76f7efEf7F89488F3297488dCa51a07c'
+      address: '0x2Feb8790000b994a7904667BBa3481D4fa55c7d8'
       abi: Factory
     mapping:
       kind: ethereum/events
