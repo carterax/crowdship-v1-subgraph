@@ -6,7 +6,7 @@ dataSources:
     name: Factory
     network: rinkeby
     source:
-      address: '0x2Feb8790000b994a7904667BBa3481D4fa55c7d8'
+      address: '0x31be600172587AB86105A5524F5D9B81274C7f23'
       abi: Factory
     mapping:
       kind: ethereum/events
@@ -57,27 +57,27 @@ templates:
           handler: handleCampaignDefaultCommissionUpdated
         - event: CampaignTransactionConfigUpdated(string,uint256)
           handler: handleCampaignTransactionConfigUpdated
-        - event: CampaignApproval(indexed address)
-          handler: handleCampaignApproval
-        - event: CampaignActivation(indexed address)
+        - event: CampaignActivation(indexed address,bool)
           handler: handleCampaignActivation
+        - event: CampaignPrivacyChange(indexed address,bool)
+          handler: handleCampaignPrivacyChange
         - event: CampaignCategoryChange(indexed address,uint256)
           handler: handleCampaignCategoryChange
-        - event: CampaignDeployed(address,address,address,address,address,uint256,bool)
+        - event: CampaignDeployed(address,address,address,address,address,uint256,bool,string)
           handler: handleCampaignDeployed
-        - event: CategoryAdded(indexed uint256,bool,string)
+        - event: CategoryAdded(indexed uint256,bool,string,string)
           handler: handleCategoryAdded
         - event: CategoryModified(indexed uint256,bool,string)
           handler: handleCategoryModified
         - event: Paused(address)
           handler: handlePaused
-        - event: TokenAdded(indexed address,bool)
+        - event: TokenAdded(indexed address,bool,string)
           handler: handleTokenAdded
         - event: TokenApproval(indexed address,bool)
           handler: handleTokenApproval
         - event: Unpaused(address)
           handler: handleUnpaused
-        - event: UserAdded(indexed address)
+        - event: UserAdded(indexed address,string)
           handler: handleUserAdded
         - event: UserApproval(indexed address,bool)
           handler: handleUserApproval

@@ -476,6 +476,7 @@ export class Token extends Entity {
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("campaignFactory", Value.fromString(""));
     this.set("approved", Value.fromBoolean(false));
+    this.set("hash", Value.fromString(""));
   }
 
   save(): void {
@@ -530,6 +531,15 @@ export class Token extends Entity {
   set approved(value: boolean) {
     this.set("approved", Value.fromBoolean(value));
   }
+
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
+  }
 }
 
 export class User extends Entity {
@@ -545,6 +555,7 @@ export class User extends Entity {
     this.set("totalContributions", Value.fromBigInt(BigInt.zero()));
     this.set("contributionCount", Value.fromBigInt(BigInt.zero()));
     this.set("rewardCount", Value.fromBigInt(BigInt.zero()));
+    this.set("hash", Value.fromString(""));
   }
 
   save(): void {
@@ -679,6 +690,15 @@ export class User extends Entity {
     this.set("rewardCount", Value.fromBigInt(value));
   }
 
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
+  }
+
   get contributions(): Array<string> {
     let value = this.get("contributions");
     return value!.toStringArray();
@@ -746,6 +766,7 @@ export class Category extends Entity {
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("active", Value.fromBoolean(false));
+    this.set("hash", Value.fromString(""));
   }
 
   save(): void {
@@ -845,6 +866,15 @@ export class Category extends Entity {
   set active(value: boolean) {
     this.set("active", Value.fromBoolean(value));
   }
+
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
+  }
 }
 
 export class Campaign extends Entity {
@@ -857,7 +887,6 @@ export class Campaign extends Entity {
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("category", Value.fromString(""));
     this.set("active", Value.fromBoolean(false));
-    this.set("approved", Value.fromBoolean(false));
     this.set("withdrawalsPaused", Value.fromBoolean(false));
     this.set("allowContributionAfterTargetIsMet", Value.fromBoolean(false));
     this.set("deadline", Value.fromBigInt(BigInt.zero()));
@@ -869,6 +898,8 @@ export class Campaign extends Entity {
       "deadlineExtensionThresholdCount",
       Value.fromBigInt(BigInt.zero())
     );
+    this.set("privateCampaign", Value.fromBoolean(false));
+    this.set("hash", Value.fromString(""));
     this.set("approversCount", Value.fromBigInt(BigInt.zero()));
     this.set("reportCount", Value.fromBigInt(BigInt.zero()));
     this.set("reviewCount", Value.fromBigInt(BigInt.zero()));
@@ -946,15 +977,6 @@ export class Campaign extends Entity {
 
   set active(value: boolean) {
     this.set("active", Value.fromBoolean(value));
-  }
-
-  get approved(): boolean {
-    let value = this.get("approved");
-    return value!.toBoolean();
-  }
-
-  set approved(value: boolean) {
-    this.set("approved", Value.fromBoolean(value));
   }
 
   get token(): string | null {
@@ -1095,6 +1117,24 @@ export class Campaign extends Entity {
 
   set deadlineExtensionThresholdCount(value: BigInt) {
     this.set("deadlineExtensionThresholdCount", Value.fromBigInt(value));
+  }
+
+  get privateCampaign(): boolean {
+    let value = this.get("privateCampaign");
+    return value!.toBoolean();
+  }
+
+  set privateCampaign(value: boolean) {
+    this.set("privateCampaign", Value.fromBoolean(value));
+  }
+
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
   }
 
   get approversCount(): BigInt {
@@ -1502,6 +1542,82 @@ export class Contribution extends Entity {
   }
 }
 
+export class PrivateContributor extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("campaign", Value.fromString(""));
+    this.set("owner", Value.fromString(""));
+    this.set("approved", Value.fromBoolean(false));
+    this.set("createdAt", Value.fromBigInt(BigInt.zero()));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PrivateContributor entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save PrivateContributor entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("PrivateContributor", id.toString(), this);
+    }
+  }
+
+  static load(id: string): PrivateContributor | null {
+    return changetype<PrivateContributor | null>(
+      store.get("PrivateContributor", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get campaign(): string {
+    let value = this.get("campaign");
+    return value!.toString();
+  }
+
+  set campaign(value: string) {
+    this.set("campaign", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    return value!.toString();
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
+  get approved(): boolean {
+    let value = this.get("approved");
+    return value!.toBoolean();
+  }
+
+  set approved(value: boolean) {
+    this.set("approved", Value.fromBoolean(value));
+  }
+
+  get createdAt(): BigInt {
+    let value = this.get("createdAt");
+    return value!.toBigInt();
+  }
+
+  set createdAt(value: BigInt) {
+    this.set("createdAt", Value.fromBigInt(value));
+  }
+}
+
 export class Reward extends Entity {
   constructor(id: string) {
     super();
@@ -1514,6 +1630,7 @@ export class Reward extends Entity {
     this.set("active", Value.fromBoolean(false));
     this.set("rewardFactory", Value.fromString(""));
     this.set("exists", Value.fromBoolean(false));
+    this.set("hash", Value.fromString(""));
   }
 
   save(): void {
@@ -1612,6 +1729,15 @@ export class Reward extends Entity {
 
   set exists(value: boolean) {
     this.set("exists", Value.fromBoolean(value));
+  }
+
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
   }
 }
 
@@ -1718,6 +1844,7 @@ export class Request extends Entity {
     this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("requestFactory", Value.fromString(""));
     this.set("recipient", Value.fromBytes(Bytes.empty()));
+    this.set("hash", Value.fromString(""));
     this.set("complete", Value.fromBoolean(false));
     this.set("value", Value.fromBigInt(BigInt.zero()));
     this.set("approvalCount", Value.fromBigInt(BigInt.zero()));
@@ -1788,6 +1915,15 @@ export class Request extends Entity {
 
   set recipient(value: Bytes) {
     this.set("recipient", Value.fromBytes(value));
+  }
+
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
   }
 
   get complete(): boolean {
@@ -1898,6 +2034,7 @@ export class Vote extends Entity {
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("updatedAt", Value.fromBigInt(BigInt.zero()));
     this.set("request", Value.fromString(""));
+    this.set("hash", Value.fromString(""));
     this.set("owner", Value.fromString(""));
     this.set("support", Value.fromBigInt(BigInt.zero()));
     this.set("voted", Value.fromBoolean(false));
@@ -1965,6 +2102,15 @@ export class Vote extends Entity {
     this.set("request", Value.fromString(value));
   }
 
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
+  }
+
   get owner(): string {
     let value = this.get("owner");
     return value!.toString();
@@ -2001,6 +2147,7 @@ export class Review extends Entity {
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("owner", Value.fromString(""));
     this.set("campaign", Value.fromString(""));
+    this.set("hash", Value.fromString(""));
   }
 
   save(): void {
@@ -2055,6 +2202,15 @@ export class Review extends Entity {
   set campaign(value: string) {
     this.set("campaign", Value.fromString(value));
   }
+
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
+  }
 }
 
 export class Report extends Entity {
@@ -2065,6 +2221,7 @@ export class Report extends Entity {
     this.set("createdAt", Value.fromBigInt(BigInt.zero()));
     this.set("owner", Value.fromString(""));
     this.set("campaign", Value.fromString(""));
+    this.set("hash", Value.fromString(""));
   }
 
   save(): void {
@@ -2118,5 +2275,14 @@ export class Report extends Entity {
 
   set campaign(value: string) {
     this.set("campaign", Value.fromString(value));
+  }
+
+  get hash(): string {
+    let value = this.get("hash");
+    return value!.toString();
+  }
+
+  set hash(value: string) {
+    this.set("hash", Value.fromString(value));
   }
 }

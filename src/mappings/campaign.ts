@@ -4,6 +4,7 @@ import {
   CampaignDeadlineExtended as CampaignDeadlineExtendedEvent,
   CampaignUserDataTransferred as CampaignUserDataTransferredEvent,
   ContributionMade as ContributionMadeEvent,
+  ContributorApprovalToggled as ContributorApprovalToggledEvent,
   ContributionWithdrawn as ContributionWithdrawnEvent,
   RequestComplete as RequestCompleteEvent,
   CampaignReviewed as CampaignReviewedEvent,
@@ -15,6 +16,7 @@ import {
   Campaign,
   User,
   Contribution,
+  PrivateContributor,
   RewardRecipient,
   Request,
   RequestFactory,
@@ -105,6 +107,40 @@ export function handleCampaignUserDataTransferred(
   }
 }
 
+export function ContributorApprovalToggled(
+  event: ContributorApprovalToggledEvent
+): void {
+  let campaign = Campaign.load(event.address.toHexString());
+
+  if (campaign !== null) {
+    let privateContributor = PrivateContributor.load(
+      event.address.toHexString() +
+        '-private-contributor-' +
+        event.params.contributor.toHexString()
+    );
+
+    if (privateContributor !== null) {
+      privateContributor.approved = event.params.isApproved;
+      privateContributor.save();
+    } else {
+      let newPrivateContributor = new PrivateContributor(
+        event.address.toHexString() +
+          '-private-contributor-' +
+          event.params.contributor.toHexString()
+      );
+
+      newPrivateContributor.owner =
+        campaign.campaignFactory +
+        '-user-' +
+        event.params.contributor.toHexString();
+      newPrivateContributor.approved = event.params.isApproved;
+      newPrivateContributor.campaign = event.address.toHexString();
+      newPrivateContributor.createdAt = event.block.timestamp;
+      newPrivateContributor.save();
+    }
+  }
+}
+
 export function handleContributionMade(event: ContributionMadeEvent): void {
   let campaign = Campaign.load(event.address.toHexString());
 
@@ -118,7 +154,10 @@ export function handleContributionMade(event: ContributionMadeEvent): void {
         `${event.address.toHexString()}-contribution-${event.params.contributionId.toString()}`
       );
 
-      contribution.owner = event.transaction.from.toHexString();
+      contribution.owner =
+        campaign.campaignFactory +
+        '-user-' +
+        event.transaction.from.toHexString();
       contribution.campaign = event.address.toHexString();
       contribution.amount = event.params.amount;
       contribution.withReward = event.params.withReward;
@@ -132,7 +171,10 @@ export function handleContributionMade(event: ContributionMadeEvent): void {
             event.params.rewardRecipientId.toString()
         );
 
-        rewardRecipient.owner = event.transaction.from.toHexString();
+        rewardRecipient.owner =
+          campaign.campaignFactory +
+          '-user-' +
+          event.transaction.from.toHexString();
         rewardRecipient.createdAt = event.block.timestamp;
         rewardRecipient.updatedAt = new BigInt(0);
         rewardRecipient.reward = event.params.rewardId.toString();
@@ -219,8 +261,12 @@ export function handleCampaignReviewed(event: CampaignReviewedEvent): void {
 
   if (campaign !== null) {
     review.createdAt = event.block.timestamp;
-    review.owner = event.transaction.from.toHexString();
+    review.owner =
+      campaign.campaignFactory +
+      '-user-' +
+      event.transaction.from.toHexString();
     review.campaign = event.address.toHexString();
+    review.hash = event.params.hashedReview;
 
     campaign.reviewCount = campaign.reviewCount.plus(ONE_BI);
 
@@ -237,8 +283,12 @@ export function handleCampaignReported(event: CampaignReportedEvent): void {
 
   if (campaign !== null) {
     report.createdAt = event.block.timestamp;
-    report.owner = event.transaction.from.toHexString();
+    report.owner =
+      campaign.campaignFactory +
+      '-user-' +
+      event.transaction.from.toHexString();
     report.campaign = event.address.toHexString();
+    report.hash = event.params.hashedReport;
 
     campaign.reportCount = campaign.reportCount.plus(ONE_BI);
 

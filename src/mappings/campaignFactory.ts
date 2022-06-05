@@ -6,7 +6,7 @@ import {
   CategoryCommissionUpdated as CategoryCommissionUpdatedEvent,
   CampaignDefaultCommissionUpdated as CampaignDefaultCommissionUpdatedEvent,
   CampaignTransactionConfigUpdated as CampaignTransactionConfigUpdatedEvent,
-  CampaignApproval as CampaignApprovalEvent,
+  CampaignPrivacyChange as CampaignPrivacyChangeEvent,
   CampaignActivation as CampaignActivationEvent,
   CampaignCategoryChange as CampaignCategoryChangeEvent,
   CampaignDeployed as CampaignDeployedEvent,
@@ -19,6 +19,7 @@ import {
   UserAdded as UserAddedEvent,
   UserApproval as UserApprovalEvent,
 } from '../../generated/templates/CampaignFactory/CampaignFactory';
+
 import {
   CampaignFactory,
   Campaign,
@@ -29,8 +30,7 @@ import {
   Category,
   Token,
 } from '../../generated/schema';
-import { CampaignFactory as CampaignFactoryContract } from '../../generated/templates/CampaignFactory/CampaignFactory';
-import { Campaign as CampaignContract } from '../../generated/templates/Campaign/Campaign';
+
 import {
   Campaign as CampaignTemplate,
   CampaignReward as CampaignRewardTemplate,
@@ -169,62 +169,77 @@ export function handleCampaignTransactionConfigUpdated(
   }
 }
 
-export function handleCampaignApproval(event: CampaignApprovalEvent): void {
+export function handleCampaignPrivacyChange(
+  event: CampaignPrivacyChangeEvent
+): void {
+  let campaign = Campaign.load(event.params.campaign.toHexString());
+
+  if (campaign !== null) {
+    campaign.privateCampaign = event.params.privateCampaign;
+    campaign.save();
+  }
+}
+
+export function handlehandleCampaignActivation(
+  event: CampaignActivationEvent
+): void {
+  let campaign = Campaign.load(event.params.campaign.toHexString());
+
+  if (campaign !== null) {
+    campaign.active = event.params.active;
+
+    campaign.save();
+  }
+}
+
+export function handleCampaignCategoryChange(
+  event: CampaignCategoryChangeEvent
+): void {
+  let campaign = Campaign.load(event.params.campaign.toHexString());
+
+  if (campaign !== null) {
+    campaign.category = `${event.address.toHexString()}-category-${event.params.newCategory.toString()}`;
+
+    campaign.save();
+  }
+}
+
+export function handleCampaignDeployed(event: CampaignDeployedEvent): void {
   let campaignFactory = CampaignFactory.load(event.address.toHexString());
 
   if (campaignFactory !== null) {
-    let campaignFactoryContract = CampaignFactoryContract.bind(event.address);
-    let campaignContract = CampaignContract.bind(event.params.campaign);
-
-    let campaignInfo = campaignFactoryContract.campaigns(event.address);
-
-    let campaignRewards = campaignContract.campaignRewardContract(),
-      campaignRequests = campaignContract.campaignRequestContract(),
-      campaignVotes = campaignContract.campaignVoteContract();
-
     let campaign = new Campaign(
       event.params.campaign.toHexString()
     ) as Campaign;
-    let rewardFactory = new RewardFactory(campaignRewards.toHexString());
-    let campaignRequestFactory = new RequestFactory(
-      campaignRequests.toHexString()
+    let rewardFactory = new RewardFactory(
+      event.params.campaignRewards.toHexString()
     );
-    let campaignVoteFactory = new VoteFactory(campaignVotes.toHexString());
+    let campaignRequestFactory = new RequestFactory(
+      event.params.campaignRequests.toHexString()
+    );
+    let campaignVoteFactory = new VoteFactory(
+      event.params.campaignVotes.toHexString()
+    );
 
-    campaign.campaignFactory = campaignContract
-      .campaignFactoryContract()
-      .toHexString();
-    campaign.owner = event.transaction.from.toHexString();
+    campaign.campaignFactory = event.params.factory.toHexString();
+    campaign.owner = `${event.address.toHexString()}-user-${event.transaction.from.toHexString()}`;
     campaign.createdAt = event.block.timestamp;
-    campaign.category = campaignInfo.value4.toString();
-    campaign.approved = true;
-    campaign.withdrawalsPaused = campaignContract.withdrawalsPaused();
-    campaign.deadline = campaignContract.deadline();
-
-    if (campaignContract.campaignState() === 0) {
-      campaign.campaignState = 'COLLECTION';
-    } else if (campaignContract.campaignState() === 1) {
-      campaign.campaignState = 'LIVE';
-    } else if (campaignContract.campaignState() === 2) {
-      campaign.campaignState = 'REVIEW';
-    } else if (campaignContract.campaignState() === 3) {
-      campaign.campaignState = 'COMPLETE';
-    } else {
-      campaign.campaignState = 'UNSUCCESSFUL';
-    }
-
-    campaign.totalCampaignContribution =
-      campaignContract.totalCampaignContribution();
-    campaign.campaignBalance = campaignContract.campaignBalance();
-    campaign.deadlineExtensionThreshold = campaignContract.deadlineSetTimes();
+    campaign.category = `${event.address.toHexString()}-category-${event.params.category.toString()}`;
+    campaign.privateCampaign = event.params.privateCampaign;
+    campaign.withdrawalsPaused = false;
+    campaign.deadline = ZERO_BI;
+    campaign.campaignState = 'COLLECTION';
+    campaign.totalCampaignContribution = ZERO_BI;
+    campaign.campaignBalance = ZERO_BI;
+    campaign.deadlineExtensionThreshold = ZERO_BI;
     campaign.deadlineExtensionThresholdCount = ZERO_BI;
-    campaign.approversCount = campaignContract.approversCount();
-    campaign.reportCount = campaignContract.reportCount();
-    campaign.reviewCount = campaignContract.reviewCount();
-
-    campaign.rewardFactory = campaignRewards.toHexString();
-    campaign.requestFactory = campaignRequests.toHexString();
-    campaign.voteFactory = campaignVotes.toHexString();
+    campaign.approversCount = ZERO_BI;
+    campaign.reportCount = ZERO_BI;
+    campaign.reviewCount = ZERO_BI;
+    campaign.rewardFactory = event.params.campaignRewards.toHexString();
+    campaign.requestFactory = event.params.campaignRequests.toHexString();
+    campaign.voteFactory = event.params.campaignVotes.toHexString();
+    campaign.hash = event.params.hashedCampaignInfo;
 
     rewardFactory.campaign = event.params.campaign.toHexString();
     rewardFactory.createdAt = event.block.timestamp;
@@ -247,99 +262,9 @@ export function handleCampaignApproval(event: CampaignApprovalEvent): void {
     campaignFactory.save();
 
     CampaignTemplate.create(event.params.campaign);
-    CampaignRewardTemplate.create(campaignRewards);
-    CampaignRequestTemplate.create(campaignRequests);
-    CampaignVoteTemplate.create(campaignVotes);
-  }
-}
-
-export function handlehandleCampaignActivation(
-  event: CampaignActivationEvent
-): void {
-  let campaign = Campaign.load(event.params.campaign.toHexString());
-
-  if (campaign !== null) {
-    campaign.active = true;
-
-    campaign.save();
-  }
-}
-
-export function handleCampaignCategoryChange(
-  event: CampaignCategoryChangeEvent
-): void {
-  let campaign = Campaign.load(event.params.campaign.toHexString());
-
-  if (campaign !== null) {
-    campaign.category = `${event.address.toHexString()}-category-${event.params.newCategory.toString()}`;
-
-    campaign.save();
-  }
-}
-
-export function handleCampaignDeployed(event: CampaignDeployedEvent): void {
-  if (event.params.approved) {
-    let campaignFactory = CampaignFactory.load(event.address.toHexString());
-
-    if (campaignFactory !== null) {
-      let campaign = new Campaign(
-        event.params.campaign.toHexString()
-      ) as Campaign;
-      let rewardFactory = new RewardFactory(
-        event.params.campaignRewards.toHexString()
-      );
-      let campaignRequestFactory = new RequestFactory(
-        event.params.campaignRequests.toHexString()
-      );
-      let campaignVoteFactory = new VoteFactory(
-        event.params.campaignVotes.toHexString()
-      );
-
-      campaign.campaignFactory = event.params.factory.toHexString();
-      campaign.owner = `${event.address.toHexString()}-user-${event.transaction.from.toHexString()}`;
-      campaign.createdAt = event.block.timestamp;
-      campaign.category = `${event.address.toHexString()}-category-${event.params.category.toString()}`;
-      campaign.approved = event.params.approved;
-      campaign.withdrawalsPaused = false;
-      campaign.deadline = ZERO_BI;
-      campaign.campaignState = 'COLLECTION';
-      campaign.totalCampaignContribution = ZERO_BI;
-      campaign.campaignBalance = ZERO_BI;
-      campaign.deadlineExtensionThreshold = ZERO_BI;
-      campaign.deadlineExtensionThresholdCount = ZERO_BI;
-      campaign.approversCount = ZERO_BI;
-      campaign.reportCount = ZERO_BI;
-      campaign.reviewCount = ZERO_BI;
-      campaign.rewardFactory = event.params.campaignRewards.toHexString();
-      campaign.requestFactory = event.params.campaignRequests.toHexString();
-      campaign.voteFactory = event.params.campaignVotes.toHexString();
-
-      rewardFactory.campaign = event.params.campaign.toHexString();
-      rewardFactory.createdAt = event.block.timestamp;
-      rewardFactory.rewardCount = ZERO_BI;
-
-      campaignRequestFactory.campaign = event.params.campaign.toHexString();
-      campaignRequestFactory.createdAt = event.block.timestamp;
-      campaignRequestFactory.requestCount = ZERO_BI;
-      campaignRequestFactory.finalizedRequestCount = ZERO_BI;
-
-      campaignVoteFactory.campaign = event.params.campaign.toHexString();
-      campaignVoteFactory.createdAt = event.block.timestamp;
-
-      campaignFactory.campaignCount =
-        campaignFactory.campaignCount.plus(ONE_BI);
-
-      rewardFactory.save();
-      campaignRequestFactory.save();
-      campaignVoteFactory.save();
-      campaign.save();
-      campaignFactory.save();
-
-      CampaignTemplate.create(event.params.campaign);
-      CampaignRewardTemplate.create(event.params.campaignRewards);
-      CampaignRequestTemplate.create(event.params.campaignRequests);
-      CampaignVoteTemplate.create(event.params.campaignVotes);
-    }
+    CampaignRewardTemplate.create(event.params.campaignRewards);
+    CampaignRequestTemplate.create(event.params.campaignRequests);
+    CampaignVoteTemplate.create(event.params.campaignVotes);
   }
 }
 
@@ -357,6 +282,7 @@ export function handleCategoryAdded(event: CategoryAddedEvent): void {
     category.createdAt = event.block.timestamp;
     category.updatedAt = ZERO_BI;
     category.active = event.params.active;
+    category.hash = event.params.hashedCategory;
 
     campaignFactory.categoriesCount =
       campaignFactory.categoriesCount.plus(ONE_BI);
@@ -401,6 +327,7 @@ export function handleTokenAdded(event: TokenAddedEvent): void {
     token.campaignFactory = event.address.toHexString();
     token.createdAt = event.block.timestamp;
     token.approved = event.params.approval;
+    token.hash = event.params.hashedToken;
 
     campaignFactory.tokenCount = campaignFactory.tokenCount.plus(ONE_BI);
 
@@ -446,6 +373,7 @@ export function handleUserAdded(event: UserAddedEvent): void {
     user.totalContributions = ZERO_BI;
     user.totalWithdrawals = ZERO_BI;
     user.contributionCount = ZERO_BI;
+    user.hash = event.params.hashedUser;
 
     campaignFactory.userCount = campaignFactory.userCount.plus(ONE_BI);
 

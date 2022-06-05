@@ -7,22 +7,15 @@
                 "internalType": "contract Campaign",
                 "name": "campaign",
                 "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "active",
+                "type": "bool"
             }
         ],
         "name": "CampaignActivation",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": true,
-                "internalType": "contract Campaign",
-                "name": "campaign",
-                "type": "address"
-            }
-        ],
-        "name": "CampaignApproval",
         "type": "event"
     },
     {
@@ -99,8 +92,14 @@
             {
                 "indexed": false,
                 "internalType": "bool",
-                "name": "approved",
+                "name": "privateCampaign",
                 "type": "bool"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "hashedCampaignInfo",
+                "type": "string"
             }
         ],
         "name": "CampaignDeployed",
@@ -117,6 +116,25 @@
             }
         ],
         "name": "CampaignImplementationUpdated",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "contract Campaign",
+                "name": "campaign",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool",
+                "name": "privateCampaign",
+                "type": "bool"
+            }
+        ],
+        "name": "CampaignPrivacyChange",
         "type": "event"
     },
     {
@@ -197,6 +215,12 @@
                 "internalType": "string",
                 "name": "title",
                 "type": "string"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "hashedCategory",
+                "type": "string"
             }
         ],
         "name": "CategoryAdded",
@@ -273,6 +297,12 @@
                 "internalType": "bool",
                 "name": "approval",
                 "type": "bool"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "hashedToken",
+                "type": "string"
             }
         ],
         "name": "TokenAdded",
@@ -356,6 +386,12 @@
                 "internalType": "address",
                 "name": "userId",
                 "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "string",
+                "name": "hashedUser",
+                "type": "string"
             }
         ],
         "name": "UserAdded",
@@ -465,6 +501,11 @@
             {
                 "internalType": "string",
                 "name": "title",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "hashedCategory",
                 "type": "string"
             },
             {
@@ -658,7 +699,7 @@
             },
             {
                 "internalType": "bool",
-                "name": "approved",
+                "name": "privateCampaign",
                 "type": "bool"
             }
         ],
@@ -1277,7 +1318,7 @@
             },
             {
                 "internalType": "bool",
-                "name": "_approved",
+                "name": "_privateCampaign",
                 "type": "bool"
             },
             {
@@ -1299,7 +1340,7 @@
                 "type": "address"
             }
         ],
-        "name": "activateCampaign",
+        "name": "toggleCampaignActivation",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1312,7 +1353,7 @@
                 "type": "address"
             }
         ],
-        "name": "approveCampaign",
+        "name": "toggleCampaignPrivacy",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1345,6 +1386,11 @@
             {
                 "internalType": "string",
                 "name": "_title",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_hashedCategory",
                 "type": "string"
             }
         ],

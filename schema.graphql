@@ -74,6 +74,7 @@ type Token @entity {
   createdAt: BigInt!
   campaignFactory: CampaignFactory!
   approved: Boolean!
+  hash: String!
 }
 
 type User @entity {
@@ -88,6 +89,7 @@ type User @entity {
   totalContributions: BigInt!
   contributionCount: BigInt!
   rewardCount: BigInt!
+  hash: String!
 
   "derived fields"
   contributions: [Contribution!]! @derivedFrom(field: "owner")
@@ -108,6 +110,7 @@ type Category @entity {
   createdAt: BigInt!
   updatedAt: BigInt!
   active: Boolean!
+  hash: String!
 }
 
 type Campaign @entity {
@@ -117,7 +120,6 @@ type Campaign @entity {
   createdAt: BigInt!
   category: Category!
   active: Boolean!
-  approved: Boolean!
   token: Token
   withdrawalsPaused: Boolean!
   allowContributionAfterTargetIsMet: Boolean
@@ -130,6 +132,8 @@ type Campaign @entity {
   campaignBalance: BigInt!
   deadlineExtensionThreshold: BigInt!
   deadlineExtensionThresholdCount: BigInt!
+  privateCampaign: Boolean!
+  hash: String!
 
   "aggregates"
   approversCount: BigInt!
@@ -182,6 +186,14 @@ type Contribution @entity {
   createdAt: BigInt!
 }
 
+type PrivateContributor @entity {
+  id: ID!
+  campaign: Campaign!
+  owner: User!
+  approved: Boolean!
+  createdAt: BigInt!
+}
+
 type Reward @entity {
   id: ID!
   createdAt: BigInt!
@@ -192,6 +204,7 @@ type Reward @entity {
   rewardFactory: RewardFactory!
   rewardRecipients: [RewardRecipient!]! @derivedFrom(field: "reward")
   exists: Boolean!
+  hash: String!
 }
 
 type RewardRecipient @entity {
@@ -210,6 +223,7 @@ type Request @entity {
   updatedAt: BigInt!
   requestFactory: RequestFactory!
   recipient: Bytes!
+  hash: String!
   complete: Boolean!
   value: BigInt!
   approvalCount: BigInt!
@@ -228,6 +242,7 @@ type Vote @entity {
   createdAt: BigInt!
   updatedAt: BigInt!
   request: Request!
+  hash: String!
   owner: User!
   support: BigInt!
   voted: Boolean!
@@ -238,6 +253,7 @@ type Review @entity {
   createdAt: BigInt!
   owner: User!
   campaign: Campaign!
+  hash: String!
 }
 
 type Report @entity {
@@ -245,4 +261,5 @@ type Report @entity {
   createdAt: BigInt!
   owner: User!
   campaign: Campaign!
+  hash: String!
 }

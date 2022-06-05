@@ -7,7 +7,12 @@ import {
   RewarderApproval as RewarderApprovalEvent,
   RewardRecipientApproval as RewardRecipientApprovalEvent,
 } from '../../generated/templates/CampaignReward/CampaignReward';
-import { Reward, RewardFactory, RewardRecipient } from '../../generated/schema';
+import {
+  Reward,
+  RewardFactory,
+  RewardRecipient,
+  Campaign,
+} from '../../generated/schema';
 
 import { Address } from '@graphprotocol/graph-ts';
 import { ONE_BI, ZERO_BI } from '../utils/constants';
@@ -26,6 +31,7 @@ export function handleRewardCreated(event: RewardCreatedEvent): void {
     reward.active = event.params.active;
     reward.rewardFactory = event.address.toHexString();
     reward.exists = true;
+    reward.hash = event.params.hashedReward;
 
     let currentRewardCount = rewardFactory.rewardCount;
 
@@ -88,25 +94,27 @@ export function handleRewardRecipientAdded(
   event: RewardRecipientAddedEvent
 ): void {
   let rewardFactory = RewardFactory.load(event.address.toHexString());
-  let rewardRecipient = new RewardRecipient(
-    `${event.address.toHexString()}-rewardRecipient-${event.params.rewardRecipientId.toString()}`
-  );
-  let reward = Reward.load(
-    `${event.address.toHexString()}-reward-${event.params.rewardId.toString()}`
-  );
 
-  if (reward !== null && rewardFactory !== null) {
-    rewardRecipient.owner = `${Address.fromString(
-      rewardFactory.campaign
-    )}-user-${event.transaction.from.toHexString()}`;
-    rewardRecipient.createdAt = event.block.timestamp;
-    rewardRecipient.updatedAt = ZERO_BI;
-    rewardRecipient.reward = event.params.rewardId.toString();
-    rewardRecipient.deliveredByCampaign = false;
-    rewardRecipient.receivedByUser = false;
+  if (rewardFactory !== null) {
+    let campaign = Campaign.load(
+      Address.fromString(rewardFactory.campaign).toHexString()
+    );
+    let rewardRecipient = new RewardRecipient(
+      `${event.address.toHexString()}-rewardRecipient-${event.params.rewardRecipientId.toString()}`
+    );
 
-    rewardRecipient.save();
-    reward.save();
+    if (campaign !== null) {
+      rewardRecipient.owner = `${Address.fromString(
+        campaign.campaignFactory
+      )}-user-${event.transaction.from.toHexString()}`;
+      rewardRecipient.createdAt = event.block.timestamp;
+      rewardRecipient.updatedAt = ZERO_BI;
+      rewardRecipient.reward = event.params.rewardId.toString();
+      rewardRecipient.deliveredByCampaign = false;
+      rewardRecipient.receivedByUser = false;
+
+      rewardRecipient.save();
+    }
   }
 }
 

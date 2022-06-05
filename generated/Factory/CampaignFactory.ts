@@ -26,23 +26,9 @@ export class CampaignActivation__Params {
   get campaign(): Address {
     return this._event.parameters[0].value.toAddress();
   }
-}
 
-export class CampaignApproval extends ethereum.Event {
-  get params(): CampaignApproval__Params {
-    return new CampaignApproval__Params(this);
-  }
-}
-
-export class CampaignApproval__Params {
-  _event: CampaignApproval;
-
-  constructor(event: CampaignApproval) {
-    this._event = event;
-  }
-
-  get campaign(): Address {
-    return this._event.parameters[0].value.toAddress();
+  get active(): boolean {
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -123,8 +109,12 @@ export class CampaignDeployed__Params {
     return this._event.parameters[5].value.toBigInt();
   }
 
-  get approved(): boolean {
+  get privateCampaign(): boolean {
     return this._event.parameters[6].value.toBoolean();
+  }
+
+  get hashedCampaignInfo(): string {
+    return this._event.parameters[7].value.toString();
   }
 }
 
@@ -143,6 +133,28 @@ export class CampaignImplementationUpdated__Params {
 
   get campaignImplementation(): Address {
     return this._event.parameters[0].value.toAddress();
+  }
+}
+
+export class CampaignPrivacyChange extends ethereum.Event {
+  get params(): CampaignPrivacyChange__Params {
+    return new CampaignPrivacyChange__Params(this);
+  }
+}
+
+export class CampaignPrivacyChange__Params {
+  _event: CampaignPrivacyChange;
+
+  constructor(event: CampaignPrivacyChange) {
+    this._event = event;
+  }
+
+  get campaign(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get privateCampaign(): boolean {
+    return this._event.parameters[1].value.toBoolean();
   }
 }
 
@@ -246,6 +258,10 @@ export class CategoryAdded__Params {
   get title(): string {
     return this._event.parameters[2].value.toString();
   }
+
+  get hashedCategory(): string {
+    return this._event.parameters[3].value.toString();
+  }
 }
 
 export class CategoryCommissionUpdated extends ethereum.Event {
@@ -333,6 +349,10 @@ export class TokenAdded__Params {
 
   get approval(): boolean {
     return this._event.parameters[1].value.toBoolean();
+  }
+
+  get hashedToken(): string {
+    return this._event.parameters[2].value.toString();
   }
 }
 
@@ -436,6 +456,10 @@ export class UserAdded__Params {
   get userId(): Address {
     return this._event.parameters[0].value.toAddress();
   }
+
+  get hashedUser(): string {
+    return this._event.parameters[1].value.toString();
+  }
 }
 
 export class UserApproval extends ethereum.Event {
@@ -465,16 +489,18 @@ export class CampaignFactory__campaignCategoriesResult {
   value1: BigInt;
   value2: BigInt;
   value3: string;
-  value4: boolean;
+  value4: string;
   value5: boolean;
+  value6: boolean;
 
   constructor(
     value0: BigInt,
     value1: BigInt,
     value2: BigInt,
     value3: string,
-    value4: boolean,
-    value5: boolean
+    value4: string,
+    value5: boolean,
+    value6: boolean
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -482,6 +508,7 @@ export class CampaignFactory__campaignCategoriesResult {
     this.value3 = value3;
     this.value4 = value4;
     this.value5 = value5;
+    this.value6 = value6;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
@@ -490,8 +517,9 @@ export class CampaignFactory__campaignCategoriesResult {
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
     map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set("value3", ethereum.Value.fromString(this.value3));
-    map.set("value4", ethereum.Value.fromBoolean(this.value4));
+    map.set("value4", ethereum.Value.fromString(this.value4));
     map.set("value5", ethereum.Value.fromBoolean(this.value5));
+    map.set("value6", ethereum.Value.fromBoolean(this.value6));
     return map;
   }
 }
@@ -688,7 +716,7 @@ export class CampaignFactory extends ethereum.SmartContract {
   ): CampaignFactory__campaignCategoriesResult {
     let result = super.call(
       "campaignCategories",
-      "campaignCategories(uint256):(uint256,uint256,uint256,string,bool,bool)",
+      "campaignCategories(uint256):(uint256,uint256,uint256,string,string,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
@@ -697,8 +725,9 @@ export class CampaignFactory extends ethereum.SmartContract {
       result[1].toBigInt(),
       result[2].toBigInt(),
       result[3].toString(),
-      result[4].toBoolean(),
-      result[5].toBoolean()
+      result[4].toString(),
+      result[5].toBoolean(),
+      result[6].toBoolean()
     );
   }
 
@@ -707,7 +736,7 @@ export class CampaignFactory extends ethereum.SmartContract {
   ): ethereum.CallResult<CampaignFactory__campaignCategoriesResult> {
     let result = super.tryCall(
       "campaignCategories",
-      "campaignCategories(uint256):(uint256,uint256,uint256,string,bool,bool)",
+      "campaignCategories(uint256):(uint256,uint256,uint256,string,string,bool,bool)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -720,8 +749,9 @@ export class CampaignFactory extends ethereum.SmartContract {
         value[1].toBigInt(),
         value[2].toBigInt(),
         value[3].toString(),
-        value[4].toBoolean(),
-        value[5].toBoolean()
+        value[4].toString(),
+        value[5].toBoolean(),
+        value[6].toBoolean()
       )
     );
   }
@@ -1944,7 +1974,7 @@ export class CreateCampaignCall__Inputs {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get _approved(): boolean {
+  get _privateCampaign(): boolean {
     return this._call.inputValues[1].value.toBoolean();
   }
 
@@ -1961,20 +1991,20 @@ export class CreateCampaignCall__Outputs {
   }
 }
 
-export class ActivateCampaignCall extends ethereum.Call {
-  get inputs(): ActivateCampaignCall__Inputs {
-    return new ActivateCampaignCall__Inputs(this);
+export class ToggleCampaignActivationCall extends ethereum.Call {
+  get inputs(): ToggleCampaignActivationCall__Inputs {
+    return new ToggleCampaignActivationCall__Inputs(this);
   }
 
-  get outputs(): ActivateCampaignCall__Outputs {
-    return new ActivateCampaignCall__Outputs(this);
+  get outputs(): ToggleCampaignActivationCall__Outputs {
+    return new ToggleCampaignActivationCall__Outputs(this);
   }
 }
 
-export class ActivateCampaignCall__Inputs {
-  _call: ActivateCampaignCall;
+export class ToggleCampaignActivationCall__Inputs {
+  _call: ToggleCampaignActivationCall;
 
-  constructor(call: ActivateCampaignCall) {
+  constructor(call: ToggleCampaignActivationCall) {
     this._call = call;
   }
 
@@ -1983,28 +2013,28 @@ export class ActivateCampaignCall__Inputs {
   }
 }
 
-export class ActivateCampaignCall__Outputs {
-  _call: ActivateCampaignCall;
+export class ToggleCampaignActivationCall__Outputs {
+  _call: ToggleCampaignActivationCall;
 
-  constructor(call: ActivateCampaignCall) {
+  constructor(call: ToggleCampaignActivationCall) {
     this._call = call;
   }
 }
 
-export class ApproveCampaignCall extends ethereum.Call {
-  get inputs(): ApproveCampaignCall__Inputs {
-    return new ApproveCampaignCall__Inputs(this);
+export class ToggleCampaignPrivacyCall extends ethereum.Call {
+  get inputs(): ToggleCampaignPrivacyCall__Inputs {
+    return new ToggleCampaignPrivacyCall__Inputs(this);
   }
 
-  get outputs(): ApproveCampaignCall__Outputs {
-    return new ApproveCampaignCall__Outputs(this);
+  get outputs(): ToggleCampaignPrivacyCall__Outputs {
+    return new ToggleCampaignPrivacyCall__Outputs(this);
   }
 }
 
-export class ApproveCampaignCall__Inputs {
-  _call: ApproveCampaignCall;
+export class ToggleCampaignPrivacyCall__Inputs {
+  _call: ToggleCampaignPrivacyCall;
 
-  constructor(call: ApproveCampaignCall) {
+  constructor(call: ToggleCampaignPrivacyCall) {
     this._call = call;
   }
 
@@ -2013,10 +2043,10 @@ export class ApproveCampaignCall__Inputs {
   }
 }
 
-export class ApproveCampaignCall__Outputs {
-  _call: ApproveCampaignCall;
+export class ToggleCampaignPrivacyCall__Outputs {
+  _call: ToggleCampaignPrivacyCall;
 
-  constructor(call: ApproveCampaignCall) {
+  constructor(call: ToggleCampaignPrivacyCall) {
     this._call = call;
   }
 }
@@ -2078,6 +2108,10 @@ export class CreateCategoryCall__Inputs {
 
   get _title(): string {
     return this._call.inputValues[1].value.toString();
+  }
+
+  get _hashedCategory(): string {
+    return this._call.inputValues[2].value.toString();
   }
 }
 

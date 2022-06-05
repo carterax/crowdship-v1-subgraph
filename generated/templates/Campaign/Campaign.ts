@@ -246,6 +246,28 @@ export class ContributionWithdrawn__Params {
   }
 }
 
+export class ContributorApprovalToggled extends ethereum.Event {
+  get params(): ContributorApprovalToggled__Params {
+    return new ContributorApprovalToggled__Params(this);
+  }
+}
+
+export class ContributorApprovalToggled__Params {
+  _event: ContributorApprovalToggled;
+
+  constructor(event: ContributorApprovalToggled) {
+    this._event = event;
+  }
+
+  get contributor(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get isApproved(): boolean {
+    return this._event.parameters[1].value.toBoolean();
+  }
+}
+
 export class DeadlineThresholdExtended extends ethereum.Event {
   get params(): DeadlineThresholdExtended__Params {
     return new DeadlineThresholdExtended__Params(this);
@@ -491,6 +513,29 @@ export class Campaign extends ethereum.SmartContract {
       "allowContributionAfterTargetIsMet",
       "allowContributionAfterTargetIsMet():(bool)",
       []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  allowedToContribute(param0: Address): boolean {
+    let result = super.call(
+      "allowedToContribute",
+      "allowedToContribute(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_allowedToContribute(param0: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "allowedToContribute",
+      "allowedToContribute(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -868,6 +913,25 @@ export class Campaign extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  reportHash(param0: Address): string {
+    let result = super.call("reportHash", "reportHash(address):(string)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toString();
+  }
+
+  try_reportHash(param0: Address): ethereum.CallResult<string> {
+    let result = super.tryCall("reportHash", "reportHash(address):(string)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
   reported(param0: Address): boolean {
     let result = super.call("reported", "reported(address):(bool)", [
       ethereum.Value.fromAddress(param0)
@@ -900,6 +964,25 @@ export class Campaign extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  reviewHash(param0: Address): string {
+    let result = super.call("reviewHash", "reviewHash(address):(string)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+
+    return result[0].toString();
+  }
+
+  try_reviewHash(param0: Address): ethereum.CallResult<string> {
+    let result = super.tryCall("reviewHash", "reviewHash(address):(string)", [
+      ethereum.Value.fromAddress(param0)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
   }
 
   reviewed(param0: Address): boolean {
@@ -1082,6 +1165,29 @@ export class Campaign extends ethereum.SmartContract {
     let result = super.tryCall(
       "isCampaignAdmin",
       "isCampaignAdmin(address):(bool)",
+      [ethereum.Value.fromAddress(_user)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  isCampaignManager(_user: Address): boolean {
+    let result = super.call(
+      "isCampaignManager",
+      "isCampaignManager(address):(bool)",
+      [ethereum.Value.fromAddress(_user)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_isCampaignManager(_user: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "isCampaignManager",
+      "isCampaignManager(address):(bool)",
       [ethereum.Value.fromAddress(_user)]
     );
     if (result.reverted) {
@@ -1581,6 +1687,36 @@ export class SetDeadlineSetTimesCall__Outputs {
   }
 }
 
+export class ToggleContributorApprovalCall extends ethereum.Call {
+  get inputs(): ToggleContributorApprovalCall__Inputs {
+    return new ToggleContributorApprovalCall__Inputs(this);
+  }
+
+  get outputs(): ToggleContributorApprovalCall__Outputs {
+    return new ToggleContributorApprovalCall__Outputs(this);
+  }
+}
+
+export class ToggleContributorApprovalCall__Inputs {
+  _call: ToggleContributorApprovalCall;
+
+  constructor(call: ToggleContributorApprovalCall) {
+    this._call = call;
+  }
+
+  get _contributor(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class ToggleContributorApprovalCall__Outputs {
+  _call: ToggleContributorApprovalCall;
+
+  constructor(call: ToggleContributorApprovalCall) {
+    this._call = call;
+  }
+}
+
 export class ContributeCall extends ethereum.Call {
   get inputs(): ContributeCall__Inputs {
     return new ContributeCall__Inputs(this);
@@ -1619,20 +1755,20 @@ export class ContributeCall__Outputs {
   }
 }
 
-export class WithdrawOwnContributionCall extends ethereum.Call {
-  get inputs(): WithdrawOwnContributionCall__Inputs {
-    return new WithdrawOwnContributionCall__Inputs(this);
+export class WithdrawContributionCall extends ethereum.Call {
+  get inputs(): WithdrawContributionCall__Inputs {
+    return new WithdrawContributionCall__Inputs(this);
   }
 
-  get outputs(): WithdrawOwnContributionCall__Outputs {
-    return new WithdrawOwnContributionCall__Outputs(this);
+  get outputs(): WithdrawContributionCall__Outputs {
+    return new WithdrawContributionCall__Outputs(this);
   }
 }
 
-export class WithdrawOwnContributionCall__Inputs {
-  _call: WithdrawOwnContributionCall;
+export class WithdrawContributionCall__Inputs {
+  _call: WithdrawContributionCall;
 
-  constructor(call: WithdrawOwnContributionCall) {
+  constructor(call: WithdrawContributionCall) {
     this._call = call;
   }
 
@@ -1641,10 +1777,10 @@ export class WithdrawOwnContributionCall__Inputs {
   }
 }
 
-export class WithdrawOwnContributionCall__Outputs {
-  _call: WithdrawOwnContributionCall;
+export class WithdrawContributionCall__Outputs {
+  _call: WithdrawContributionCall;
 
-  constructor(call: WithdrawOwnContributionCall) {
+  constructor(call: WithdrawContributionCall) {
     this._call = call;
   }
 }

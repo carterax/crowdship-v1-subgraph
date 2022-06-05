@@ -358,7 +358,7 @@
             },
             {
                 "internalType": "string",
-                "name": "hashed",
+                "name": "hashedReward",
                 "type": "string"
             },
             {

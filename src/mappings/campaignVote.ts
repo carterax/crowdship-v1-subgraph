@@ -28,10 +28,11 @@ export function handleVoted(event: VotedEvent): void {
         vote.updatedAt = ZERO_BI;
         vote.request = event.params.requestId.toString();
         vote.owner = `${Address.fromString(
-          voteFactory.campaign
+          campaign.campaignFactory
         )}-user-${event.transaction.from.toHexString()}`;
         vote.support = new BigInt(event.params.support);
         vote.voted = true;
+        vote.hash = event.params.hashedVote;
 
         if (vote.support === ZERO_BI) {
           request.againstCount = request.againstCount.plus(ONE_BI);
